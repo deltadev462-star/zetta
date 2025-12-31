@@ -16,7 +16,7 @@ import {
   Card,
   CardContent,
   Chip,
-  alpha,
+  
   Tooltip,
   LinearProgress,
 } from '@mui/material';
@@ -87,6 +87,17 @@ const Cart: React.FC = () => {
         return 'var(--primary-color)';
       default:
         return 'var(--warning-color)';
+    }
+  };
+
+  const getConditionRgb = (condition: string) => {
+    switch (condition) {
+      case 'excellent':
+        return 'var(--success-rgb)';
+      case 'good':
+        return 'var(--primary-rgb)';
+      default:
+        return 'var(--warning-rgb)';
     }
   };
 
@@ -270,8 +281,8 @@ const Cart: React.FC = () => {
                                   label={item.product.condition}
                                   size="small"
                                   sx={{
-                                    bgcolor: alpha(getConditionColor(item.product.condition), 0.1),
-                                    border: `1px solid ${alpha(getConditionColor(item.product.condition), 0.3)}`,
+                                    bgcolor: `rgba(${getConditionRgb(item.product.condition)}, 0.1)`,
+                                    border: `1px solid rgba(${getConditionRgb(item.product.condition)}, 0.3)`,
                                     color: getConditionColor(item.product.condition),
                                   }}
                                 />

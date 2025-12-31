@@ -55,6 +55,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
 import LiveChat from "../components/LiveChat";
 import Footer from "../components/Footer";
+import { ScrollToTop } from "../components";
 
 const MainLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -963,6 +964,9 @@ const MainLayout: React.FC = () => {
 
       {/* Live Chat */}
       {user && <LiveChat />}
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
 
       {/* Backdrop for mobile drawer */}
       {mobileOpen && (
