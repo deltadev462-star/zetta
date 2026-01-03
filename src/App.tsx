@@ -119,7 +119,7 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 0,
+    borderRadius: 2, // 0.5rem = 8px subtle radius
   },
   components: {
     MuiCssBaseline: {
@@ -134,7 +134,7 @@ const theme = createTheme({
           },
           "&::-webkit-scrollbar-thumb": {
             background: "rgba(0, 212, 255, 0.3)",
-            borderRadius: 0,
+            borderRadius: 2,
             "&:hover": {
               background: "rgba(0, 212, 255, 0.5)",
             },
@@ -147,7 +147,7 @@ const theme = createTheme({
         root: {
           textTransform: "none",
           fontWeight: 600,
-          borderRadius: 0,
+          borderRadius: 2,
           padding: "10px 24px",
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           position: "relative",
@@ -205,7 +205,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiOutlinedInput-root": {
-            borderRadius: 0,
+            borderRadius: 2,
             backgroundColor: "rgba(255, 255, 255, 0.5)",
             backdropFilter: "blur(10px)",
             "& fieldset": {
@@ -226,7 +226,7 @@ const theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 0,
+          borderRadius: 2,
           backdropFilter: "blur(10px)",
           backgroundColor: "rgba(0, 212, 255, 0.08)",
           border: "1px solid rgba(0, 212, 255, 0.2)",

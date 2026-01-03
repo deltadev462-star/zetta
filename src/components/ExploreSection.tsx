@@ -2,69 +2,80 @@ import React from 'react';
 import { Box, Card, CardMedia, Typography, IconButton, Grid } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PageTitle from './PageTitle';
 
 interface ExploreSectionProps {
   onNavigate?: (category: string) => void;
 }
 
-const exploreCategories = [
-  {
-    id: 1,
-    title: 'Imaging Equipment',
-    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=1200',
-    link: '/products?category=imaging',
-  },
-  {
-    id: 2,
-    title: 'Surgical Equipment',
-    image: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?q=80&w=1200',
-    link: '/products?category=surgical',
-  },
-  {
-    id: 3,
-    title: 'Laboratory Equipment',
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1200',
-    link: '/products?category=laboratory',
-  },
-  {
-    id: 4,
-    title: 'Monitoring Equipment',
-    image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=1200',
-    link: '/products?category=monitoring',
-  },
-  {
-    id: 5,
-    title: 'Respiratory Equipment',
-    image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=1200',
-    link: '/products?category=respiratory',
-  },
-  {
-    id: 6,
-    title: 'Emergency Equipment',
-    image: 'https://images.unsplash.com/photo-1563213126-a4273aed2016?q=80&w=1200',
-    link: '/products?category=emergency',
-  },
-  {
-    id: 7,
-    title: 'Diagnostic Equipment',
-    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=1200',
-    link: '/products?category=diagnostic',
-  },
-  {
-    id: 8,
-    title: 'Infusion Equipment',
-    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1200',
-    link: '/products?category=infusion',
-  },
-];
 
 const ExploreSection: React.FC<ExploreSectionProps> = ({ onNavigate }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const exploreCategories = [
+    {
+      id: 1,
+      title: t('productCategories.imagingEquipment'),
+      image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=1200',
+      link: '/products?category=Imaging Equipment',
+      categoryKey: 'imaging',
+    },
+    {
+      id: 2,
+      title: t('productCategories.surgicalEquipment'),
+      image: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?q=80&w=1200',
+      link: '/products?category=Surgical Equipment',
+      categoryKey: 'surgical',
+    },
+    {
+      id: 3,
+      title: t('productCategories.laboratoryEquipment'),
+      image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1200',
+      link: '/products?category=Laboratory Equipment',
+      categoryKey: 'laboratory',
+    },
+    {
+      id: 4,
+      title: t('productCategories.monitoringEquipment'),
+      image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=1200',
+      link: '/products?category=Monitoring Equipment',
+      categoryKey: 'monitoring',
+    },
+    {
+      id: 5,
+      title: t('productCategories.respiratoryEquipment'),
+      image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=1200',
+      link: '/products?category=Respiratory Equipment',
+      categoryKey: 'respiratory',
+    },
+    {
+      id: 6,
+      title: t('productCategories.emergencyEquipment'),
+      image: 'https://images.unsplash.com/photo-1563213126-a4273aed2016?q=80&w=1200',
+      link: '/products?category=Emergency Equipment',
+      categoryKey: 'emergency',
+    },
+    {
+      id: 7,
+      title: t('productCategories.diagnosticEquipment'),
+      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=1200',
+      link: '/products?category=Diagnostic Equipment',
+      categoryKey: 'diagnostic',
+    },
+    {
+      id: 8,
+      title: t('productCategories.infusionEquipment'),
+      image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1200',
+      link: '/products?category=Infusion Equipment',
+      categoryKey: 'infusion',
+    },
+  ];
 
   const handleCategoryClick = (category: typeof exploreCategories[0]) => {
     if (onNavigate) {
-      onNavigate(category.title.toLowerCase().replace(' equipment', ''));
+      onNavigate(category.categoryKey);
     } else {
       navigate(category.link);
     }
@@ -72,10 +83,10 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({ onNavigate }) => {
 
   return (
     <Box sx={{ py: 6 }}>
-      <PageTitle 
-        text="Explore" 
+      <PageTitle
+        text={t('exploreSection.exploreTitle')}
         align="left"
-        subtitle="Browse our equipment by category"
+        subtitle={t('exploreSection.exploreSubtitle')}
         size="large"
         glowEffect
       />

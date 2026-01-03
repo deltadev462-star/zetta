@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Container,
   Box,
@@ -19,10 +20,10 @@ import {
   Card,
   alpha,
 } from '@mui/material';
-import { 
-  Visibility, 
-  VisibilityOff, 
-  Email, 
+import {
+  Visibility,
+  VisibilityOff,
+  Email,
   Lock,
   Login as LoginIcon,
   AutoAwesome,
@@ -33,6 +34,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,15 +47,15 @@ const Login: React.FC = () => {
     const errors: {email?: string, password?: string} = {};
     
     if (!email) {
-      errors.email = 'Email is required';
+      errors.email = t('auth.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Please enter a valid email';
+      errors.email = t('auth.enterValidEmail');
     }
     
     if (!password) {
-      errors.password = 'Password is required';
+      errors.password = t('auth.passwordRequired');
     } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = t('auth.passwordMinLength');
     }
     
     setFieldErrors(errors);
@@ -78,7 +80,7 @@ const Login: React.FC = () => {
         navigate('/');
       }
     } catch (err: any) {
-      setError('An unexpected error occurred');
+      setError(t('auth.unexpectedError'));
     } finally {
       setLoading(false);
     }
@@ -129,7 +131,7 @@ const Login: React.FC = () => {
       bgcolor: 'var(--bg-secondary)',
       backdropFilter: 'blur(10px)',
       border: '1px solid var(--border-primary)',
-      borderRadius: 4,
+      borderRadius: 1,
       overflow: 'hidden',
       boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
       '&::before': {
@@ -189,7 +191,7 @@ const Login: React.FC = () => {
                     Zetta Med
                   </Typography>
                   <Typography variant="h6" sx={{ color: 'var(--text-secondary)' }}>
-                    Welcome back
+                    {t('auth.welcomeBack')}
                   </Typography>
                 </Box>
               </Stack>
@@ -220,7 +222,7 @@ const Login: React.FC = () => {
                   <TextField
                     fullWidth
                     id="email"
-                    label="Email Address"
+                    label={t('auth.emailAddress')}
                     name="email"
                     autoComplete="email"
                     autoFocus
@@ -269,7 +271,7 @@ const Login: React.FC = () => {
                   <TextField
                     fullWidth
                     name="password"
-                    label="Password"
+                    label={t('auth.password')}
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     autoComplete="current-password"
@@ -348,7 +350,7 @@ const Login: React.FC = () => {
                         },
                       }}
                     >
-                      Forgot password?
+                      {t('auth.forgotPassword')}
                     </Link>
                   </Box>
 
@@ -374,7 +376,7 @@ const Login: React.FC = () => {
                       },
                     }}
                   >
-                    {loading ? 'Signing in...' : 'Sign In'}
+                    {loading ? t('auth.signingIn') : t('auth.signIn')}
                   </Button>
                 </Stack>
               </Box>
@@ -392,7 +394,7 @@ const Login: React.FC = () => {
                   variant="body2"
                   sx={{ px: 2, color: 'var(--text-secondary)' }}
                 >
-                  New to Zetta Med?
+                  {t('auth.newToZettaMed')}
                 </Typography>
                 <Box
                   sx={{
@@ -425,7 +427,7 @@ const Login: React.FC = () => {
                   },
                 }}
               >
-                Create Account
+                {t('auth.createAccount')}
               </Button>
 
               {/* Footer Text */}
@@ -434,7 +436,7 @@ const Login: React.FC = () => {
                 align="center"
                 sx={{ mt: 4, color: 'var(--text-secondary)' }}
               >
-                By signing in, you agree to our{' '}
+                {t('auth.bySigningIn')}{' '}
                 <Link
                   href="#"
                   sx={{
@@ -445,9 +447,9 @@ const Login: React.FC = () => {
                     },
                   }}
                 >
-                  Terms of Service
+                  {t('auth.termsOfService')}
                 </Link>
-                {' and '}
+                {' '}{t('auth.and')}{' '}
                 <Link
                   href="#"
                   sx={{
@@ -458,7 +460,7 @@ const Login: React.FC = () => {
                     },
                   }}
                 >
-                  Privacy Policy
+                  {t('auth.privacyPolicy')}
                 </Link>
               </Typography>
             </Box>

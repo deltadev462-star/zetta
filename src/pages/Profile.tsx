@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Container,
   Paper,
@@ -22,7 +23,7 @@ import {
   alpha,
   Tooltip,
 } from '@mui/material';
-import { 
+import {
   Save,
   Person,
   Business,
@@ -44,6 +45,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../types';
 
 const Profile: React.FC = () => {
+  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -130,10 +132,10 @@ const Profile: React.FC = () => {
                 mb: 1,
               }}
             >
-              My Profile
+              {t('profile.title')}
             </Typography>
             <Typography variant="body1" sx={{ color: 'var(--text-secondary)' }}>
-              Manage your personal information and account settings
+              {t('profile.subtitle')}
             </Typography>
           </Box>
 
@@ -197,7 +199,7 @@ const Profile: React.FC = () => {
                     </Box>
                     
                     <Typography variant="h5" gutterBottom fontWeight={700}>
-                      {formData.full_name || 'User'}
+                      {formData.full_name || t('profile.user')}
                     </Typography>
                     
                     <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
@@ -213,7 +215,7 @@ const Profile: React.FC = () => {
                       />
                       <Chip
                         icon={<Security />}
-                        label={user?.role === 'admin' ? 'Administrator' : 'Buyer'}
+                        label={user?.role === 'admin' ? t('profile.administrator') : t('profile.buyer')}
                         size="small"
                         sx={{
                           bgcolor: user?.role === 'admin'
@@ -233,7 +235,7 @@ const Profile: React.FC = () => {
                     <Box sx={{ mb: 3 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                          Profile Completion
+                          {t('profile.profileCompletion')}
                         </Typography>
                         <Typography 
                           variant="body2" 
@@ -250,10 +252,10 @@ const Profile: React.FC = () => {
                         value={completionPercentage}
                         sx={{
                           height: 10,
-                          borderRadius: 5,
+                          borderRadius: 1,
                           bgcolor: 'rgba(0,0,0,0.08)',
                           '& .MuiLinearProgress-bar': {
-                            borderRadius: 5,
+                            borderRadius: 1,
                             background: completionPercentage === 100
                               ? `linear-gradient(90deg, var(--success-color) 0%, #00cc55 100%)`
                               : `linear-gradient(90deg, var(--primary-color) 0%, #0099cc 100%)`,
@@ -262,7 +264,7 @@ const Profile: React.FC = () => {
                       />
                       {completionPercentage < 100 && (
                         <Typography variant="caption" sx={{ mt: 1, display: 'block', color: 'var(--text-secondary)' }}>
-                          Complete your profile to unlock all features
+                          {t('profile.completeProfileMessage')}
                         </Typography>
                       )}
                     </Box>
@@ -311,7 +313,7 @@ const Profile: React.FC = () => {
                         },
                       }}
                     >
-                      {editMode ? 'Cancel' : 'Edit Profile'}
+                      {editMode ? t('profile.cancel') : t('profile.editProfile')}
                     </Button>
                   </Box>
                 </Box>
@@ -354,7 +356,7 @@ const Profile: React.FC = () => {
                   },
                 }}
               >
-                Profile updated successfully!
+                {t('profile.profileUpdatedSuccess')}
               </Alert>
             </Zoom>
           )}
@@ -377,7 +379,7 @@ const Profile: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <AutoAwesome sx={{ color: 'var(--primary-color)', fontSize: 28 }} />
                 <Typography variant="h5" fontWeight={700}>
-                  Personal Information
+                  {t('profile.personalInfo')}
                 </Typography>
               </Box>
 
@@ -385,7 +387,7 @@ const Profile: React.FC = () => {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
                   <TextField
                     fullWidth
-                    label="Full Name"
+                    label={t('profile.fullName')}
                     name="full_name"
                     value={formData.full_name}
                     onChange={handleChange}
@@ -402,7 +404,7 @@ const Profile: React.FC = () => {
                   
                   <TextField
                     fullWidth
-                    label="Company Name"
+                    label={t('profile.companyName')}
                     name="company_name"
                     value={formData.company_name}
                     onChange={handleChange}
@@ -418,7 +420,7 @@ const Profile: React.FC = () => {
                   
                   <TextField
                     fullWidth
-                    label="Phone Number"
+                    label={t('profile.phoneNumber')}
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
@@ -434,7 +436,7 @@ const Profile: React.FC = () => {
                   
                   <TextField
                     fullWidth
-                    label="Country"
+                    label={t('profile.country')}
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
@@ -450,7 +452,7 @@ const Profile: React.FC = () => {
                   
                   <TextField
                     fullWidth
-                    label="Address"
+                    label={t('profile.address')}
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
@@ -467,7 +469,7 @@ const Profile: React.FC = () => {
                   
                   <TextField
                     fullWidth
-                    label="City"
+                    label={t('profile.city')}
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
@@ -483,7 +485,7 @@ const Profile: React.FC = () => {
                   
                   <TextField
                     fullWidth
-                    label="Postal Code"
+                    label={t('profile.postalCode')}
                     name="postal_code"
                     value={formData.postal_code}
                     onChange={handleChange}
@@ -513,7 +515,7 @@ const Profile: React.FC = () => {
                         },
                       }}
                     >
-                      Cancel
+                      {t('profile.cancel')}
                     </Button>
                     <Button
                       type="submit"
@@ -534,7 +536,7 @@ const Profile: React.FC = () => {
                         },
                       }}
                     >
-                      {loading ? 'Saving...' : 'Save Changes'}
+                      {loading ? t('profile.saving') : t('profile.saveChanges')}
                     </Button>
                   </Box>
                 )}
@@ -562,10 +564,10 @@ const Profile: React.FC = () => {
               <CardContent sx={{ textAlign: 'center', py: 4 }}>
                 <Security sx={{ fontSize: 48, color: 'var(--primary-color)', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  Security Settings
+                  {t('profile.securitySettings')}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                  Manage your password and security preferences
+                  {t('profile.securitySettingsDesc')}
                 </Typography>
               </CardContent>
             </Card>
@@ -588,10 +590,10 @@ const Profile: React.FC = () => {
               <CardContent sx={{ textAlign: 'center', py: 4 }}>
                 <AutoAwesome sx={{ fontSize: 48, color: 'var(--secondary-color)', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
-                  Preferences
+                  {t('profile.preferences')}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                  Customize your experience and notifications
+                  {t('profile.preferencesDesc')}
                 </Typography>
               </CardContent>
             </Card>

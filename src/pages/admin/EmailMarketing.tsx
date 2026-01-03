@@ -551,7 +551,7 @@ const EmailMarketing: React.FC = () => {
               </Typography>
               
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mt: 3 }}>
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
                   <Typography variant="h4" sx={{ color: '#00d4ff' }}>
                     {selectedCampaign.sent_count}
                   </Typography>
@@ -560,7 +560,7 @@ const EmailMarketing: React.FC = () => {
                   </Typography>
                 </Box>
                 
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
                   <Typography variant="h4" sx={{ color: '#ff0080' }}>
                     {selectedCampaign.analytics?.openRate || 0}%
                   </Typography>
@@ -569,7 +569,7 @@ const EmailMarketing: React.FC = () => {
                   </Typography>
                 </Box>
                 
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
                   <Typography variant="h4" sx={{ color: '#00ff88' }}>
                     {selectedCampaign.analytics?.clickRate || 0}%
                   </Typography>
@@ -578,7 +578,7 @@ const EmailMarketing: React.FC = () => {
                   </Typography>
                 </Box>
                 
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
                   <Typography variant="h4" sx={{ color: '#ffaa00' }}>
                     {selectedCampaign.click_count}
                   </Typography>

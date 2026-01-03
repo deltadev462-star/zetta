@@ -52,6 +52,7 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { warrantyService } from '../services/warranty';
 import { format, differenceInDays } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -76,6 +77,7 @@ function TabPanel(props: TabPanelProps) {
 
 const WarrantyManagement: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [tabValue, setTabValue] = useState(0);
   const [warranties, setWarranties] = useState<any[]>([]);
@@ -186,26 +188,26 @@ const WarrantyManagement: React.FC = () => {
     const daysRemaining = differenceInDays(endDate, now);
 
     if (warranty.status === 'expired') {
-      return <Chip label="Expired" color="error" size="small" icon={<Warning />} />;
+      return <Chip label={t('warranty.expired')} color="error" size="small" icon={<Warning />} />;
     } else if (warranty.status === 'claimed') {
-      return <Chip label="Claim Filed" color="warning" size="small" icon={<Report />} />;
+      return <Chip label={t('warranty.claimFiled')} color="warning" size="small" icon={<Report />} />;
     } else if (daysRemaining < 30) {
-      return <Chip label={`Expires in ${daysRemaining} days`} color="warning" size="small" icon={<Schedule />} />;
+      return <Chip label={t('warranty.expiresInDays', { days: daysRemaining })} color="warning" size="small" icon={<Schedule />} />;
     } else {
-      return <Chip label="Active" color="success" size="small" icon={<CheckCircle />} />;
+      return <Chip label={t('warranty.active')} color="success" size="small" icon={<CheckCircle />} />;
     }
   };
 
   const getClaimStatus = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Chip label="Pending" color="warning" size="small" />;
+        return <Chip label={t('warranty.pending')} color="warning" size="small" />;
       case 'approved':
-        return <Chip label="Approved" color="success" size="small" />;
+        return <Chip label={t('warranty.approved')} color="success" size="small" />;
       case 'rejected':
-        return <Chip label="Rejected" color="error" size="small" />;
+        return <Chip label={t('warranty.rejected')} color="error" size="small" />;
       case 'resolved':
-        return <Chip label="Resolved" color="info" size="small" />;
+        return <Chip label={t('warranty.resolved')} color="info" size="small" />;
       default:
         return <Chip label={status} size="small" />;
     }
@@ -225,10 +227,10 @@ const WarrantyManagement: React.FC = () => {
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Warranty Management
+          {t('warranty.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage your product warranties, extensions, and claims
+          {t('warranty.subtitle')}
         </Typography>
       </Box>
 
@@ -238,13 +240,13 @@ const WarrantyManagement: React.FC = () => {
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Shield sx={{ color: '#00d4ff', mr: 1 }} />
-              <Typography variant="h6">Active Warranties</Typography>
+              <Typography variant="h6">{t('warranty.activeWarranties')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {warranties.filter(w => w.status === 'active').length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Products protected
+              {t('warranty.productsProtected')}
             </Typography>
           </CardContent>
         </Card>
@@ -253,13 +255,13 @@ const WarrantyManagement: React.FC = () => {
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Report sx={{ color: '#ff0080', mr: 1 }} />
-              <Typography variant="h6">Active Claims</Typography>
+              <Typography variant="h6">{t('warranty.activeClaims')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {claims.filter(c => c.status === 'pending').length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Being processed
+              {t('warranty.beingProcessed')}
             </Typography>
           </CardContent>
         </Card>
@@ -268,13 +270,13 @@ const WarrantyManagement: React.FC = () => {
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <LocalOffer sx={{ color: '#00ff88', mr: 1 }} />
-              <Typography variant="h6">Extended Warranties</Typography>
+              <Typography variant="h6">{t('warranty.extendedWarranties')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {warranties.filter(w => w.warranty_type === 'extended').length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Additional coverage
+              {t('warranty.additionalCoverage')}
             </Typography>
           </CardContent>
         </Card>
@@ -287,22 +289,21 @@ const WarrantyManagement: React.FC = () => {
           onChange={(e, v) => setTabValue(v)}
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          <Tab label="My Warranties" />
-          <Tab label="Claims History" />
-          <Tab label="Extension Options" />
+          <Tab label={t('warranty.myWarranties')} />
+          <Tab label={t('warranty.claimsHistory')} />
+          <Tab label={t('warranty.extensionOptions')} />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
           <Box sx={{ mb: 2 }}>
             <Alert severity="info">
-              All products come with a standard warranty based on their condition. 
-              You can extend your warranty for additional coverage.
+              {t('warranty.allProductsWarranty')}
             </Alert>
           </Box>
 
           {warranties.length === 0 ? (
             <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: 'center' }}>
-              No warranties found. Purchase products to receive warranty coverage.
+              {t('warranty.noWarrantiesFound')}
             </Typography>
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -312,16 +313,16 @@ const WarrantyManagement: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', pr: 2 }}>
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="h6">
-                          {warranty.product?.title || 'Product'}
+                          {warranty.product?.title || t('warranty.product')}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Order #{warranty.order_id.substring(0, 8)}...
+                          {t('warranty.orderNumber')}{warranty.order_id.substring(0, 8)}...
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         {getWarrantyStatus(warranty)}
-                        <Chip 
-                          label={warranty.warranty_type === 'extended' ? 'Extended' : 'Standard'} 
+                        <Chip
+                          label={warranty.warranty_type === 'extended' ? t('warranty.extended') : t('warranty.standard')}
                           variant="outlined"
                           size="small"
                         />
@@ -333,19 +334,19 @@ const WarrantyManagement: React.FC = () => {
                       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
                         <Box>
                           <Typography variant="subtitle2" color="text.secondary">
-                            Coverage Period
+                            {t('warranty.coveragePeriod')}
                           </Typography>
                           <Typography>
-                            {format(new Date(warranty.start_date), 'MMM dd, yyyy')} - 
+                            {format(new Date(warranty.start_date), 'MMM dd, yyyy')} -
                             {format(new Date(warranty.end_date), 'MMM dd, yyyy')}
                           </Typography>
                         </Box>
                         <Box>
                           <Typography variant="subtitle2" color="text.secondary">
-                            Duration
+                            {t('warranty.duration')}
                           </Typography>
                           <Typography>
-                            {warranty.duration_months} months
+                            {warranty.duration_months} {t('warranty.months')}
                           </Typography>
                         </Box>
                       </Box>
@@ -358,7 +359,7 @@ const WarrantyManagement: React.FC = () => {
                               startIcon={<Add />}
                               onClick={() => handleExtendWarranty(warranty)}
                             >
-                              Extend Warranty
+                              {t('warranty.extendWarranty')}
                             </Button>
                             <Button
                               variant="outlined"
@@ -366,7 +367,7 @@ const WarrantyManagement: React.FC = () => {
                               startIcon={<Report />}
                               onClick={() => handleFileClaimClick(warranty)}
                             >
-                              File Claim
+                              {t('warranty.fileClaim')}
                             </Button>
                           </>
                         )}
@@ -374,7 +375,7 @@ const WarrantyManagement: React.FC = () => {
                           variant="text"
                           startIcon={<Description />}
                         >
-                          View Details
+                          {t('warranty.viewDetails')}
                         </Button>
                       </Box>
                     </Box>
@@ -390,12 +391,12 @@ const WarrantyManagement: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Claim #</TableCell>
-                  <TableCell>Product</TableCell>
-                  <TableCell>Issue</TableCell>
-                  <TableCell>Filed Date</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Resolution</TableCell>
+                  <TableCell>{t('warranty.claimNumber')}</TableCell>
+                  <TableCell>{t('warranty.product')}</TableCell>
+                  <TableCell>{t('warranty.issue')}</TableCell>
+                  <TableCell>{t('warranty.filedDate')}</TableCell>
+                  <TableCell>{t('common.status')}</TableCell>
+                  <TableCell>{t('warranty.resolution')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -403,7 +404,7 @@ const WarrantyManagement: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={6} align="center">
                       <Typography variant="body2" color="text.secondary" sx={{ py: 3 }}>
-                        No claims filed yet
+                        {t('warranty.noClaimsYet')}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -411,7 +412,7 @@ const WarrantyManagement: React.FC = () => {
                   claims.map((claim) => (
                     <TableRow key={claim.id}>
                       <TableCell>{claim.claim_number}</TableCell>
-                      <TableCell>{claim.warranty?.product?.title || 'Product'}</TableCell>
+                      <TableCell>{claim.warranty?.product?.title || t('warranty.product')}</TableCell>
                       <TableCell sx={{ maxWidth: 300 }}>
                         <Typography variant="body2" noWrap>
                           {claim.issue_description}
@@ -435,8 +436,7 @@ const WarrantyManagement: React.FC = () => {
         <TabPanel value={tabValue} index={2}>
           <Box sx={{ mb: 3 }}>
             <Alert severity="success">
-              Extend your warranty for continued peace of mind! 
-              Extension prices start at €{warrantyService.EXTENSION_PRICE_PER_MONTH}/month.
+              {t('warranty.extendPeaceOfMind')} {t('warranty.extensionStartsAt', { price: warrantyService.EXTENSION_PRICE_PER_MONTH })}
             </Alert>
           </Box>
 
@@ -444,57 +444,57 @@ const WarrantyManagement: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  6 Month Extension
+                  {t('warranty.monthExtension', { months: 6 })}
                 </Typography>
                 <Typography variant="h3" sx={{ color: '#00d4ff', mb: 2 }}>
                   €{warrantyService.calculateExtensionPrice(6).toFixed(2)}
                 </Typography>
                 <List dense>
                   <ListItem>
-                    <ListItemText primary="✓ Full coverage continuation" />
+                    <ListItemText primary={`✓ ${t('warranty.fullCoverage')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ Priority support" />
+                    <ListItemText primary={`✓ ${t('warranty.prioritySupport')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ No service fees" />
+                    <ListItemText primary={`✓ ${t('warranty.noServiceFees')}`} />
                   </ListItem>
                 </List>
               </CardContent>
               <CardActions>
                 <Button fullWidth variant="outlined">
-                  Select
+                  {t('common.select')}
                 </Button>
               </CardActions>
             </Card>
 
             <Card sx={{ border: '2px solid #00d4ff' }}>
               <CardContent>
-                <Chip label="Most Popular" color="primary" size="small" sx={{ mb: 1 }} />
+                <Chip label={t('warranty.mostPopular')} color="primary" size="small" sx={{ mb: 1 }} />
                 <Typography variant="h6" gutterBottom>
-                  12 Month Extension
+                  {t('warranty.monthExtension', { months: 12 })}
                 </Typography>
                 <Typography variant="h3" sx={{ color: '#00d4ff', mb: 2 }}>
                   €{warrantyService.calculateExtensionPrice(12).toFixed(2)}
                 </Typography>
                 <List dense>
                   <ListItem>
-                    <ListItemText primary="✓ Full coverage continuation" />
+                    <ListItemText primary={`✓ ${t('warranty.fullCoverage')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ Priority support" />
+                    <ListItemText primary={`✓ ${t('warranty.prioritySupport')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ No service fees" />
+                    <ListItemText primary={`✓ ${t('warranty.noServiceFees')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ 10% discount included" />
+                    <ListItemText primary={`✓ ${t('warranty.discountIncluded', { discount: 10 })}`} />
                   </ListItem>
                 </List>
               </CardContent>
               <CardActions>
                 <Button fullWidth variant="contained">
-                  Select
+                  {t('common.select')}
                 </Button>
               </CardActions>
             </Card>
@@ -502,29 +502,29 @@ const WarrantyManagement: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  24 Month Extension
+                  {t('warranty.monthExtension', { months: 24 })}
                 </Typography>
                 <Typography variant="h3" sx={{ color: '#00d4ff', mb: 2 }}>
                   €{warrantyService.calculateExtensionPrice(24).toFixed(2)}
                 </Typography>
                 <List dense>
                   <ListItem>
-                    <ListItemText primary="✓ Full coverage continuation" />
+                    <ListItemText primary={`✓ ${t('warranty.fullCoverage')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ Priority support" />
+                    <ListItemText primary={`✓ ${t('warranty.prioritySupport')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ No service fees" />
+                    <ListItemText primary={`✓ ${t('warranty.noServiceFees')}`} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="✓ 15% discount included" />
+                    <ListItemText primary={`✓ ${t('warranty.discountIncluded', { discount: 15 })}`} />
                   </ListItem>
                 </List>
               </CardContent>
               <CardActions>
                 <Button fullWidth variant="outlined">
-                  Select
+                  {t('common.select')}
                 </Button>
               </CardActions>
             </Card>
@@ -534,36 +534,36 @@ const WarrantyManagement: React.FC = () => {
 
       {/* Extension Dialog */}
       <Dialog open={extensionDialog} onClose={() => setExtensionDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Extend Warranty</DialogTitle>
+        <DialogTitle>{t('warranty.extendWarranty')}</DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="info" sx={{ mb: 2 }}>
-              Extending warranty for: {selectedWarranty?.product?.title}
+              {t('warranty.extendingWarranty', { product: selectedWarranty?.product?.title })}
             </Alert>
             
             <FormControl fullWidth>
-              <InputLabel>Extension Duration</InputLabel>
+              <InputLabel>{t('warranty.extensionDuration')}</InputLabel>
               <Select
                 value={extensionMonths}
                 onChange={(e) => setExtensionMonths(Number(e.target.value))}
-                label="Extension Duration"
+                label={t('warranty.extensionDuration')}
               >
-                <MenuItem value={6}>6 Months - €{warrantyService.calculateExtensionPrice(6).toFixed(2)}</MenuItem>
-                <MenuItem value={12}>12 Months - €{warrantyService.calculateExtensionPrice(12).toFixed(2)}</MenuItem>
-                <MenuItem value={24}>24 Months - €{warrantyService.calculateExtensionPrice(24).toFixed(2)}</MenuItem>
+                <MenuItem value={6}>6 {t('warranty.months')} - €{warrantyService.calculateExtensionPrice(6).toFixed(2)}</MenuItem>
+                <MenuItem value={12}>12 {t('warranty.months')} - €{warrantyService.calculateExtensionPrice(12).toFixed(2)}</MenuItem>
+                <MenuItem value={24}>24 {t('warranty.months')} - €{warrantyService.calculateExtensionPrice(24).toFixed(2)}</MenuItem>
               </Select>
             </FormControl>
             
-            <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+            <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
               <Typography variant="subtitle2" gutterBottom>
-                Extension Summary
+                {t('warranty.extensionSummary')}
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography>Duration:</Typography>
-                <Typography>{extensionMonths} months</Typography>
+                <Typography>{t('warranty.duration')}:</Typography>
+                <Typography>{extensionMonths} {t('warranty.months')}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography>Price:</Typography>
+                <Typography>{t('products.price')}:</Typography>
                 <Typography sx={{ fontWeight: 'bold', color: '#00d4ff' }}>
                   €{warrantyService.calculateExtensionPrice(extensionMonths).toFixed(2)}
                 </Typography>
@@ -572,49 +572,49 @@ const WarrantyManagement: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setExtensionDialog(false)}>Cancel</Button>
-          <Button 
-            onClick={processExtension} 
+          <Button onClick={() => setExtensionDialog(false)}>{t('common.cancel')}</Button>
+          <Button
+            onClick={processExtension}
             variant="contained"
             disabled={processing}
             startIcon={processing ? <CircularProgress size={20} /> : <Payment />}
           >
-            {processing ? 'Processing...' : 'Proceed to Payment'}
+            {processing ? t('warranty.processing') : t('warranty.proceedToPayment')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Claim Dialog */}
       <Dialog open={claimDialog} onClose={() => setClaimDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>File Warranty Claim</DialogTitle>
+        <DialogTitle>{t('warranty.fileWarrantyClaim')}</DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="warning" sx={{ mb: 2 }}>
-              Filing a claim for: {selectedWarranty?.product?.title}
+              {t('warranty.filingClaim', { product: selectedWarranty?.product?.title })}
             </Alert>
             
             <TextField
               fullWidth
               multiline
               rows={4}
-              label="Describe the issue"
+              label={t('warranty.describeIssue')}
               value={issueDescription}
               onChange={(e) => setIssueDescription(e.target.value)}
-              placeholder="Please provide detailed information about the problem you're experiencing..."
-              helperText="Be as specific as possible to help us process your claim quickly"
+              placeholder={t('warranty.issuePlaceholder')}
+              helperText={t('warranty.issueHelperText')}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setClaimDialog(false)}>Cancel</Button>
-          <Button 
-            onClick={fileClaim} 
+          <Button onClick={() => setClaimDialog(false)}>{t('common.cancel')}</Button>
+          <Button
+            onClick={fileClaim}
             variant="contained"
             color="warning"
             disabled={!issueDescription || processing}
             startIcon={processing ? <CircularProgress size={20} /> : <Report />}
           >
-            {processing ? 'Filing...' : 'File Claim'}
+            {processing ? t('warranty.filing') : t('warranty.fileClaim')}
           </Button>
         </DialogActions>
       </Dialog>

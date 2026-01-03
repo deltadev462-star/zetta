@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 interface PageTitleProps {
   text: string;
@@ -21,6 +22,8 @@ const PageTitle: React.FC<PageTitleProps> = ({
   size = 'large',
   className = ''
 }) => {
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
   // Size mappings for MUI Typography variant and Tailwind classes
   const sizeConfig = {
     small: { variant: 'h4' as const, className: 'text-3xl md:text-4xl' },
@@ -73,17 +76,30 @@ const PageTitle: React.FC<PageTitleProps> = ({
  
   return (
     <Box sx={containerSx} className={className}>
-      <Typography variant={variant} sx={titleSx} className={sizeClass}>
-        <span className="relative inline-block z-10">{text}</span>
-        <span
-          className="absolute bottom-[-10px] left-0 w-full h-[3px] bg-primary transform scale-x-0 origin-center transition-transform duration-500 ease-in-out opacity-60 hover:scale-x-100"
-          style={{
-            transformOrigin: align === 'left' ? 'left' : align === 'right' ? 'right' : 'center',
-            backgroundColor: '#00a1cc'
+      <Box sx={{ position: 'relative', display: 'inline-block' }}>
+        <Typography variant={variant} sx={titleSx} className={sizeClass}>
+          {text}
+        </Typography>
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '-10px',
+            [isRTL ? 'right' : 'left']: 0,
+            width: '100%',
+            height: '3px',
+            backgroundColor: '#00a1cc',
+            transform: 'scaleX(0)',
+            transformOrigin: isRTL
+              ? (align === 'left' ? 'right' : align === 'right' ? 'left' : 'center')
+              : (align === 'left' ? 'left' : align === 'right' ? 'right' : 'center'),
+            transition: 'transform 0.5s ease-in-out',
+            opacity: 0.6,
+            '&:hover': {
+              transform: 'scaleX(1)',
+            },
           }}
         />
-      </Typography>
-       
+      </Box>
     </Box>
   );
 };

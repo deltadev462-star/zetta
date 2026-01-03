@@ -397,7 +397,7 @@ const CRM: React.FC = () => {
                 <Box
                   sx={{
                     p: 1.5,
-                    borderRadius: 2,
+                    borderRadius: 1,
                     bgcolor: `${segment.color}20`,
                     display: 'inline-flex',
                   }}

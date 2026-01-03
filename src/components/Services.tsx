@@ -3,30 +3,30 @@ import { Box, Container, Card, CardContent, Typography } from "@mui/material";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import { useTranslation } from 'react-i18next';
 
 const Services: React.FC = () => {
+  const { t } = useTranslation();
+  
   const services = [
     {
       icon: <LocalShippingIcon />,
-      title: "Delivery",
-      description:
-        "Zetta med manages shipping for you throughout Europe: take advantage of free standard delivery (3–4 weeks) or choose express delivery in 10 days.",
+      title: t('services.delivery.title'),
+      description: t('services.delivery.description'),
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       shadowColor: "rgba(102, 126, 234, 0.4)",
     },
     {
       icon: <VerifiedUserIcon />,
-      title: "Warranty",
-      description:
-        "Our 12 month warranty ensures the safety and reliability of your medical equipment throughout its lifespan.",
+      title: t('services.warranty.title'),
+      description: t('services.warranty.description'),
       gradient: "linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)",
       shadowColor: "rgba(0, 212, 255, 0.4)",
     },
     {
       icon: <AccountBalanceIcon />,
-      title: "Flexible Financing",
-      description:
-        "Settle your medical equipment in up to 36 installments with our financing service or pay after delivery with Zetta med Facility.",
+      title: t('services.flexibleFinancing.title'),
+      description: t('services.flexibleFinancing.description'),
       gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
       shadowColor: "rgba(245, 87, 108, 0.4)",
     },
@@ -101,7 +101,7 @@ const Services: React.FC = () => {
                   sx={{
                     width: 80,
                     height: 80,
-                    borderRadius: 3,
+                    borderRadius: 1,
                     background: service.gradient,
                     display: "flex",
                     alignItems: "center",

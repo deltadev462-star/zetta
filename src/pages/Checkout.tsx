@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Container,
   Paper,
@@ -44,10 +45,10 @@ import { supabase } from '../services/supabase';
 import { mockPaymentService } from '../services/payment';
 import { ShippingAddress, Order } from '../types';
 
-const steps = ['Shipping Information', 'Payment Method', 'Review & Confirm'];
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { items, clearCart, getCartTotal } = useCart();
   const [activeStep, setActiveStep] = useState(0);
@@ -55,6 +56,8 @@ const Checkout: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [orderId, setOrderId] = useState<string>('');
+  
+  const steps = [t('checkout.shippingInfo'), t('checkout.paymentMethod'), t('checkout.reviewConfirm')];
 
   const [shippingInfo, setShippingInfo] = useState<ShippingAddress>({
     full_name: user?.profile?.full_name || '',
@@ -95,7 +98,7 @@ const Checkout: React.FC = () => {
     const required = ['full_name', 'address_line1', 'city', 'country', 'postal_code', 'phone'];
     for (const field of required) {
       if (!shippingInfo[field as keyof ShippingAddress]) {
-        setError(`Please fill in all required shipping fields`);
+        setError(t('checkout.fillAllRequiredFields'));
         return false;
       }
     }
@@ -213,12 +216,12 @@ const Checkout: React.FC = () => {
         return (
           <Box>
             <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
-              Shipping Information
+              {t('checkout.shippingInfo')}
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 3 }}>
               <TextField
                   fullWidth
-                  label="Full Name"
+                  label={t('checkout.fullName')}
                   name="full_name"
                   value={shippingInfo.full_name}
                   onChange={handleShippingChange}
@@ -227,7 +230,7 @@ const Checkout: React.FC = () => {
               </Box>
               <TextField
                   fullWidth
-                  label="Address Line 1"
+                  label={t('checkout.addressLine1')}
                   name="address_line1"
                   value={shippingInfo.address_line1}
                   onChange={handleShippingChange}
@@ -235,14 +238,14 @@ const Checkout: React.FC = () => {
                 />
               <TextField
                   fullWidth
-                  label="Address Line 2 (Optional)"
+                  label={t('checkout.addressLine2')}
                   name="address_line2"
                   value={shippingInfo.address_line2}
                   onChange={handleShippingChange}
                 />
                 <TextField
                   fullWidth
-                  label="City"
+                  label={t('checkout.city')}
                   name="city"
                   value={shippingInfo.city}
                   onChange={handleShippingChange}
@@ -250,14 +253,14 @@ const Checkout: React.FC = () => {
                 />
                 <TextField
                   fullWidth
-                  label="State/Province (Optional)"
+                  label={t('checkout.state')}
                   name="state"
                   value={shippingInfo.state}
                   onChange={handleShippingChange}
                 />
                 <TextField
                   fullWidth
-                  label="Country"
+                  label={t('checkout.country')}
                   name="country"
                   value={shippingInfo.country}
                   onChange={handleShippingChange}
@@ -266,7 +269,7 @@ const Checkout: React.FC = () => {
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
                 <TextField
                   fullWidth
-                  label="Postal Code"
+                  label={t('checkout.postalCode')}
                   name="postal_code"
                   value={shippingInfo.postal_code}
                   onChange={handleShippingChange}
@@ -274,7 +277,7 @@ const Checkout: React.FC = () => {
                 />
               <TextField
                   fullWidth
-                  label="Phone Number"
+                  label={t('checkout.phoneNumber')}
                   name="phone"
                   value={shippingInfo.phone}
                   onChange={handleShippingChange}
@@ -289,7 +292,7 @@ const Checkout: React.FC = () => {
         return (
           <Box>
             <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
-              Payment Method
+              {t('checkout.paymentMethod')}
             </Typography>
             <FormControl component="fieldset" fullWidth>
               <RadioGroup
@@ -315,10 +318,10 @@ const Checkout: React.FC = () => {
                         <CreditCard />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            Credit/Debit Card
+                            {t('checkout.creditDebitCard')}
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                            Secure payment via Stripe
+                            {t('checkout.securePaymentStripe')}
                           </Typography>
                         </Box>
                       </Box>
@@ -345,10 +348,10 @@ const Checkout: React.FC = () => {
                         <AccountBalance />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            Bank Transfer
+                            {t('checkout.bankTransfer')}
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                            Direct bank transfer (3-5 business days)
+                            {t('checkout.directBankTransfer')}
                           </Typography>
                         </Box>
                       </Box>
@@ -371,8 +374,7 @@ const Checkout: React.FC = () => {
               }}
             >
               <Typography variant="body2">
-                <strong>Secure Payment:</strong> Your payment information is encrypted and processed securely. 
-                We never store your card details.
+                <strong>{t('checkout.securePayment')}:</strong> {t('checkout.paymentInfoEncrypted')}
               </Typography>
             </Alert>
           </Box>
@@ -382,7 +384,7 @@ const Checkout: React.FC = () => {
         return (
           <Box>
             <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
-              Review Your Order
+              {t('checkout.reviewYourOrder')}
             </Typography>
 
             {/* Order Items */}
@@ -394,7 +396,7 @@ const Checkout: React.FC = () => {
               boxShadow: 'var(--shadow-primary)',
             }}>
               <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                Order Items
+                {t('checkout.orderItems')}
               </Typography>
               <List>
                 {items.map((item, index) => (
@@ -409,7 +411,7 @@ const Checkout: React.FC = () => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={item.product.title}
-                        secondary={`Quantity: ${item.quantity}`}
+                        secondary={t('checkout.quantity', { quantity: item.quantity })}
                         sx={{ ml: 2 }}
                       />
                       <Typography variant="body1" fontWeight={600}>
@@ -431,7 +433,7 @@ const Checkout: React.FC = () => {
               boxShadow: 'var(--shadow-primary)',
             }}>
               <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                Shipping Address
+                {t('checkout.shippingAddress')}
               </Typography>
               <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
                 {shippingInfo.full_name}<br />
@@ -439,7 +441,7 @@ const Checkout: React.FC = () => {
                 {shippingInfo.address_line2 && <>{shippingInfo.address_line2}<br /></>}
                 {shippingInfo.city}, {shippingInfo.state} {shippingInfo.postal_code}<br />
                 {shippingInfo.country}<br />
-                Phone: {shippingInfo.phone}
+                {t('checkout.phone', { phone: shippingInfo.phone })}
               </Typography>
             </Paper>
 
@@ -451,22 +453,22 @@ const Checkout: React.FC = () => {
               boxShadow: 'var(--shadow-primary)',
             }}>
               <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                Payment Summary
+                {t('checkout.paymentSummary')}
               </Typography>
               <Box sx={{ mt: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>Subtotal</Typography>
+                  <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>{t('checkout.subtotal')}</Typography>
                   <Typography variant="body2">€{subtotal.toFixed(2)}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>Shipping</Typography>
+                  <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>{t('checkout.shipping')}</Typography>
                   <Typography variant="body2">
-                    {shipping === 0 ? 'FREE' : `€${shipping.toFixed(2)}`}
+                    {shipping === 0 ? t('checkout.free') : `€${shipping.toFixed(2)}`}
                   </Typography>
                 </Box>
                 <Divider sx={{ my: 2, borderColor: 'var(--border-primary)' }} />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="h6" fontWeight={700}>Total</Typography>
+                  <Typography variant="h6" fontWeight={700}>{t('checkout.total')}</Typography>
                   <Typography variant="h6" fontWeight={700} color="primary">
                     €{total.toFixed(2)}
                   </Typography>
@@ -486,13 +488,13 @@ const Checkout: React.FC = () => {
       <Container maxWidth="md" sx={{ mt: 8, textAlign: 'center' }}>
         <CheckCircle sx={{ fontSize: 80, color: 'var(--success-color)', mb: 3 }} />
         <Typography variant="h4" gutterBottom fontWeight={700}>
-          Payment Successful!
+          {t('checkout.paymentSuccessful')}
         </Typography>
         <Typography variant="body1" sx={{ mb: 3, color: 'var(--text-secondary)' }}>
-          Your order has been confirmed. Order ID: #{orderId.slice(0, 8)}
+          {t('checkout.orderConfirmed', { id: orderId.slice(0, 8) })}
         </Typography>
         <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-          Redirecting to your orders...
+          {t('checkout.redirectingToOrders')}
         </Typography>
       </Container>
     );
@@ -523,7 +525,7 @@ const Checkout: React.FC = () => {
                 mb: 4,
               }}
             >
-              Checkout
+              {t('checkout.title')}
             </Typography>
 
             {error && (
@@ -560,7 +562,7 @@ const Checkout: React.FC = () => {
                 onClick={handleBack}
                 startIcon={<ArrowBack />}
               >
-                Back
+                {t('checkout.back')}
               </Button>
 
               {activeStep === steps.length - 1 ? (
@@ -581,7 +583,7 @@ const Checkout: React.FC = () => {
                     },
                   }}
                 >
-                  {loading ? 'Processing...' : 'Complete Order'}
+                  {loading ? t('checkout.processing') : t('checkout.completeOrder')}
                 </Button>
               ) : (
                 <Button
@@ -597,7 +599,7 @@ const Checkout: React.FC = () => {
                     },
                   }}
                 >
-                  Next
+                  {t('checkout.next')}
                 </Button>
               )}
             </Box>
@@ -620,7 +622,7 @@ const Checkout: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
                 <ShoppingCart />
                 <Typography variant="h6" fontWeight={600}>
-                  Order Summary
+                  {t('checkout.orderSummary')}
                 </Typography>
               </Box>
 
@@ -629,7 +631,7 @@ const Checkout: React.FC = () => {
                   <ListItem key={item.product.id} sx={{ px: 0 }}>
                     <ListItemText
                       primary={item.product.title}
-                      secondary={`Qty: ${item.quantity}`}
+                      secondary={t('cart.quantity', { quantity: item.quantity })}
                       primaryTypographyProps={{ variant: 'body2' }}
                       secondaryTypographyProps={{ variant: 'caption' }}
                     />
@@ -643,14 +645,14 @@ const Checkout: React.FC = () => {
               <Divider sx={{ my: 2, borderColor: 'var(--border-primary)' }} />
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>Subtotal</Typography>
+                <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>{t('checkout.subtotal')}</Typography>
                 <Typography variant="body2">€{subtotal.toFixed(2)}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>Shipping</Typography>
+                <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>{t('checkout.shipping')}</Typography>
                 <Typography variant="body2">
                   {shipping === 0 ? (
-                    <Chip label="FREE" size="small" color="success" />
+                    <Chip label={t('checkout.free')} size="small" color="success" />
                   ) : (
                     `€${shipping.toFixed(2)}`
                   )}
@@ -660,7 +662,7 @@ const Checkout: React.FC = () => {
               <Divider sx={{ mb: 2, borderColor: 'var(--border-primary)' }} />
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                <Typography variant="h6" fontWeight={700}>Total</Typography>
+                <Typography variant="h6" fontWeight={700}>{t('checkout.total')}</Typography>
                 <Typography variant="h6" fontWeight={700} color="primary">
                   €{total.toFixed(2)}
                 </Typography>
@@ -679,7 +681,7 @@ const Checkout: React.FC = () => {
                 }}
               >
                 <Typography variant="caption">
-                  Secure checkout powered by Stripe
+                  {t('checkout.secureCheckoutPoweredByStripe')}
                 </Typography>
               </Alert>
             </CardContent>

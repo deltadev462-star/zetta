@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Fab, Zoom } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { useTranslation } from 'react-i18next';
 
 export const ScrollToTop: React.FC = () => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export const ScrollToTop: React.FC = () => {
       <Fab
         onClick={scrollToTop}
         size="medium"
-        aria-label="Scroll to top"
+        aria-label={t('ariaLabels.scrollToTop')}
         sx={{
           position: 'fixed',
           bottom: 32,

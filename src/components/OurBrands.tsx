@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { PageTitle } from './';
 
 const BRANDS = [
@@ -38,6 +39,7 @@ const BRANDS = [
 ];
 
 const OurBrands: React.FC = () => {
+  const { t } = useTranslation();
   // Double the brands array for seamless loop
   const doubledBrands = [...BRANDS, ...BRANDS];
 
@@ -48,7 +50,7 @@ const OurBrands: React.FC = () => {
       overflow: 'hidden'
     }}>
       <PageTitle
-        text="Our Brands"
+        text={t('ourBrands.title')}
         align="center"
         size="medium"
          

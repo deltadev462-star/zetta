@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Container, Typography, Grid, Link, Divider, Stack, IconButton } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { 
+import { useTranslation } from 'react-i18next';
+import {
   AutoAwesome,
   Email,
   Phone,
@@ -13,6 +14,8 @@ import {
 import Services from './Services';
 
 const Footer: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
   return (
     <Box
       component="footer"
@@ -84,8 +87,7 @@ const Footer: React.FC = () => {
               lineHeight: 1.8,
             }}
           >
-            Your trusted partner in medical equipment. Providing high-quality refurbished medical devices
-            with comprehensive warranties and exceptional service.
+            {t('footer.aboutText', { defaultValue: 'Your trusted partner in medical equipment. Providing high-quality refurbished medical devices with comprehensive warranties and exceptional service.' })}
           </Typography>
         </Box>
 
@@ -104,15 +106,15 @@ const Footer: React.FC = () => {
                   content: '""',
                   position: 'absolute',
                   bottom: -8,
-                  left: 0,
+                  [isRTL ? 'right' : 'left']: 0,
                   width: 40,
                   height: 3,
                   bgcolor: '#00d4ff',
-                  borderRadius: 1.5,
+                  borderRadius: 0.5,
                 },
               }}
             >
-              Catalog
+              {t('footer.catalog', { defaultValue: 'Catalog' })}
             </Typography>
             <Stack spacing={1.5}>
               <Link
@@ -127,11 +129,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Search
+                {t('common.search')}
               </Link>
               <Link
                 component={RouterLink}
@@ -145,11 +147,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Our Brands
+                {t('footer.ourBrands', { defaultValue: 'Our Brands' })}
               </Link>
               <Link
                 component={RouterLink}
@@ -163,11 +165,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Our Offers Without Product Sheet
+                {t('footer.ourOffers', { defaultValue: 'Our Offers Without Product Sheet' })}
               </Link>
             </Stack>
           </Grid>
@@ -185,15 +187,15 @@ const Footer: React.FC = () => {
                   content: '""',
                   position: 'absolute',
                   bottom: -8,
-                  left: 0,
+                  [isRTL ? 'right' : 'left']: 0,
                   width: 40,
                   height: 3,
                   bgcolor: '#00d4ff',
-                  borderRadius: 1.5,
+                  borderRadius: 0.5,
                 },
               }}
             >
-              About
+              {t('footer.aboutUs')}
             </Typography>
             <Stack spacing={1.5}>
               <Link
@@ -208,11 +210,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                About Us
+                {t('footer.aboutUs')}
               </Link>
               <Link
                 component={RouterLink}
@@ -226,11 +228,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Zetta Med's Services and Benefits
+                {t('footer.servicesAndBenefits', { defaultValue: "Zetta Med's Services and Benefits" })}
               </Link>
               <Link
                 component={RouterLink}
@@ -244,11 +246,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Sell Your Equipment
+                {t('footer.sellEquipment', { defaultValue: 'Sell Your Equipment' })}
               </Link>
             </Stack>
           </Grid>
@@ -266,15 +268,15 @@ const Footer: React.FC = () => {
                   content: '""',
                   position: 'absolute',
                   bottom: -8,
-                  left: 0,
+                  [isRTL ? 'right' : 'left']: 0,
                   width: 40,
                   height: 3,
                   bgcolor: '#00d4ff',
-                  borderRadius: 1.5,
+                  borderRadius: 0.5,
                 },
               }}
             >
-              Help
+              {t('footer.help', { defaultValue: 'Help' })}
             </Typography>
             <Stack spacing={1.5}>
               <Link
@@ -289,11 +291,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Terms and Conditions of Use
+                {t('footer.termsOfUse', { defaultValue: 'Terms and Conditions of Use' })}
               </Link>
               <Link
                 component={RouterLink}
@@ -307,11 +309,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                General Terms and Conditions of Sale
+                {t('footer.salesTerms', { defaultValue: 'General Terms and Conditions of Sale' })}
               </Link>
               <Link
                 component={RouterLink}
@@ -325,11 +327,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Legal Notices and Privacy Policy
+                {t('footer.legalNotices', { defaultValue: 'Legal Notices and Privacy Policy' })}
               </Link>
               <Link
                 component={RouterLink}
@@ -343,11 +345,11 @@ const Footer: React.FC = () => {
                   transition: 'all 0.3s',
                   '&:hover': {
                     color: '#00d4ff',
-                    transform: 'translateX(5px)',
+                    transform: isRTL ? 'translateX(-5px)' : 'translateX(5px)',
                   },
                 }}
               >
-                Contact Us
+                {t('footer.contact')}
               </Link>
             </Stack>
           </Grid>
@@ -365,15 +367,15 @@ const Footer: React.FC = () => {
                   content: '""',
                   position: 'absolute',
                   bottom: -8,
-                  left: 0,
+                  [isRTL ? 'right' : 'left']: 0,
                   width: 40,
                   height: 3,
                   bgcolor: '#00d4ff',
-                  borderRadius: 1.5,
+                  borderRadius: 0.5,
                 },
               }}
             >
-              Contact
+              {t('footer.contact')}
             </Typography>
             <Stack spacing={2}>
               <Box
@@ -383,7 +385,7 @@ const Footer: React.FC = () => {
                   gap: 1,
                   p: 2,
                   bgcolor: 'rgba(0,212,255,0.08)',
-                  borderRadius: 2,
+                  borderRadius: 1,
                   border: '1px solid rgba(0,212,255,0.2)',
                   transition: 'all 0.3s',
                   '&:hover': {
@@ -415,7 +417,7 @@ const Footer: React.FC = () => {
                   gap: 1,
                   p: 2,
                   bgcolor: 'rgba(0,212,255,0.08)',
-                  borderRadius: 2,
+                  borderRadius: 1,
                   border: '1px solid rgba(0,212,255,0.2)',
                   transition: 'all 0.3s',
                   '&:hover': {
@@ -552,7 +554,7 @@ const Footer: React.FC = () => {
               textAlign: { xs: 'center', md: 'left' },
             }}
           >
-            © {new Date().getFullYear()} Zetta Med Platform. All rights reserved.
+            © {new Date().getFullYear()} Zetta Med Platform. {t('footer.allRightsReserved')}
           </Typography>
           
           <Stack
@@ -577,7 +579,7 @@ const Footer: React.FC = () => {
                 },
               }}
             >
-              Privacy Policy
+              {t('footer.privacyPolicy')}
             </Link>
             <Link
               component={RouterLink}
@@ -592,7 +594,7 @@ const Footer: React.FC = () => {
                 },
               }}
             >
-              Terms of Service
+              {t('footer.termsOfService')}
             </Link>
             <Link
               component={RouterLink}
@@ -607,7 +609,7 @@ const Footer: React.FC = () => {
                 },
               }}
             >
-              Cookie Policy
+              {t('footer.cookiePolicy', { defaultValue: 'Cookie Policy' })}
             </Link>
           </Stack>
         </Box>

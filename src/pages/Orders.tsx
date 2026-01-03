@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Container,
   Typography,
@@ -56,6 +57,7 @@ const statusColor = (status?: string) => {
 };
 
 const Orders: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -157,10 +159,10 @@ const Orders: React.FC = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            My Orders
+            {t('orders.title')}
           </Typography>
         </Box>
-        <Tooltip title="Refresh">
+        <Tooltip title={t('orders.refresh')}>
           <span>
             <Button
               onClick={fetchOrders}
@@ -173,7 +175,7 @@ const Orders: React.FC = () => {
                 '&:hover': { borderColor: 'var(--primary-color)', bgcolor: 'var(--bg-active)' },
               }}
             >
-              Refresh
+              {t('orders.refresh')}
             </Button>
           </span>
         </Tooltip>
@@ -205,7 +207,7 @@ const Orders: React.FC = () => {
           boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
         }}>
           <Typography variant="body1" sx={{ color: 'var(--text-secondary)' }}>
-            You have no orders yet.
+            {t('orders.noOrders')}
           </Typography>
         </Card>
       ) : (
@@ -239,28 +241,28 @@ const Orders: React.FC = () => {
                 >
                   <Box>
                     <Typography variant="h6" fontWeight={700}>
-                      Order #{short(order.id)}
+                      {t('orders.orderNumber', { id: short(order.id) })}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                      Placed on {new Date(order.created_at).toLocaleString()}
+                      {t('orders.placedOn', { date: new Date(order.created_at).toLocaleString() })}
                     </Typography>
                   </Box>
                   <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                     <Chip
-                      label={`Order: ${order.status}`}
+                      label={t('orders.orderStatus', { status: t(`orders.${order.status}`) })}
                       color={statusColor(order.status) as any}
                       variant="outlined"
                       size="small"
                     />
                     <Chip
-                      label={`Payment: ${order.payment_status}`}
+                      label={t('orders.paymentStatus', { status: t(`orders.${order.payment_status}`) })}
                       color={statusColor(order.payment_status) as any}
                       variant="outlined"
                       size="small"
                       icon={<Payments sx={{ fontSize: 16 }} />}
                     />
                     <Chip
-                      label={`Total ${fmt(order.total_amount)}`}
+                      label={t('orders.totalAmount', { amount: fmt(order.total_amount) })}
                       color="primary"
                       size="small"
                     />
@@ -272,7 +274,7 @@ const Orders: React.FC = () => {
                 {/* Items */}
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1.5 }}>
-                    Items
+                    {t('orders.items')}
                   </Typography>
                   <List dense>
                     {(order.order_items || []).map((item: OrderItem & { product: any }) => (
@@ -292,8 +294,8 @@ const Orders: React.FC = () => {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={item.product?.title || 'Product'}
-                          secondary={`Qty: ${item.quantity}`}
+                          primary={item.product?.title || t('orders.product')}
+                          secondary={t('orders.quantity', { quantity: item.quantity })}
                           sx={{ ml: 1.5 }}
                         />
                         <Typography variant="body2" fontWeight={600}>
@@ -307,11 +309,11 @@ const Orders: React.FC = () => {
                 {/* Payments */}
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1.5 }}>
-                    Payments
+                    {t('orders.payments')}
                   </Typography>
                   {(order.payments || []).length === 0 ? (
                     <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                      No payment records yet.
+                      {t('orders.noPayments')}
                     </Typography>
                   ) : (
                     <List dense>
@@ -338,14 +340,14 @@ const Orders: React.FC = () => {
                 {/* Invoices */}
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1.5 }}>
-                    Invoices
+                    {t('orders.invoices')}
                   </Typography>
                   {(order.invoices || []).length === 0 ? (
                     <Stack direction="row" alignItems="center" spacing={2}>
                       <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                        No invoices yet.
+                        {t('orders.noInvoices')}
                       </Typography>
-                      <Tooltip title={order.payment_status !== 'paid' ? 'Invoice will be available after payment is confirmed' : ''}>
+                      <Tooltip title={order.payment_status !== 'paid' ? t('orders.invoiceAvailableAfterPayment') : ''}>
                         <span>
                           <Button
                             variant="contained"
@@ -357,7 +359,7 @@ const Orders: React.FC = () => {
                               background: `linear-gradient(135deg, var(--primary-color) 0%, #0099cc 100%)`,
                             }}
                           >
-                            {actionLoading === order.id ? 'Generating...' : 'Generate Invoice'}
+                            {actionLoading === order.id ? t('orders.generating') : t('orders.generateInvoice')}
                           </Button>
                         </span>
                       </Tooltip>
@@ -372,11 +374,11 @@ const Orders: React.FC = () => {
                             </Avatar>
                           </ListItemAvatar>
                           <ListItemText
-                            primary={`Invoice ${inv.invoice_number} • ${fmt(inv.total_amount)}`}
-                            secondary={`Issued ${new Date(inv.issue_date).toLocaleDateString()} • Status: ${inv.status}`}
+                            primary={`${t('orders.invoiceNumber', { number: inv.invoice_number })} • ${fmt(inv.total_amount)}`}
+                            secondary={`${t('orders.issued', { date: new Date(inv.issue_date).toLocaleDateString() })} • ${t('orders.invoiceStatus', { status: inv.status })}`}
                             sx={{ ml: 1.5 }}
                           />
-                          <Tooltip title={inv.pdf_url ? 'Download PDF' : 'PDF not available'}>
+                          <Tooltip title={inv.pdf_url ? t('orders.downloadPDF') : t('orders.pdfNotAvailable')}>
                             <span>
                               <Button
                                 size="small"
@@ -390,7 +392,7 @@ const Orders: React.FC = () => {
                                   '&:hover': { borderColor: 'var(--primary-color)', bgcolor: 'var(--bg-active)' },
                                 }}
                               >
-                                {actionLoading === inv.id ? 'Opening...' : 'Download'}
+                                {actionLoading === inv.id ? t('orders.opening') : t('orders.download')}
                               </Button>
                             </span>
                           </Tooltip>

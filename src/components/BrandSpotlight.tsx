@@ -10,11 +10,12 @@ import {
   alpha,
   IconButton,
 } from "@mui/material";
+import { useTranslation } from 'react-i18next';
 import {
   ShoppingCart,
   Science,
   Verified,
-  TrendingUp,
+  
   Star,
   LocalShipping,
   Security,
@@ -34,103 +35,104 @@ interface BrandSpotlightProps {
   onAddToCart: (product: Product) => void;
 }
 
-// Brand data constants
-const BRAND_INFO = {
-  name: "Thermo Fisher Scientific Inc.",
-  tagline:
-    "World leader in serving science, with annual revenue of over $40 billion",
-  color: "#0066CC",
-  accentColor: "#00A6FB",
-  stats: [
-    {
-      value: "100K+",
-      label: "Products",
-      color: "#00A6FB",
-    },
-    {
-      value: "4.8",
-      label: "Rating",
-      color: "#00A6FB",
-      hasStars: true,
-    },
-    {
-      value: "600K+",
-      label: "Customers",
-      color: "#4CAF50",
-    },
-  ],
-  badges: [
-    {
-      icon: Public,
-      label: "Global Leader",
-      color: "#4CAF50",
-    },
-    {
-      icon: Groups,
-      label: "130,000+ Employees",
-      color: "#FF6B35",
-    },
-    {
-      icon: Biotech,
-      label: "ISO 9001:2015",
-      color: "#9C27B0",
-    },
-  ],
-};
-
-// Key highlights data
-const KEY_HIGHLIGHTS = [
-  {
-    icon: LocalShipping,
-    title: "Fast Shipping",
-    description: "24-48 hour delivery for in-stock items",
-    color: "#4CAF50",
-  },
-  {
-    icon: Security,
-    title: "Quality Assured",
-    description: "GMP & ISO certified facilities",
-    color: "#FF6B35",
-  },
-  {
-    icon: EmojiEvents,
-    title: "Award Winning",
-    description: "100+ industry awards globally",
-    color: "#9C27B0",
-  },
-  {
-    icon: Science,
-    title: "Innovation Leader",
-    description: "$1.3B annual R&D investment",
-    color: "#0066CC",
-  },
-];
-
-// Bottom CTA features
-const CTA_FEATURES = [
-  {
-    icon: Verified,
-    text: "Certified Quality",
-    color: "#4CAF50",
-  },
-  {
-    icon: LocalShipping,
-    text: "Global Distribution",
-    color: "#FF6B35",
-  },
-  {
-    icon: Groups,
-    text: "Expert Support",
-    color: "#9C27B0",
-  },
-];
 
 const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
   products,
   onAddToCart,
 }) => {
-  const brandColor = BRAND_INFO.color;
-  const accentColor = BRAND_INFO.accentColor;
+  const { t } = useTranslation();
+  const brandColor = "#0066CC";
+  const accentColor = "#00A6FB";
+
+  // Brand data constants
+  const BRAND_INFO = {
+    name: t('brandSpotlight.brandName'),
+    tagline: t('brandSpotlight.brandTagline'),
+    color: brandColor,
+    accentColor: accentColor,
+    stats: [
+      {
+        value: "100K+",
+        label: t('brandSpotlight.stats.products'),
+        color: "#00A6FB",
+      },
+      {
+        value: "4.8",
+        label: t('brandSpotlight.stats.rating'),
+        color: "#00A6FB",
+        hasStars: true,
+      },
+      {
+        value: "600K+",
+        label: t('brandSpotlight.stats.customers'),
+        color: "#4CAF50",
+      },
+    ],
+    badges: [
+      {
+        icon: Public,
+        label: t('brandSpotlight.globalLeader'),
+        color: "#4CAF50",
+      },
+      {
+        icon: Groups,
+        label: t('brandSpotlight.employees'),
+        color: "#FF6B35",
+      },
+      {
+        icon: Biotech,
+        label: t('brandSpotlight.iso9001'),
+        color: "#9C27B0",
+      },
+    ],
+  };
+
+  // Key highlights data
+  const KEY_HIGHLIGHTS = [
+    {
+      icon: LocalShipping,
+      title: t('brandSpotlight.highlights.fastshipping'),
+      description: t('brandSpotlight.highlights.fastshippingDesc'),
+      color: "#4CAF50",
+    },
+    {
+      icon: Security,
+      title: t('brandSpotlight.highlights.qualityassured'),
+      description: t('brandSpotlight.highlights.qualityassuredDesc'),
+      color: "#FF6B35",
+    },
+    {
+      icon: EmojiEvents,
+      title: t('brandSpotlight.highlights.awardwinning'),
+      description: t('brandSpotlight.highlights.awardwinningDesc'),
+      color: "#9C27B0",
+    },
+    {
+      icon: Science,
+      title: t('brandSpotlight.highlights.innovationleader'),
+      description: t('brandSpotlight.highlights.innovationleaderDesc'),
+      color: "#0066CC",
+    },
+  ];
+
+  // Bottom CTA features
+  const CTA_FEATURES = [
+    {
+      icon: Verified,
+      text: t('brandSpotlight.features.certifiedquality'),
+      color: "#4CAF50",
+    },
+    {
+      icon: LocalShipping,
+      text: t('brandSpotlight.features.globaldistribution'),
+      color: "#FF6B35",
+    },
+    {
+      icon: Groups,
+      text: t('brandSpotlight.features.expertsupport'),
+      color: "#9C27B0",
+    },
+  ];
 
   return (
     <Box sx={{ position: "relative" }}>
@@ -139,7 +141,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
         sx={{
           mb: 4,
           p: { xs: 2, sm: 3, md: 4 },
-          borderRadius: 0,
+          borderRadius: 1, // Subtle radius 4px
           background: alpha(brandColor, 0.08),
           border: `1px solid ${alpha(brandColor, 0.2)}`,
           position: "relative",
@@ -152,7 +154,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
             width: { xs: 100, sm: 150, md: 200 },
             height: { xs: 100, sm: 150, md: 200 },
             background: alpha(brandColor, 0.05),
-            borderRadius: 0,
+            borderRadius: 1,
           },
         }}
       >
@@ -179,7 +181,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
               sx={{
                 width: { xs: 60, sm: 70, md: 80 },
                 height: { xs: 60, sm: 70, md: 80 },
-                borderRadius: 0,
+                borderRadius: 1,
                 background: "white",
                 display: "flex",
                 alignItems: "center",
@@ -217,7 +219,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                 </Typography>
                 <Chip
                   icon={<Verified />}
-                  label="Official Partner"
+                  label={t('brandSpotlight.officialPartner', { defaultValue: 'Official Partner' })}
                   size="small"
                   sx={{
                     bgcolor: alpha(brandColor, 0.1),
@@ -398,7 +400,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                 key={index}
                 sx={{
                   p: 2,
-                  borderRadius: 0,
+                  borderRadius: 1,
                   bgcolor: alpha(highlight.color, 0.05),
                   border: `1px solid ${alpha(highlight.color, 0.2)}`,
                   textAlign: "center",
@@ -464,7 +466,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                   flexDirection: "column",
                   background: "white",
                   border: "1px solid transparent",
-                  borderRadius: 0,
+                  borderRadius: 1,
                   overflow: "hidden",
                   transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                   cursor: "pointer",
@@ -516,7 +518,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                     gap: 1,
                     px: 1.5,
                     py: 0.5,
-                    borderRadius: 0,
+                    borderRadius: 0.5,
                     bgcolor: "oklch(95% 0.026 102.212)",
                     boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
                   }}
@@ -526,14 +528,14 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                     variant="caption"
                     sx={{ fontWeight: 700, color: brandColor }}
                   >
-                    THERMO FISHER
+                    {t('brandSpotlight.thermoFisher')}
                   </Typography>
                 </Box>
 
                 {/* Stock Status Badge */}
                 {product.status === "available" && (
                   <Chip
-                    label="In Stock"
+                    label={t('products.inStock')}
                     size="small"
                     sx={{
                       position: "absolute",
@@ -724,7 +726,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                           variant="caption"
                           sx={{ color: "rgba(51,51,51,0.7)" }}
                         >
-                          Ships within 24-48 hours
+                          {t('brandSpotlight.shipsWithin', { defaultValue: 'Ships within 24-48 hours' })}
                         </Typography>
                       </Box>
                       {product.warranty_duration && (
@@ -741,7 +743,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                             variant="caption"
                             sx={{ color: "rgba(51,51,51,0.7)" }}
                           >
-                            {product.warranty_duration} Month Warranty
+                            {product.warranty_duration} {t('brandSpotlight.monthWarranty', { defaultValue: 'Month Warranty' })}
                           </Typography>
                         </Box>
                       )}
@@ -758,7 +760,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                     >
                       <Verified sx={{ fontSize: 16, color: "#4CAF50" }} />
                       <Typography variant="caption" sx={{ color: "#4CAF50" }}>
-                        Thermo Fisher Quality Guarantee
+                        {t('brandSpotlight.qualityGuarantee', { defaultValue: 'Thermo Fisher Quality Guarantee' })}
                       </Typography>
                     </Box>
 
@@ -775,7 +777,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                         // background: `linear-gradient(135deg, ${brandColor} 0%, ${accentColor} 100%)`,
                         boxShadow: `none`,
                         fontWeight: 400,
-                        borderRadius: 0,
+                        borderRadius: 1,
                         position: "relative",
                         overflow: "hidden",
                         "&::before": {
@@ -798,7 +800,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                         },
                       }}
                     >
-                      Add to Cart
+                      {t('products.addToCart')}
                     </Button>
                   </Box>
                 </CardContent>
@@ -880,7 +882,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
         sx={{
           mt: 4,
           p: 4,
-          borderRadius: 0,
+          borderRadius: 1,
           background: `linear-gradient(135deg, ${alpha(
             brandColor,
             0.05
@@ -898,7 +900,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
             right: -100,
             width: 300,
             height: 300,
-            borderRadius: 0,
+            borderRadius: 1,
             background: alpha(brandColor, 0.05),
           }}
         />
@@ -915,14 +917,13 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
         >
           <Box>
             <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-              Discover the Complete Thermo Fisher Portfolio
+              {t('brandSpotlight.discoverPortfolio', { defaultValue: 'Discover the Complete Thermo Fisher Portfolio' })}
             </Typography>
             <Typography
               variant="body1"
               sx={{ color: "rgba(51,51,51,0.7)", mb: 2 }}
             >
-              Access over 100,000 products spanning life sciences, diagnostics,
-              and applied markets
+              {t('brandSpotlight.accessProducts', { defaultValue: 'Access over 100,000 products spanning life sciences, diagnostics, and applied markets' })}
             </Typography>
             <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
               {CTA_FEATURES.map((feature, index) => {
@@ -958,13 +959,13 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                 },
               }}
             >
-              Explore Full Catalog
+              {t('brandSpotlight.exploreCatalog', { defaultValue: 'Explore Full Catalog' })}
             </Button>
             <Typography
               variant="caption"
               sx={{ display: "block", mt: 1, color: "rgba(51,51,51,0.6)" }}
             >
-              Special pricing for bulk orders
+              {t('brandSpotlight.specialPricing', { defaultValue: 'Special pricing for bulk orders' })}
             </Typography>
           </Box>
         </Box>

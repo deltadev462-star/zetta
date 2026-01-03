@@ -323,7 +323,7 @@ const ProductManagement: React.FC = () => {
                           sx={{
                             width: 60,
                             height: 60,
-                            borderRadius: 2,
+                            borderRadius: 1,
                             overflow: 'hidden',
                             bgcolor: 'rgba(255,255,255,0.05)',
                             display: 'flex',

@@ -17,6 +17,7 @@ import {
   Skeleton,
   alpha,
 } from "@mui/material";
+import { useTranslation } from 'react-i18next';
 import {
   ShoppingCart,
   CheckCircle,
@@ -38,38 +39,6 @@ import { PageTitle, FeaturedEquipmentSwiper, ExploreSection, RecentlyAddedOffers
 
 const ITEMS_PER_PAGE = 12;
 
-const HERO_SLIDES = [
-  {
-    img: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=2000&auto=format&fit=crop",
-    title: "Medical Equipment Marketplace",
-    subtitle: "Discover premium medical equipment with cutting-edge technology",
-    alt: "Modern medical facility with advanced equipment",
-    accent: "#00d4ff",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1581594549595-35f6c54d7754?q=80&w=2000&auto=format&fit=crop",
-    title: "Advanced Imaging Systems",
-    subtitle:
-      "High-precision MRI, CT, and X-Ray diagnostics for modern healthcare",
-    alt: "State-of-the-art MRI scanner in modern facility",
-    accent: "#00ff88",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1551190822-a9333d879b1f?q=80&w=2000&auto=format&fit=crop",
-    title: "Surgical Excellence",
-    subtitle:
-      "Premium surgical instruments and OR equipment from trusted manufacturers",
-    alt: "Advanced surgical operating room",
-    accent: "#ff0080",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop",
-    title: "Laboratory Innovation",
-    subtitle: "Cutting-edge lab equipment for research and diagnostics",
-    alt: "Modern laboratory with advanced equipment",
-    accent: "#ffaa00",
-  },
-];
 
 // Mock data for development/demo
 const MOCK_PRODUCTS: Product[] = [
@@ -286,6 +255,7 @@ const MOCK_PRODUCTS: Product[] = [
 ];
 
 const Products: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { addToCart, items } = useCart();
@@ -311,6 +281,38 @@ const Products: React.FC = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Translate hero slides
+  const HERO_SLIDES = [
+    {
+      img: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=2000&auto=format&fit=crop",
+      title: t('hero.title'),
+      subtitle: t('hero.subtitle'),
+      alt: "Modern medical facility with advanced equipment",
+      accent: "#00d4ff",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1581594549595-35f6c54d7754?q=80&w=2000&auto=format&fit=crop",
+      title: t('hero.slide2Title'),
+      subtitle: t('hero.slide2Subtitle'),
+      alt: "State-of-the-art MRI scanner in modern facility",
+      accent: "#00ff88",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1551190822-a9333d879b1f?q=80&w=2000&auto=format&fit=crop",
+      title: t('hero.slide3Title'),
+      subtitle: t('hero.slide3Subtitle'),
+      alt: "Advanced surgical operating room",
+      accent: "#ff0080",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop",
+      title: t('hero.slide4Title'),
+      subtitle: t('hero.slide4Subtitle'),
+      alt: "Modern laboratory with advanced equipment",
+      accent: "#ffaa00",
+    },
+  ];
 
   const nextSlide = () => {
     if (!isTransitioning) {
@@ -533,9 +535,9 @@ const Products: React.FC = () => {
             onTouchEnd={handleTouchEnd}
             sx={{
               position: "relative",
-              height: { xs: 320, sm: 400, md: 500, lg: 560 },
-              mb: 8,
-              borderRadius: 3,
+              height: { xs: 320, sm: 300, md: 300, lg: 360 },
+              mb: 3,
+              borderRadius: "8px",
               overflow: "hidden",
               border: "1px solid rgba(0,0,0,0.1)",
               boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
@@ -723,7 +725,7 @@ const Products: React.FC = () => {
                   },
                 }}
               >
-                Explore Products
+                {t('hero.exploreProducts')}
               </Button>
               <Box
                 component="img"
@@ -852,7 +854,7 @@ const Products: React.FC = () => {
           {allProducts.length > 0 && (
             <Box  >
               <PageTitle
-                text="Featured Equipment"
+                text={t('featuredEquipment.title')}
                 align="left"
                  size="medium"
                 
@@ -872,7 +874,7 @@ const Products: React.FC = () => {
          {allProducts.length > 0 && (
            <Box  >
              <PageTitle
-               text="Recently Added Offers"
+               text={t('recentOffers.title')}
                align="left"
                 size="medium"
               />
@@ -891,7 +893,7 @@ const Products: React.FC = () => {
          {allProducts.length > 0 && (
            <Box  >
              <PageTitle
-               text="Brand Spotlight: Thermo Fisher Scientific"
+               text={t('brandSpotlight.title')}
                align="left"
                 size="medium"
               />
@@ -1236,7 +1238,7 @@ const Products: React.FC = () => {
                     py: 8,
                     background: "rgba(15,15,25,0.6)",
                     backdropFilter: "blur(20px)",
-                    borderRadius: 3,
+                    borderRadius: 1,
                     border: "1px solid rgba(255,255,255,0.1)",
                   }}
                 >
@@ -1244,10 +1246,10 @@ const Products: React.FC = () => {
                     sx={{ fontSize: 80, color: "rgba(255,255,255,0.1)", mb: 2 }}
                   />
                   <Typography variant="h5" color="text.secondary" gutterBottom>
-                    No products found
+                    {t('products.noProductsFound')}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
-                    Try adjusting your filters or search criteria
+                    {t('products.adjustFilters')}
                   </Typography>
                 </Box>
               )}

@@ -49,14 +49,12 @@ import {
   Person,
   Phone,
   Email,
-  LocationOn,
-  CalendarToday,
-  Flag,
-  Description,
+ 
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../services/supabase';
-import { ServiceRequest, LogisticsRequest, MaintenanceRequest } from '../../types';
+import { ServiceRequest } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 interface ServiceRequestDetails extends ServiceRequest {
   user_profile?: any;
@@ -64,7 +62,8 @@ interface ServiceRequestDetails extends ServiceRequest {
 }
 
 const ServiceRequests: React.FC = () => {
-  const { user } = useAuth();
+  
+  const { t } = useTranslation();
   const [requests, setRequests] = useState<ServiceRequestDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -110,7 +109,7 @@ const ServiceRequests: React.FC = () => {
 
       setRequests(parsedRequests);
     } catch (err: any) {
-      setError('Failed to fetch service requests');
+      setError(t('common.error'));
       console.error('Error fetching service requests:', err);
     } finally {
       setLoading(false);
@@ -131,10 +130,10 @@ const ServiceRequests: React.FC = () => {
           ? { ...request, status: newStatus as any } 
           : request
       ));
-      setSuccess('Status updated successfully');
+      setSuccess(t('common.success'));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
-      setError('Failed to update status');
+      setError(t('common.error'));
     }
   };
 
@@ -234,54 +233,54 @@ const ServiceRequests: React.FC = () => {
       return (
         <Box>
           <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <LocalShipping /> Logistics Request Details
+            <LocalShipping /> {t('logistics.title')}
           </Typography>
           
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
             <Box>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Service Type
+                {t('logistics.serviceType')}
               </Typography>
-              <Chip 
-                label={(request as any).service_type || 'N/A'} 
+              <Chip
+                label={(request as any).service_type || 'N/A'}
                 sx={{ mb: 2 }}
                 color="primary"
               />
 
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Preferred Date
+                {t('logistics.preferredDate')}
               </Typography>
               <Typography variant="body1" sx={{ mb: 2 }}>
-                {(request as any).preferred_date 
+                {(request as any).preferred_date
                   ? formatDate((request as any).preferred_date)
-                  : 'Not specified'}
+                  : t('admin.notSpecified')}
               </Typography>
 
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Special Instructions
+                {t('logistics.specialInstructions')}
               </Typography>
               <Typography variant="body1">
-                {details.specialInstructions || 'None'}
+                {details.specialInstructions || t('admin.notSpecified')}
               </Typography>
             </Box>
 
             <Box>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                Addresses
+                {t('admin.addresses')}
               </Typography>
               <Card sx={{ mb: 2, bgcolor: 'rgba(0,212,255,0.05)' }}>
                 <CardContent>
-                  <Typography variant="caption" color="text.secondary">Pickup</Typography>
+                  <Typography variant="caption" color="text.secondary">{t('admin.pickup')}</Typography>
                   <Typography variant="body2">
-                    {(request as any).pickup_address || 'Not specified'}
+                    {(request as any).pickup_address || t('admin.notSpecified')}
                   </Typography>
                 </CardContent>
               </Card>
               <Card sx={{ bgcolor: 'rgba(255,0,128,0.05)' }}>
                 <CardContent>
-                  <Typography variant="caption" color="text.secondary">Delivery</Typography>
+                  <Typography variant="caption" color="text.secondary">{t('admin.delivery')}</Typography>
                   <Typography variant="body2">
-                    {(request as any).delivery_address || 'Not specified'}
+                    {(request as any).delivery_address || t('admin.notSpecified')}
                   </Typography>
                 </CardContent>
               </Card>
@@ -293,16 +292,16 @@ const ServiceRequests: React.FC = () => {
       return (
         <Box>
           <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Build /> Maintenance Request Details
+            <Build /> {t('maintenance.title')}
           </Typography>
           
           <Box sx={{ mb: 3 }}>
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-              Urgency Level
+              {t('admin.urgency')}
             </Typography>
-            <Chip 
-              label={(request as any).urgency || 'medium'} 
-              sx={{ 
+            <Chip
+              label={t(`maintenance.${(request as any).urgency || 'medium'}`)}
+              sx={{
                 bgcolor: `${getUrgencyColor((request as any).urgency || 'medium')}20`,
                 color: getUrgencyColor((request as any).urgency || 'medium'),
                 border: `1px solid ${getUrgencyColor((request as any).urgency || 'medium')}50`,
@@ -312,24 +311,24 @@ const ServiceRequests: React.FC = () => {
           </Box>
 
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Product Description
+            {t('maintenance.productDescription')}
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {details.productDescription || 'Not specified'}
+            {details.productDescription || t('admin.notSpecified')}
           </Typography>
 
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Issue Description
+            {t('maintenance.issueDescription')}
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {(request as any).issue_description || 'Not specified'}
+            {(request as any).issue_description || t('admin.notSpecified')}
           </Typography>
 
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Preferred Contact Method
+            {t('maintenance.preferredContactMethod')}
           </Typography>
           <Typography variant="body1">
-            {details.preferredContact || 'Email'}
+            {t(`maintenance.${(details.preferredContact || 'email').toLowerCase()}`)}
           </Typography>
         </Box>
       );
@@ -351,10 +350,10 @@ const ServiceRequests: React.FC = () => {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Service Requests
+          {t('admin.serviceRequests')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage logistics and maintenance service requests
+          {t('admin.manageServiceRequests')}
         </Typography>
       </Box>
 
@@ -382,7 +381,7 @@ const ServiceRequests: React.FC = () => {
       >
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <TextField
-            placeholder="Search by ID, customer name, or company..."
+            placeholder={t('common.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             sx={{ flex: 1, minWidth: 300 }}
@@ -395,18 +394,18 @@ const ServiceRequests: React.FC = () => {
             }}
           />
           <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Status</InputLabel>
+            <InputLabel>{t('common.status')}</InputLabel>
             <Select
               value={filterStatus}
-              label="Status"
+              label={t('common.status')}
               onChange={(e) => setFilterStatus(e.target.value as string)}
               startAdornment={<FilterList sx={{ mr: 1, color: 'text.secondary' }} />}
             >
-              <MenuItem value="">All Status</MenuItem>
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="in_progress">In Progress</MenuItem>
-              <MenuItem value="completed">Completed</MenuItem>
-              <MenuItem value="cancelled">Cancelled</MenuItem>
+              <MenuItem value="">{t('common.all')}</MenuItem>
+              <MenuItem value="pending">{t('warranty.pending')}</MenuItem>
+              <MenuItem value="in_progress">{t('admin.inProgress')}</MenuItem>
+              <MenuItem value="completed">{t('admin.completed')}</MenuItem>
+              <MenuItem value="cancelled">{t('admin.cancelled')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -438,9 +437,9 @@ const ServiceRequests: React.FC = () => {
             },
           }}
         >
-          <Tab label={`All Requests (${requests.length})`} />
-          <Tab label={`Logistics (${requests.filter(r => r.type === 'logistics').length})`} icon={<LocalShipping />} iconPosition="start" />
-          <Tab label={`Maintenance (${requests.filter(r => r.type === 'maintenance').length})`} icon={<Build />} iconPosition="start" />
+          <Tab label={`${t('admin.allRequests')} (${requests.length})`} />
+          <Tab label={`${t('nav.logistics')} (${requests.filter(r => r.type === 'logistics').length})`} icon={<LocalShipping />} iconPosition="start" />
+          <Tab label={`${t('nav.maintenance')} (${requests.filter(r => r.type === 'maintenance').length})`} icon={<Build />} iconPosition="start" />
         </Tabs>
 
         {loading ? (
@@ -453,13 +452,13 @@ const ServiceRequests: React.FC = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Request ID</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>Contact</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell align="center">Actions</TableCell>
+                    <TableCell>{t('admin.requestId')}</TableCell>
+                    <TableCell>{t('admin.type')}</TableCell>
+                    <TableCell>{t('admin.customer')}</TableCell>
+                    <TableCell>{t('admin.contact')}</TableCell>
+                    <TableCell>{t('admin.created')}</TableCell>
+                    <TableCell>{t('common.status')}</TableCell>
+                    <TableCell align="center">{t('common.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -490,7 +489,7 @@ const ServiceRequests: React.FC = () => {
                           {request.user_profile?.full_name || 'N/A'}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {request.user_profile?.company_name || 'Individual'}
+                          {request.user_profile?.company_name || t('admin.individual')}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -540,7 +539,7 @@ const ServiceRequests: React.FC = () => {
                               },
                             }}
                           >
-                            Details
+                            {t('common.details')}
                           </Button>
                           <FormControl size="small" sx={{ minWidth: 120 }}>
                             <Select
@@ -548,10 +547,10 @@ const ServiceRequests: React.FC = () => {
                               onChange={(e) => handleStatusUpdate(request.id, e.target.value)}
                               sx={{ height: 32 }}
                             >
-                              <MenuItem value="pending">Pending</MenuItem>
-                              <MenuItem value="in_progress">In Progress</MenuItem>
-                              <MenuItem value="completed">Completed</MenuItem>
-                              <MenuItem value="cancelled">Cancelled</MenuItem>
+                              <MenuItem value="pending">{t('warranty.pending')}</MenuItem>
+                              <MenuItem value="in_progress">{t('admin.inProgress')}</MenuItem>
+                              <MenuItem value="completed">{t('admin.completed')}</MenuItem>
+                              <MenuItem value="cancelled">{t('admin.cancelled')}</MenuItem>
                             </Select>
                           </FormControl>
                         </Box>
@@ -594,10 +593,10 @@ const ServiceRequests: React.FC = () => {
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6">
-              Service Request Details
+              {t('admin.serviceRequestDetails')}
             </Typography>
-            <Chip 
-              label={selectedRequest?.status.replace('_', ' ')}
+            <Chip
+              label={t(`admin.${selectedRequest?.status || ''}`)}
               color={getStatusColor(selectedRequest?.status || '') as any}
               icon={getStatusIcon(selectedRequest?.status || '') || undefined}
             />
@@ -608,15 +607,15 @@ const ServiceRequests: React.FC = () => {
             <Box>
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Request Information
+                  {t('admin.requestInformation')}
                 </Typography>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                   <Box>
-                    <Typography variant="caption" color="text.secondary">Request ID</Typography>
+                    <Typography variant="caption" color="text.secondary">{t('admin.requestId')}</Typography>
                     <Typography variant="body2">#{selectedRequest.id.slice(0, 8)}</Typography>
                   </Box>
                   <Box>
-                    <Typography variant="caption" color="text.secondary">Created</Typography>
+                    <Typography variant="caption" color="text.secondary">{t('admin.created')}</Typography>
                     <Typography variant="body2">{formatDate(selectedRequest.created_at)}</Typography>
                   </Box>
                 </Box>
@@ -626,7 +625,7 @@ const ServiceRequests: React.FC = () => {
 
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Customer Information
+                  {t('admin.customerInformation')}
                 </Typography>
                 <List dense>
                   <ListItem sx={{ px: 0 }}>
@@ -637,7 +636,7 @@ const ServiceRequests: React.FC = () => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={selectedRequest.user_profile?.full_name || 'N/A'}
-                      secondary={selectedRequest.user_profile?.company_name || 'Individual'}
+                      secondary={selectedRequest.user_profile?.company_name || t('admin.individual')}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
@@ -648,7 +647,7 @@ const ServiceRequests: React.FC = () => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={selectedRequest.details_parsed?.contactPhone || selectedRequest.user_profile?.phone || 'N/A'}
-                      secondary="Phone"
+                      secondary={t('maintenance.phone')}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
@@ -659,7 +658,7 @@ const ServiceRequests: React.FC = () => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={selectedRequest.details_parsed?.contactEmail || selectedRequest.user_profile?.email || 'N/A'}
-                      secondary="Email"
+                      secondary={t('maintenance.email')}
                     />
                   </ListItem>
                 </List>
@@ -672,7 +671,7 @@ const ServiceRequests: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDetailsDialogOpen(false)}>Close</Button>
+          <Button onClick={() => setDetailsDialogOpen(false)}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
     </Container>

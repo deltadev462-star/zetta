@@ -8,6 +8,7 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
+import { useTranslation } from 'react-i18next';
 import {
   ArrowForwardIos,
   ArrowBackIosNew,
@@ -34,6 +35,7 @@ const RecentlyAddedOffers: React.FC<RecentlyAddedOffersProps> = ({
   products,
   onAddToCart,
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -58,8 +60,8 @@ const RecentlyAddedOffers: React.FC<RecentlyAddedOffersProps> = ({
   const getTimeAgo = (createdAt: string) => {
     const hours = Math.floor(Math.random() * 48) + 1;
     return hours < 24
-      ? `${hours} hours ago`
-      : `${Math.floor(hours / 24)} days ago`;
+      ? t('recentOffers.hoursAgo', { count: hours, defaultValue: `${hours} hours ago` })
+      : t('recentOffers.daysAgo', { count: Math.floor(hours / 24), defaultValue: `${Math.floor(hours / 24)} days ago` });
   };
 
   return (
@@ -164,7 +166,7 @@ const RecentlyAddedOffers: React.FC<RecentlyAddedOffersProps> = ({
                 height: "100%",
                 cursor: "pointer",
                 bgcolor: "oklch(98.5% 0.001 106.423)",
-                borderRadius: 0,
+                borderRadius: 1,
                 border: "1px solid transparent",
                 boxShadow: "none",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -213,7 +215,7 @@ const RecentlyAddedOffers: React.FC<RecentlyAddedOffersProps> = ({
                 />
                 {/* New Badge */}
                 <Chip
-                  label="NEW"
+                  label={t('recentOffers.new', { defaultValue: 'NEW' })}
                   size="small"
                   sx={{
                     position: "absolute",
@@ -292,7 +294,7 @@ const RecentlyAddedOffers: React.FC<RecentlyAddedOffersProps> = ({
                 {/* Special Offer Tag */}
                 <Chip
                   icon={<LocalOffer sx={{ fontSize: 14 }} />}
-                  label="Limited Offer"
+                  label={t('recentOffers.limitedOffer', { defaultValue: 'Limited Offer' })}
                   size="small"
                   sx={{
                     bgcolor: "rgba(255, 0, 128, 0.2)",

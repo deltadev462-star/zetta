@@ -49,6 +49,7 @@ import { supabase } from '../../services/supabase';
 import { DashboardStats, Order, Product } from '../../types';
 import { useNavigate } from 'react-router-dom';
 import { productService } from '../../services/products';
+import { useTranslation } from 'react-i18next';
 
 interface StatCardProps {
   title: string;
@@ -81,7 +82,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, color, d
             <Box
               sx={{
                 p: 1.5,
-                borderRadius: 2,
+                borderRadius: 1,
                 bgcolor: `${color}20`,
                 display: 'inline-flex',
               }}
@@ -265,8 +266,10 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
+  const { t, i18n } = useTranslation();
+
   const handleDeleteProduct = async (productId: string) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+    if (window.confirm(t('dashboard.deleteProductConfirm'))) {
       try {
         const { error } = await productService.deleteProduct(productId);
         if (error) throw error;
@@ -276,7 +279,7 @@ const AdminDashboard: React.FC = () => {
         fetchDashboardStats();
       } catch (error) {
         console.error('Error deleting product:', error);
-        alert('Failed to delete product');
+        alert(t('dashboard.failedToDeleteProduct'));
       }
     }
   };
@@ -299,10 +302,10 @@ const AdminDashboard: React.FC = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                Seller Dashboard
+                {t('dashboard.sellerDashboard')}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                {user ? `Welcome back, ${user?.profile?.full_name || user?.email}` : 'Welcome to Zetta Med Seller Portal'}
+                {user ? t('dashboard.welcomeBack', { name: user?.profile?.full_name || user?.email }) : t('dashboard.welcomeToPortal')}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -329,7 +332,7 @@ const AdminDashboard: React.FC = () => {
                     },
                   }}
                 >
-                  Register as Seller
+                  {t('dashboard.registerAsSeller')}
                 </Button>
               )}
               <Button
@@ -346,7 +349,7 @@ const AdminDashboard: React.FC = () => {
                   },
                 }}
               >
-                Add Product
+                {t('dashboard.addProduct')}
               </Button>
             </Box>
           </Box>
@@ -366,14 +369,14 @@ const AdminDashboard: React.FC = () => {
               mb: 4 
             }}>
               <StatCard
-                title="Total Products"
+                title={t('dashboard.totalProducts')}
                 value={stats.total_sales}
                 icon={<Inventory />}
                 color="#00d4ff"
                 delay={0}
               />
               <StatCard
-                title="Total Orders"
+                title={t('dashboard.totalOrders')}
                 value={stats.total_orders}
                 icon={<ShoppingCart />}
                 trend={12}
@@ -381,14 +384,14 @@ const AdminDashboard: React.FC = () => {
                 delay={100}
               />
               <StatCard
-                title="Pending Orders"
+                title={t('dashboard.pendingOrders')}
                 value={stats.pending_orders}
                 icon={<People />}
                 color="#ffaa00"
                 delay={200}
               />
               <StatCard
-                title="Revenue"
+                title={t('dashboard.revenue')}
                 value={`€${stats.total_revenue.toFixed(2)}`}
                 icon={<AttachMoney />}
                 trend={8}
@@ -423,17 +426,17 @@ const AdminDashboard: React.FC = () => {
                 },
               }}
             >
-              <Tab label="Overview" />
-              <Tab label="Recent Orders" />
-              <Tab label="Products" />
-              <Tab label="Analytics" />
+              <Tab label={t('dashboard.tabs.overview')} />
+              <Tab label={t('dashboard.tabs.recentOrders')} />
+              <Tab label={t('dashboard.tabs.products')} />
+              <Tab label={t('dashboard.tabs.analytics')} />
             </Tabs>
 
             <Box sx={{ p: 3 }}>
               {activeTab === 0 && (
                 <Box>
                   <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                    Quick Actions
+                    {t('dashboard.quickActions')}
                   </Typography>
                   <Box sx={{ 
                     display: 'grid', 
@@ -458,7 +461,7 @@ const AdminDashboard: React.FC = () => {
                         },
                       }}
                     >
-                      Manage Products
+                      {t('dashboard.manageProducts')}
                     </Button>
                     <Button
                       fullWidth
@@ -474,7 +477,7 @@ const AdminDashboard: React.FC = () => {
                         },
                       }}
                     >
-                      View Orders
+                      {t('dashboard.viewOrders')}
                     </Button>
                     <Button
                       fullWidth
@@ -490,12 +493,12 @@ const AdminDashboard: React.FC = () => {
                         },
                       }}
                     >
-                      Generate Reports
+                      {t('dashboard.generateReports')}
                     </Button>
                   </Box>
 
                   <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 3 }}>
-                    Commission Summary
+                    {t('dashboard.commissionSummary')}
                   </Typography>
                   <Card
                     sx={{
@@ -512,7 +515,7 @@ const AdminDashboard: React.FC = () => {
                       }}>
                         <Box>
                           <Typography variant="h6" gutterBottom>
-                            Total Commission Earned
+                            {t('dashboard.totalCommissionEarned')}
                           </Typography>
                           <Typography variant="h3" sx={{ color: '#ff0080', fontWeight: 700 }}>
                             €{stats.commission_earned.toFixed(2)}
@@ -520,15 +523,15 @@ const AdminDashboard: React.FC = () => {
                         </Box>
                         <Box>
                           <Typography variant="body2" color="text.secondary" gutterBottom>
-                            Commission Rate
+                            {t('dashboard.commissionRate')}
                           </Typography>
-                          <Chip 
-                            label="15% on all sales" 
-                            sx={{ 
+                          <Chip
+                            label={t('dashboard.fifteenPercentOnSales')}
+                            sx={{
                               bgcolor: 'rgba(255,0,128,0.2)',
                               color: '#ff0080',
                               fontWeight: 600,
-                            }} 
+                            }}
                           />
                         </Box>
                       </Box>
@@ -540,7 +543,7 @@ const AdminDashboard: React.FC = () => {
               {activeTab === 1 && (
                 <Box>
                   <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                    Recent Orders
+                    {t('dashboard.recentOrders')}
                   </Typography>
                   
                   {ordersLoading ? (
@@ -548,19 +551,19 @@ const AdminDashboard: React.FC = () => {
                       <CircularProgress />
                     </Box>
                   ) : orders.length === 0 ? (
-                    <Alert severity="info">No orders yet</Alert>
+                    <Alert severity="info">{t('dashboard.noOrdersYet')}</Alert>
                   ) : (
                     <TableContainer component={Paper} sx={{ bgcolor: 'transparent' }}>
                       <Table>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Order ID</TableCell>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Customer</TableCell>
-                            <TableCell>Items</TableCell>
-                            <TableCell>Total</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell>{t('dashboard.orderId')}</TableCell>
+                            <TableCell>{t('dashboard.date')}</TableCell>
+                            <TableCell>{t('dashboard.customer')}</TableCell>
+                            <TableCell>{t('dashboard.items')}</TableCell>
+                            <TableCell>{t('dashboard.total')}</TableCell>
+                            <TableCell>{t('dashboard.status')}</TableCell>
+                            <TableCell>{t('dashboard.actions')}</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -569,7 +572,7 @@ const AdminDashboard: React.FC = () => {
                               <TableCell>#{order.id.slice(0, 8)}</TableCell>
                               <TableCell>{formatDate(order.created_at)}</TableCell>
                               <TableCell>{order.shipping_address.full_name}</TableCell>
-                              <TableCell>{order.items?.length || 0} items</TableCell>
+                              <TableCell>{order.items?.length || 0} {t('dashboard.items').toLowerCase()}</TableCell>
                               <TableCell>€{order.total_amount.toFixed(2)}</TableCell>
                               <TableCell>
                                 <Chip
@@ -604,7 +607,7 @@ const AdminDashboard: React.FC = () => {
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h5">
-                      My Products
+                      {t('dashboard.myProducts')}
                     </Typography>
                     <Button
                       variant="contained"
@@ -615,7 +618,7 @@ const AdminDashboard: React.FC = () => {
                         boxShadow: '0 4px 20px rgba(0,212,255,0.3)',
                       }}
                     >
-                      Add Product
+                      {t('dashboard.addProduct')}
                     </Button>
                   </Box>
                   
@@ -624,7 +627,7 @@ const AdminDashboard: React.FC = () => {
                       <CircularProgress />
                     </Box>
                   ) : products.length === 0 ? (
-                    <Alert severity="info">No products yet. Add your first product!</Alert>
+                    <Alert severity="info">{t('dashboard.noProductsYet')}</Alert>
                   ) : (
                     <Box sx={{
                       display: 'grid',
@@ -651,7 +654,7 @@ const AdminDashboard: React.FC = () => {
                             }}
                           >
                             <CardContent>
-                              <Box sx={{ mb: 2, height: 150, overflow: 'hidden', borderRadius: 2, bgcolor: 'rgba(255,255,255,0.05)' }}>
+                              <Box sx={{ mb: 2, height: 150, overflow: 'hidden', borderRadius: 1, bgcolor: 'rgba(255,255,255,0.05)' }}>
                                 {product.images && product.images.length > 0 ? (
                                   <img
                                     src={product.images[0]}
@@ -708,7 +711,7 @@ const AdminDashboard: React.FC = () => {
                                   onClick={() => navigate(`/admin/products/edit/${product.id}`)}
                                   sx={{ color: '#00d4ff' }}
                                 >
-                                  Edit
+                                  {t('common.edit')}
                                 </Button>
                                 <Button
                                   size="small"
@@ -716,7 +719,7 @@ const AdminDashboard: React.FC = () => {
                                   onClick={() => handleDeleteProduct(product.id)}
                                   sx={{ color: '#ff3366' }}
                                 >
-                                  Delete
+                                  {t('common.delete')}
                                 </Button>
                               </Stack>
                             </CardContent>
@@ -731,7 +734,7 @@ const AdminDashboard: React.FC = () => {
               {activeTab === 3 && (
                 <Box>
                   <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                    Analytics & Reports
+                    {t('dashboard.analyticsReports')}
                   </Typography>
                   
                   <Box sx={{
@@ -750,22 +753,22 @@ const AdminDashboard: React.FC = () => {
                         <CardContent>
                           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                             <Assessment sx={{ color: '#00d4ff', mr: 1 }} />
-                            <Typography variant="h6">Sales Overview</Typography>
+                            <Typography variant="h6">{t('dashboard.salesOverview')}</Typography>
                           </Box>
                           <Box sx={{ mb: 3 }}>
                             <Typography variant="body2" color="text.secondary" gutterBottom>
-                              This Month
+                              {t('dashboard.thisMonth')}
                             </Typography>
                             <Typography variant="h4" sx={{ color: '#00ff88' }}>
                               €{stats.total_revenue.toFixed(2)}
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                            <Typography variant="body2">Orders</Typography>
+                            <Typography variant="body2">{t('common.orders')}</Typography>
                             <Typography variant="body2" fontWeight={600}>{stats.total_orders}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="body2">Average Order Value</Typography>
+                            <Typography variant="body2">{t('dashboard.averageOrderValue')}</Typography>
                             <Typography variant="body2" fontWeight={600}>
                               €{stats.total_orders > 0 ? (stats.total_revenue / stats.total_orders).toFixed(2) : '0.00'}
                             </Typography>
@@ -785,12 +788,12 @@ const AdminDashboard: React.FC = () => {
                         <CardContent>
                           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                             <LocalShipping sx={{ color: '#ff0080', mr: 1 }} />
-                            <Typography variant="h6">Order Status</Typography>
+                            <Typography variant="h6">{t('dashboard.orderStatus')}</Typography>
                           </Box>
                           <Stack spacing={2}>
                             <Box>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                <Typography variant="body2">Pending</Typography>
+                                <Typography variant="body2">{t('orders.pending')}</Typography>
                                 <Typography variant="body2" fontWeight={600}>{stats.pending_orders}</Typography>
                               </Box>
                               <LinearProgress
@@ -804,7 +807,7 @@ const AdminDashboard: React.FC = () => {
                             </Box>
                             <Box>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                <Typography variant="body2">Completed</Typography>
+                                <Typography variant="body2">{t('dashboard.completed')}</Typography>
                                 <Typography variant="body2" fontWeight={600}>{stats.total_orders - stats.pending_orders}</Typography>
                               </Box>
                               <LinearProgress
@@ -832,7 +835,7 @@ const AdminDashboard: React.FC = () => {
                         <CardContent>
                           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                             <TrendingUp sx={{ color: '#00ff88', mr: 1 }} />
-                            <Typography variant="h6">Performance Metrics</Typography>
+                            <Typography variant="h6">{t('dashboard.performanceMetrics')}</Typography>
                           </Box>
                           <Box sx={{
                             display: 'grid',
@@ -848,7 +851,7 @@ const AdminDashboard: React.FC = () => {
                                   {products.length}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  Active Products
+                                  {t('dashboard.activeProducts')}
                                 </Typography>
                               </Box>
                             </Box>
@@ -858,7 +861,7 @@ const AdminDashboard: React.FC = () => {
                                   {stats.total_orders}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  Total Orders
+                                  {t('dashboard.totalOrders')}
                                 </Typography>
                               </Box>
                             </Box>
@@ -868,7 +871,7 @@ const AdminDashboard: React.FC = () => {
                                   {products.filter(p => p.status === 'available').length}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  Available Products
+                                  {t('dashboard.availableProducts')}
                                 </Typography>
                               </Box>
                             </Box>
@@ -878,7 +881,7 @@ const AdminDashboard: React.FC = () => {
                                   €{stats.commission_earned.toFixed(0)}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  Commission Earned
+                                  {t('dashboard.commissionEarned')}
                                 </Typography>
                               </Box>
                             </Box>
@@ -902,7 +905,7 @@ const AdminDashboard: React.FC = () => {
                           },
                         }}
                       >
-                        View Detailed Reports
+                        {t('dashboard.viewDetailedReports')}
                       </Button>
                     </Box>
                   </Box>

@@ -2,56 +2,56 @@
   /* Primary Colors */
   --primary-color: #00d4ff;
   --primary-rgb: 0, 212, 255;
-  
+
   /* Secondary Colors */
   --secondary-color: #ff0080;
   --secondary-rgb: 255, 0, 128;
-  
+
   /* Success Colors */
   --success-color: #00ff88;
   --success-rgb: 0, 255, 136;
-  
+
   /* Warning Colors */
-  --warning-color: #FFD700;
+  --warning-color: #ffd700;
   --warning-rgb: 255, 215, 0;
-  
+
   /* Danger Colors */
   --danger-color: #ff3366;
   --danger-rgb: 255, 51, 102;
-  
+
   /* Info Colors */
   --info-color: #0066cc;
   --info-rgb: 0, 102, 204;
-  
+
   /* Neutral Colors */
   --text-primary: #333333;
   --text-secondary: rgba(0, 0, 0, 0.7);
   --text-disabled: rgba(0, 0, 0, 0.3);
   --text-light: rgba(255, 255, 255, 0.87);
   --text-light-secondary: rgba(255, 255, 255, 0.5);
-  
+
   /* Background Colors */
   --bg-primary: oklch(98.7% 0.026 102.212);
   --bg-secondary: rgba(255, 255, 255, 0.95);
   --bg-hover: rgba(0, 212, 255, 0.08);
   --bg-active: rgba(0, 212, 255, 0.1);
-  
+
   /* Border Colors */
   --border-primary: rgba(0, 0, 0, 0.08);
   --border-secondary: rgba(255, 255, 255, 0.2);
   --border-active: rgba(0, 212, 255, 0.3);
-  
+
   /* Condition Colors */
-  --condition-excellent: #4CAF50;
+  --condition-excellent: #4caf50;
   --condition-good: #00d4ff;
   --condition-fair: #ff9800;
-  
+
   /* Status Colors */
   --status-pending: #ff9800;
-  --status-approved: #4CAF50;
+  --status-approved: #4caf50;
   --status-rejected: #f44336;
   --status-completed: #00ff88;
-  
+
   /* Shadow */
   --shadow-primary: 0 2px 8px rgba(0, 0, 0, 0.05);
   --shadow-hover: 0 4px 20px rgba(0, 212, 255, 0.1);
@@ -138,35 +138,656 @@ code {
   background: var(--secondary-color);
   width: 24px;
   border-radius: 4px;
+}
 
-  /* Brand Spotlight Swiper Styles */
-  .brand-spotlight-swiper {
-    padding: 20px 0 40px;
-  }
+/* Brand Spotlight Swiper Styles */
+.brand-spotlight-swiper {
+  padding: 20px 0 40px;
+}
 
-  .brand-spotlight-swiper .swiper-pagination {
-    bottom: 0;
-  }
+.brand-spotlight-swiper .swiper-pagination {
+  bottom: 0;
+}
 
-  .brand-spotlight-swiper .swiper-pagination-bullet {
-    background: var(--text-disabled);
-    opacity: 1;
-    width: 8px;
-    height: 8px;
-    transition: all 0.3s;
-  }
+.brand-spotlight-swiper .swiper-pagination-bullet {
+  background: var(--text-disabled);
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  transition: all 0.3s;
+}
 
-  .brand-spotlight-swiper .swiper-pagination-bullet-active {
-    background: var(--info-color);
-    width: 24px;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgba(var(--info-rgb), 0.5);
-  }
+.brand-spotlight-swiper .swiper-pagination-bullet-active {
+  background: var(--info-color);
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(var(--info-rgb), 0.5);
+}
 
 /* Gradient shift animation for Login and Register pages */
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
+
+/* RTL Support for Arabic */
+[dir="rtl"] {
+  /* Text alignment */
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] body {
+  font-family: "Segoe UI", "Tahoma", -apple-system, BlinkMacSystemFont, "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+/* MUI AppBar RTL */
+[dir="rtl"] .MuiAppBar-root .MuiToolbar-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiAppBar-root .MuiIconButton-root {
+  transform: scaleX(1);
+}
+
+/* MUI Drawer RTL */
+[dir="rtl"] .MuiDrawer-paperAnchorLeft {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .MuiDrawer-paperAnchorRight {
+  left: 0;
+  right: auto;
+}
+
+/* MUI List RTL */
+[dir="rtl"] .MuiListItemIcon-root {
+  margin-left: 16px;
+  margin-right: 0;
+  min-width: 40px;
+}
+
+[dir="rtl"] .MuiListItemText-root {
+  text-align: right;
+  margin-right: 0;
+}
+
+[dir="rtl"] .MuiListItemButton-root {
+  padding-right: 16px;
+  padding-left: 16px;
+  text-align: right;
+}
+
+/* MUI Button RTL */
+[dir="rtl"] .MuiButton-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiButton-startIcon {
+  margin-left: 8px;
+  margin-right: -4px;
+  direction: ltr;
+}
+
+[dir="rtl"] .MuiButton-endIcon {
+  margin-right: 8px;
+  margin-left: -4px;
+  direction: ltr;
+}
+
+/* MUI Input RTL */
+[dir="rtl"] .MuiInputBase-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiInputAdornment-positionStart {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .MuiInputAdornment-positionEnd {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+[dir="rtl"] .MuiOutlinedInput-notchedOutline {
+  text-align: right;
+}
+
+[dir="rtl"] .MuiOutlinedInput-notchedOutline legend {
+  text-align: right;
+  float: right;
+  margin-right: -5px;
+  margin-left: 0;
+}
+
+[dir="rtl"] .MuiOutlinedInput-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiInputLabel-root {
+  right: 14px !important;
+  left: auto !important;
+  transform-origin: top right !important;
+}
+
+[dir="rtl"] .MuiInputLabel-shrink {
+  transform: translate(12px, -9px) scale(0.75) !important;
+  right: 0 !important;
+}
+
+[dir="rtl"] .MuiInputLabel-outlined {
+  right: 14px !important;
+  left: auto !important;
+}
+
+[dir="rtl"] .MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(14px, -9px) scale(0.75) !important;
+  right: 0 !important;
+  background-color: white;
+  padding: 0 4px;
+}
+
+/* MUI Select RTL */
+[dir="rtl"] .MuiSelect-icon {
+  left: 7px !important;
+  right: auto !important;
+}
+
+[dir="rtl"] .MuiSelect-select {
+  padding-right: 14px !important;
+  padding-left: 32px !important;
+  text-align: right !important;
+   
+}
+
+[dir="rtl"] .MuiSelect-outlined ~ .MuiOutlinedInput-notchedOutline {
+  text-align: right;
+}
+
+/* Fix for Select with label in RTL */
+[dir="rtl"] .MuiFormControl-root .MuiInputLabel-outlined {
+  right: 28px !important;
+  left: auto !important;
+  transform-origin: top right !important;
+}
+
+[dir="rtl"] .MuiFormControl-root .MuiInputLabel-outlined.MuiInputLabel-shrink {
+  right:27px !important;
+  transform: translate(16px, -6px) scale(0.75) !important;
+  background-color: oklch(96.5% 0.026 102.212);
+  padding: 0 8px;
+}
+
+/* MUI Chip RTL */
+[dir="rtl"] .MuiChip-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+}
+
+[dir="rtl"] .MuiChip-deleteIcon {
+  margin-right: 5px;
+  margin-left: -6px;
+}
+
+[dir="rtl"] .MuiChip-label {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* MUI Badge RTL */
+[dir="rtl"] .MuiBadge-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiBadge-anchorOriginTopRight {
+  right: auto;
+  left: 0;
+  transform: translate(50%, -50%);
+}
+
+[dir="rtl"] .MuiBadge-anchorOriginBottomRight {
+  right: auto;
+  left: 0;
+  transform: translate(50%, 50%);
+}
+
+/* MUI Typography RTL */
+[dir="rtl"] .MuiTypography-root {
+  text-align: inherit;
+}
+
+[dir="rtl"] .MuiTypography-paragraph {
+  text-align: right;
+}
+
+/* Flexbox RTL adjustments */
+[dir="rtl"] .MuiBox-root,
+[dir="rtl"] .MuiStack-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiGrid-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiGrid-item {
+  direction: rtl;
+}
+
+/* Card RTL adjustments */
+[dir="rtl"] .MuiCard-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiCardContent-root {
+  text-align: right;
+}
+
+[dir="rtl"] .MuiCardActions-root {
+  padding-left: 8px;
+  padding-right: 16px;
+  justify-content: flex-start;
+}
+
+/* Dialog RTL adjustments */
+[dir="rtl"] .MuiDialog-paper {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiDialogTitle-root {
+  text-align: right;
+}
+
+[dir="rtl"] .MuiDialogContent-root {
+  text-align: right;
+}
+
+[dir="rtl"] .MuiDialogActions-root {
+  padding-left: 8px;
+  padding-right: 24px;
+  justify-content: flex-start;
+}
+
+/* Form RTL adjustments */
+[dir="rtl"] .MuiFormControl-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiFormLabel-root {
+  transform-origin: top right;
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .MuiFormControlLabel-root {
+  margin-left: 16px;
+  margin-right: -11px;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .MuiFormHelperText-root {
+  text-align: right;
+}
+
+/* Menu RTL adjustments */
+[dir="rtl"] .MuiMenu-paper {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiMenuItem-root {
+  direction: rtl;
+  text-align: right;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+/* Pagination RTL */
+[dir="rtl"] .MuiPagination-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiPaginationItem-previousNext {
+  transform: scaleX(-1);
+}
+
+/* Table RTL adjustments */
+[dir="rtl"] .MuiTable-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiTableCell-root {
+  text-align: right;
+}
+
+[dir="rtl"] .MuiTablePagination-toolbar {
+  direction: rtl;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .MuiTablePagination-actions {
+  margin-left: 0;
+  margin-right: 20px;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .MuiTablePagination-selectLabel,
+[dir="rtl"] .MuiTablePagination-displayedRows {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Tooltip RTL */
+[dir="rtl"]
+  .MuiTooltip-popper[data-popper-placement*="right"]
+  .MuiTooltip-arrow {
+  left: 0;
+  right: auto;
+}
+
+[dir="rtl"]
+  .MuiTooltip-popper[data-popper-placement*="left"]
+  .MuiTooltip-arrow {
+  right: 0;
+  left: auto;
+}
+
+/* Custom component RTL adjustments */
+[dir="rtl"] .swiper-button-next {
+  left: 10px;
+  right: auto;
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .swiper-button-prev {
+  right: 10px;
+  left: auto;
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .swiper-pagination {
+  direction: rtl;
+}
+
+[dir="rtl"] .swiper-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .swiper-slide {
+  direction: rtl;
+}
+
+/* Icon adjustments for RTL */
+[dir="rtl"] .MuiSvgIcon-root {
+  direction: ltr;
+}
+
+/* Fix for navigation arrows */
+[dir="rtl"] .MuiIconButton-root .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+/* Directional icons that need to be flipped in RTL */
+[dir="rtl"] svg[data-testid="ArrowBackIosNewIcon"],
+[dir="rtl"] svg[data-testid="ArrowForwardIosIcon"],
+[dir="rtl"] svg[data-testid="ArrowBackIcon"],
+[dir="rtl"] svg[data-testid="ArrowForwardIcon"],
+[dir="rtl"] svg[data-testid="ChevronLeftIcon"],
+[dir="rtl"] svg[data-testid="ChevronRightIcon"],
+[dir="rtl"] svg[data-testid="KeyboardArrowLeftIcon"],
+[dir="rtl"] svg[data-testid="KeyboardArrowRightIcon"],
+[dir="rtl"] svg[data-testid="NavigateBeforeIcon"],
+[dir="rtl"] svg[data-testid="NavigateNextIcon"],
+[dir="rtl"] svg[data-testid="FirstPageIcon"],
+[dir="rtl"] svg[data-testid="LastPageIcon"],
+[dir="rtl"] svg[data-testid="ArrowRightAltIcon"],
+[dir="rtl"] svg[data-testid="ArrowLeftIcon"],
+[dir="rtl"] svg[data-testid="ArrowRightIcon"],
+[dir="rtl"] svg[data-testid="KeyboardBackspaceIcon"],
+[dir="rtl"] svg[data-testid="TrendingFlatIcon"],
+[dir="rtl"] svg[data-testid="ForwardIcon"],
+[dir="rtl"] svg[data-testid="ReplyIcon"],
+[dir="rtl"] svg[data-testid="RedoIcon"],
+[dir="rtl"] svg[data-testid="UndoIcon"],
+[dir="rtl"] svg[data-testid="SubdirectoryArrowLeftIcon"],
+[dir="rtl"] svg[data-testid="SubdirectoryArrowRightIcon"],
+[dir="rtl"] svg[data-testid="OpenInNewIcon"],
+[dir="rtl"] svg[data-testid="LaunchIcon"],
+[dir="rtl"] svg[data-testid="ExitToAppIcon"],
+[dir="rtl"] svg[data-testid="LoginIcon"],
+[dir="rtl"] svg[data-testid="LogoutIcon"] {
+  transform: scaleX(-1);
+}
+
+/* Icons that should not be flipped */
+[dir="rtl"] svg[data-testid="PlayArrowIcon"],
+[dir="rtl"] svg[data-testid="PauseIcon"],
+[dir="rtl"] svg[data-testid="StopIcon"],
+[dir="rtl"] svg[data-testid="CheckIcon"],
+[dir="rtl"] svg[data-testid="CloseIcon"],
+[dir="rtl"] svg[data-testid="AddIcon"],
+[dir="rtl"] svg[data-testid="RemoveIcon"] {
+  transform: scaleX(1) !important;
+}
+
+/* Class-based icon flipping for custom components */
+[dir="rtl"] .arrow-forward,
+[dir="rtl"] .arrow-back,
+[dir="rtl"] .chevron-left,
+[dir="rtl"] .chevron-right,
+[dir="rtl"] .navigate-next,
+[dir="rtl"] .navigate-before {
+  transform: scaleX(-1);
+}
+
+/* Button icons RTL adjustments */
+[dir="rtl"] .MuiButton-startIcon .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+[dir="rtl"] .MuiButton-endIcon .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+/* List item icons RTL */
+[dir="rtl"] .MuiListItemIcon-root .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+/* Breadcrumb separator icons */
+[dir="rtl"] .MuiBreadcrumbs-separator .MuiSvgIcon-root {
+  transform: scaleX(-1);
+}
+
+/* Stepper icons */
+[dir="rtl"] .MuiStepIcon-root {
+  transform: scaleX(1);
+}
+
+[dir="rtl"] .MuiStepConnector-line {
+  direction: rtl;
+}
+
+/* Tab scroll buttons */
+[dir="rtl"] .MuiTabs-scrollButtons .MuiSvgIcon-root {
+  transform: scaleX(-1);
+}
+
+/* Speed dial icons */
+[dir="rtl"] .MuiSpeedDialAction-fab .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+/* Accordion expand icon */
+[dir="rtl"] .MuiAccordionSummary-expandIconWrapper {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .MuiAccordionSummary-expandIconWrapper.Mui-expanded {
+  transform: rotate(0deg);
+}
+
+/* Rating component */
+[dir="rtl"] .MuiRating-root {
+  direction: rtl;
+}
+
+/* Slider component */
+[dir="rtl"] .MuiSlider-root {
+  direction: ltr;
+}
+
+/* Timeline component */
+[dir="rtl"] .MuiTimeline-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiTimelineConnector-root {
+  right: calc(50% - 1px);
+  left: auto;
+}
+
+/* Mobile stepper */
+[dir="rtl"] .MuiMobileStepper-root {
+  flex-direction: row-reverse;
+}
+
+/* TreeView icons */
+[dir="rtl"] .MuiTreeItem-iconContainer .MuiSvgIcon-root {
+  transform: scaleX(-1);
+}
+
+/* Data grid icons */
+[dir="rtl"] .MuiDataGrid-columnHeaderTitleContainer .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+[dir="rtl"] .MuiDataGrid-sortIcon {
+  transform: scaleX(1);
+}
+
+/* Autocomplete icons */
+[dir="rtl"] .MuiAutocomplete-popupIndicator .MuiSvgIcon-root,
+[dir="rtl"] .MuiAutocomplete-clearIndicator .MuiSvgIcon-root {
+  transform: scaleX(1);
+}
+
+/* Custom icon classes for specific use cases */
+[dir="rtl"] .icon-directional {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .icon-no-flip {
+  transform: scaleX(1) !important;
+}
+
+/* Language Switcher RTL */
+[dir="rtl"] .language-switcher-menu {
+  direction: rtl;
+}
+
+/* Fix box shadows and borders for RTL */
+[dir="rtl"] .MuiPaper-root {
+  direction: rtl;
+}
+
+/* Ensure proper text direction in inputs */
+[dir="rtl"] input,
+[dir="rtl"] textarea {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Fix for floating elements */
+[dir="rtl"] [style*="float: left"] {
+  float: right !important;
+}
+
+[dir="rtl"] [style*="float: right"] {
+  float: left !important;
+}
+
+/* Transform fixes for RTL */
+[dir="rtl"] [style*="translateX"] {
+  transform: scaleX(-1);
+}
+
+/* Container and spacing RTL adjustments */
+[dir="rtl"] .MuiContainer-root {
+  direction: rtl;
+}
+
+[dir="rtl"] [class*="ml-"] {
+  margin-left: 0;
+  margin-right: var(--spacing);
+}
+
+[dir="rtl"] [class*="mr-"] {
+  margin-right: 0;
+  margin-left: var(--spacing);
+}
+
+[dir="rtl"] [class*="pl-"] {
+  padding-left: 0;
+  padding-right: var(--spacing);
+}
+
+[dir="rtl"] [class*="pr-"] {
+  padding-right: 0;
+  padding-left: var(--spacing);
+}
+
+/* Absolute positioning RTL fixes */
+[dir="rtl"] [class*="left-"] {
+  left: auto;
+  right: var(--position);
+}
+
+[dir="rtl"] [class*="right-"] {
+  right: auto;
+  left: var(--position);
+}
+
+/* Border radius RTL adjustments */
+[dir="rtl"] [class*="rounded-tl"],
+[dir="rtl"] [class*="rounded-bl"] {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+[dir="rtl"] [class*="rounded-tr"],
+[dir="rtl"] [class*="rounded-br"] {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+}
+
+/* Specific fixes for navigation and layout */
+[dir="rtl"] .MuiAppBar-root {
+  direction: rtl;
+}
+
+[dir="rtl"] .MuiToolbar-root {
+  flex-direction: row;
+}
+
+[dir="rtl"] .MuiToolbar-root > * {
+  direction: rtl;
 }

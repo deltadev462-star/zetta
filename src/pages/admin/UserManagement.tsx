@@ -54,6 +54,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { userManagementService } from '../../services/userManagement';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -78,6 +79,7 @@ function TabPanel(props: TabPanelProps) {
 
 const UserManagement: React.FC = () => {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [tabValue, setTabValue] = useState(0);
   const [users, setUsers] = useState<any[]>([]);
@@ -201,7 +203,7 @@ const UserManagement: React.FC = () => {
   const handleDeactivateUser = async (userId: string, reason: string) => {
     if (!currentUser) return;
     
-    if (window.confirm('Are you sure you want to permanently deactivate this user?')) {
+    if (window.confirm(t('admin.deactivateUser') + '?')) {
       setProcessing(true);
       try {
         const { error } = await userManagementService.deactivateUser(userId, currentUser.id, reason);
@@ -228,7 +230,7 @@ const UserManagement: React.FC = () => {
         suspendForm.duration !== 'permanent' ? new Date(Date.now() + suspendForm.customDays * 24 * 60 * 60 * 1000) : undefined
       );
       
-      alert(`Suspended: ${result.success}, Failed: ${result.failed}`);
+      alert(`${t('warranty.pending')}: ${result.success}, ${t('warranty.failed')}: ${result.failed}`);
       setBulkActionDialog(false);
       setSelectedUsers([]);
       fetchData();
@@ -260,11 +262,11 @@ const UserManagement: React.FC = () => {
   const getUserStatus = (user: any) => {
     switch (user.status) {
       case 'active':
-        return <Chip label="Active" color="success" size="small" icon={<CheckCircle />} />;
+        return <Chip label={t('warranty.active')} color="success" size="small" icon={<CheckCircle />} />;
       case 'suspended':
-        return <Chip label="Suspended" color="warning" size="small" icon={<Warning />} />;
+        return <Chip label={t('warranty.pending')} color="warning" size="small" icon={<Warning />} />;
       case 'deactivated':
-        return <Chip label="Deactivated" color="error" size="small" icon={<Block />} />;
+        return <Chip label={t('admin.deactivated')} color="error" size="small" icon={<Block />} />;
       default:
         return <Chip label={user.status} size="small" />;
     }
@@ -292,10 +294,10 @@ const UserManagement: React.FC = () => {
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          User Management
+          {t('admin.userManagement')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage user accounts, permissions, and monitor activity
+          {t('admin.userManagement')}
         </Typography>
       </Box>
 
@@ -306,7 +308,7 @@ const UserManagement: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <People sx={{ color: '#00d4ff', mr: 1 }} />
-                <Typography variant="h6">Total Users</Typography>
+                <Typography variant="h6">{t('admin.totalUsers')}</Typography>
               </Box>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 {userStats.totalUsers}
@@ -318,7 +320,7 @@ const UserManagement: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <CheckCircle sx={{ color: '#00ff88', mr: 1 }} />
-                <Typography variant="h6">Active</Typography>
+                <Typography variant="h6">{t('warranty.active')}</Typography>
               </Box>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 {userStats.activeUsers}
@@ -330,7 +332,7 @@ const UserManagement: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Warning sx={{ color: '#ffaa00', mr: 1 }} />
-                <Typography variant="h6">Suspended</Typography>
+                <Typography variant="h6">{t('warranty.pending')}</Typography>
               </Box>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 {userStats.suspendedUsers}
@@ -342,7 +344,7 @@ const UserManagement: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Block sx={{ color: '#ff0080', mr: 1 }} />
-                <Typography variant="h6">Deactivated</Typography>
+                <Typography variant="h6">{t('admin.deactivated')}</Typography>
               </Box>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 {userStats.deactivatedUsers}
@@ -354,7 +356,7 @@ const UserManagement: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <PersonAdd sx={{ color: '#00d4ff', mr: 1 }} />
-                <Typography variant="h6">New This Month</Typography>
+                <Typography variant="h6">{t('admin.newThisMonth')}</Typography>
               </Box>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 {userStats.newUsersThisMonth}
@@ -369,7 +371,7 @@ const UserManagement: React.FC = () => {
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField
             size="small"
-            placeholder="Search users..."
+            placeholder={t('admin.searchUsers')}
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
             InputProps={{
@@ -379,29 +381,29 @@ const UserManagement: React.FC = () => {
           />
           
           <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel>Role</InputLabel>
+            <InputLabel>{t('auth.role')}</InputLabel>
             <Select
               value={filters.role}
               onChange={(e) => setFilters({ ...filters, role: e.target.value as any })}
-              label="Role"
+              label={t('auth.role')}
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="buyer">Buyer</MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="">{t('common.all')}</MenuItem>
+              <MenuItem value="buyer">{t('auth.buyer')}</MenuItem>
+              <MenuItem value="admin">{t('auth.admin')}</MenuItem>
             </Select>
           </FormControl>
           
           <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel>Status</InputLabel>
+            <InputLabel>{t('common.status')}</InputLabel>
             <Select
               value={filters.status}
               onChange={(e) => setFilters({ ...filters, status: e.target.value as any })}
-              label="Status"
+              label={t('common.status')}
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="suspended">Suspended</MenuItem>
-              <MenuItem value="deactivated">Deactivated</MenuItem>
+              <MenuItem value="">{t('common.all')}</MenuItem>
+              <MenuItem value="active">{t('warranty.active')}</MenuItem>
+              <MenuItem value="suspended">{t('warranty.pending')}</MenuItem>
+              <MenuItem value="deactivated">{t('admin.deactivated')}</MenuItem>
             </Select>
           </FormControl>
 
@@ -411,7 +413,7 @@ const UserManagement: React.FC = () => {
               color="warning"
               onClick={() => setBulkActionDialog(true)}
             >
-              Bulk Suspend ({selectedUsers.length})
+              {t('admin.bulkSuspend')} ({selectedUsers.length})
             </Button>
           )}
         </Box>
@@ -424,8 +426,8 @@ const UserManagement: React.FC = () => {
           onChange={(e, v) => setTabValue(v)}
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          <Tab label="All Users" />
-          <Tab label="Suspension History" />
+          <Tab label={t('admin.allUsers')} />
+          <Tab label={t('admin.suspensionHistory')} />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
@@ -445,15 +447,15 @@ const UserManagement: React.FC = () => {
                       }}
                     />
                   </TableCell>
-                  <TableCell>User</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Orders</TableCell>
-                  <TableCell>Total Spent</TableCell>
-                  <TableCell>Joined</TableCell>
-                  <TableCell>Last Login</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell>{t('admin.user')}</TableCell>
+                  <TableCell>{t('common.email')}</TableCell>
+                  <TableCell>{t('auth.role')}</TableCell>
+                  <TableCell>{t('common.status')}</TableCell>
+                  <TableCell>{t('nav.orders')}</TableCell>
+                  <TableCell>{t('cart.total')}</TableCell>
+                  <TableCell>{t('orders.created')}</TableCell>
+                  <TableCell>{t('admin.lastLogin')}</TableCell>
+                  <TableCell align="right">{t('common.actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -494,9 +496,9 @@ const UserManagement: React.FC = () => {
                       {format(new Date(user.created_at), 'MMM dd, yyyy')}
                     </TableCell>
                     <TableCell>
-                      {user.last_sign_in 
+                      {user.last_sign_in
                         ? format(new Date(user.last_sign_in), 'MMM dd, yyyy')
-                        : 'Never'}
+                        : t('admin.never')}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
@@ -518,12 +520,12 @@ const UserManagement: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell>User</TableCell>
-                  <TableCell>Action</TableCell>
-                  <TableCell>Reason</TableCell>
-                  <TableCell>Admin</TableCell>
-                  <TableCell>Suspended Until</TableCell>
+                  <TableCell>{t('logistics.preferredDate')}</TableCell>
+                  <TableCell>{t('admin.user')}</TableCell>
+                  <TableCell>{t('common.actions')}</TableCell>
+                  <TableCell>{t('admin.reasonForSuspension')}</TableCell>
+                  <TableCell>{t('auth.admin')}</TableCell>
+                  <TableCell>{t('admin.suspensionDuration')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -563,7 +565,7 @@ const UserManagement: React.FC = () => {
       >
         <MenuItem onClick={() => handleViewActivity(selectedUser)}>
           <ListItemIcon><History /></ListItemIcon>
-          <ListItemText>View Activity</ListItemText>
+          <ListItemText>{t('admin.viewActivity')}</ListItemText>
         </MenuItem>
         
         {selectedUser?.status === 'active' && (
@@ -572,7 +574,7 @@ const UserManagement: React.FC = () => {
             setSuspendDialog(true);
           }}>
             <ListItemIcon><Lock /></ListItemIcon>
-            <ListItemText>Suspend User</ListItemText>
+            <ListItemText>{t('admin.suspendUser')}</ListItemText>
           </MenuItem>
         )}
         
@@ -582,7 +584,7 @@ const UserManagement: React.FC = () => {
             handleUnsuspendUser(selectedUser.id);
           }}>
             <ListItemIcon><LockOpen /></ListItemIcon>
-            <ListItemText>Unsuspend User</ListItemText>
+            <ListItemText>{t('admin.unsuspendUser')}</ListItemText>
           </MenuItem>
         )}
         
@@ -591,7 +593,7 @@ const UserManagement: React.FC = () => {
           handleExportUserData(selectedUser.id);
         }}>
           <ListItemIcon><Download /></ListItemIcon>
-          <ListItemText>Export User Data</ListItemText>
+          <ListItemText>{t('admin.exportUserData')}</ListItemText>
         </MenuItem>
         
         {selectedUser?.status !== 'deactivated' && (
@@ -600,40 +602,40 @@ const UserManagement: React.FC = () => {
             handleDeactivateUser(selectedUser.id, 'Admin action');
           }} sx={{ color: 'error.main' }}>
             <ListItemIcon><Delete /></ListItemIcon>
-            <ListItemText>Deactivate User</ListItemText>
+            <ListItemText>{t('admin.deactivateUser')}</ListItemText>
           </MenuItem>
         )}
       </Menu>
 
       {/* Suspend Dialog */}
       <Dialog open={suspendDialog} onClose={() => setSuspendDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Suspend User</DialogTitle>
+        <DialogTitle>{t('admin.suspendUser')}</DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="warning" sx={{ mb: 2 }}>
-              Suspending user: {selectedUser?.email}
+              {t('admin.suspendUser')}: {selectedUser?.email}
             </Alert>
             
             <TextField
               fullWidth
               multiline
               rows={3}
-              label="Reason for suspension"
+              label={t('admin.reasonForSuspension')}
               value={suspendForm.reason}
               onChange={(e) => setSuspendForm({ ...suspendForm, reason: e.target.value })}
-              placeholder="Please provide a detailed reason..."
+              placeholder={t('admin.reasonForSuspension')}
               sx={{ mb: 2 }}
             />
             
             <FormControl fullWidth>
-              <InputLabel>Suspension Duration</InputLabel>
+              <InputLabel>{t('admin.suspensionDuration')}</InputLabel>
               <Select
                 value={suspendForm.duration}
                 onChange={(e) => setSuspendForm({ ...suspendForm, duration: e.target.value })}
-                label="Suspension Duration"
+                label={t('admin.suspensionDuration')}
               >
-                <MenuItem value="permanent">Permanent</MenuItem>
-                <MenuItem value="custom">Custom Duration</MenuItem>
+                <MenuItem value="permanent">{t('admin.permanent')}</MenuItem>
+                <MenuItem value="custom">{t('admin.customDuration')}</MenuItem>
               </Select>
             </FormControl>
             
@@ -641,7 +643,7 @@ const UserManagement: React.FC = () => {
               <TextField
                 fullWidth
                 type="number"
-                label="Days"
+                label={t('admin.days')}
                 value={suspendForm.customDays}
                 onChange={(e) => setSuspendForm({ ...suspendForm, customDays: parseInt(e.target.value) || 1 })}
                 sx={{ mt: 2 }}
@@ -651,47 +653,47 @@ const UserManagement: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setSuspendDialog(false)}>Cancel</Button>
-          <Button 
-            onClick={handleSuspendUser} 
+          <Button onClick={() => setSuspendDialog(false)}>{t('common.cancel')}</Button>
+          <Button
+            onClick={handleSuspendUser}
             variant="contained"
             color="warning"
             disabled={!suspendForm.reason || processing}
           >
-            {processing ? <CircularProgress size={20} /> : 'Suspend User'}
+            {processing ? <CircularProgress size={20} /> : t('admin.suspendUser')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Bulk Action Dialog */}
       <Dialog open={bulkActionDialog} onClose={() => setBulkActionDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Bulk Suspend Users</DialogTitle>
+        <DialogTitle>{t('admin.bulkSuspend')}</DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="warning" sx={{ mb: 2 }}>
-              You are about to suspend {selectedUsers.length} users
+              {t('admin.youAreAboutToSuspend', { count: selectedUsers.length })}
             </Alert>
             
             <TextField
               fullWidth
               multiline
               rows={3}
-              label="Reason for suspension"
+              label={t('admin.reasonForSuspension')}
               value={suspendForm.reason}
               onChange={(e) => setSuspendForm({ ...suspendForm, reason: e.target.value })}
-              placeholder="Please provide a detailed reason..."
+              placeholder={t('admin.reasonForSuspension')}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setBulkActionDialog(false)}>Cancel</Button>
-          <Button 
-            onClick={handleBulkSuspend} 
+          <Button onClick={() => setBulkActionDialog(false)}>{t('common.cancel')}</Button>
+          <Button
+            onClick={handleBulkSuspend}
             variant="contained"
             color="warning"
             disabled={!suspendForm.reason || processing}
           >
-            {processing ? <CircularProgress size={20} /> : `Suspend ${selectedUsers.length} Users`}
+            {processing ? <CircularProgress size={20} /> : `${t('admin.bulkSuspend')} ${selectedUsers.length} ${t('admin.totalUsers')}`}
           </Button>
         </DialogActions>
       </Dialog>

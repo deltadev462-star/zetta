@@ -21,9 +21,11 @@ import { Build, Send, Warning } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
 import { MaintenanceRequest } from '../types';
+import { useTranslation } from 'react-i18next';
 
 const Maintenance: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -82,7 +84,7 @@ const Maintenance: React.FC = () => {
         .insert(requestData);
 
       if (submitError) {
-        setError('Failed to submit request. Please try again.');
+        setError(t('common.error'));
       } else {
         setSuccess(true);
         // Reset form after successful submission
@@ -100,7 +102,7 @@ const Maintenance: React.FC = () => {
         }, 3000);
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError(t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -125,30 +127,29 @@ const Maintenance: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <Build sx={{ fontSize: 40, mr: 2, color: 'primary.main' }} />
           <Typography variant="h4">
-            Maintenance Service Request
+            {t('maintenance.title')}
           </Typography>
         </Box>
 
         <Typography variant="body1" color="text.secondary" paragraph>
-          Submit a maintenance request for your medical equipment. Our certified technicians
-          will review your request and contact you to schedule service.
+          {t('maintenance.subtitle')}
         </Typography>
 
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
         {success && (
           <Alert severity="success" sx={{ mb: 3 }}>
-            Your maintenance request has been submitted successfully! We'll contact you soon.
+            {t('maintenance.requestSubmitted')}
           </Alert>
         )}
 
         <Box component="form" onSubmit={handleSubmit}>
           <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-            Equipment Information
+            {t('maintenance.equipmentInfo')}
           </Typography>
           
           <TextField
             fullWidth
-            label="Product/Equipment Description"
+            label={t('maintenance.productDescription')}
             name="productDescription"
             value={formData.productDescription}
             onChange={handleInputChange}
@@ -161,17 +162,17 @@ const Maintenance: React.FC = () => {
             fullWidth
             multiline
             rows={4}
-            label="Issue Description"
+            label={t('maintenance.issueDescription')}
             name="issueDescription"
             value={formData.issueDescription}
             onChange={handleInputChange}
             required
             sx={{ mb: 3 }}
-            placeholder="Please describe the issue you're experiencing..."
+            placeholder={t('maintenance.issuePlaceholder')}
           />
 
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-            Urgency Level
+            {t('maintenance.urgencyLevel')}
           </Typography>
 
           <RadioGroup
@@ -185,8 +186,8 @@ const Maintenance: React.FC = () => {
               control={<Radio />}
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Chip label="Low" color="success" size="small" />
-                  <Typography variant="body2">Routine maintenance</Typography>
+                  <Chip label={t('maintenance.low')} color="success" size="small" />
+                  <Typography variant="body2">{t('maintenance.routineMaintenance')}</Typography>
                 </Box>
               }
             />
@@ -195,8 +196,8 @@ const Maintenance: React.FC = () => {
               control={<Radio />}
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Chip label="Medium" color="warning" size="small" />
-                  <Typography variant="body2">Equipment operational but needs attention</Typography>
+                  <Chip label={t('maintenance.medium')} color="warning" size="small" />
+                  <Typography variant="body2">{t('maintenance.operationalNeedsAttention')}</Typography>
                 </Box>
               }
             />
@@ -205,8 +206,8 @@ const Maintenance: React.FC = () => {
               control={<Radio />}
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Chip label="High" color="error" size="small" />
-                  <Typography variant="body2">Equipment non-operational</Typography>
+                  <Chip label={t('maintenance.high')} color="error" size="small" />
+                  <Typography variant="body2">{t('maintenance.nonOperational')}</Typography>
                 </Box>
               }
             />
@@ -214,17 +215,17 @@ const Maintenance: React.FC = () => {
 
           {formData.urgency === 'high' && (
             <Alert severity="warning" sx={{ mb: 3 }} icon={<Warning />}>
-              High urgency requests will be prioritized. Our team will contact you within 24 hours.
+              {t('maintenance.highUrgencyWarning')}
             </Alert>
           )}
 
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-            Contact Information
+            {t('maintenance.contactInfo')}
           </Typography>
 
           <TextField
             fullWidth
-            label="Contact Name"
+            label={t('maintenance.contactName')}
             name="contactName"
             value={formData.contactName}
             onChange={handleInputChange}
@@ -235,7 +236,7 @@ const Maintenance: React.FC = () => {
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
             <TextField
               fullWidth
-              label="Phone Number"
+              label={t('maintenance.phoneNumber')}
               name="contactPhone"
               value={formData.contactPhone}
               onChange={handleInputChange}
@@ -244,7 +245,7 @@ const Maintenance: React.FC = () => {
             />
             <TextField
               fullWidth
-              label="Email Address"
+              label={t('maintenance.emailAddress')}
               name="contactEmail"
               value={formData.contactEmail}
               onChange={handleInputChange}
@@ -254,15 +255,15 @@ const Maintenance: React.FC = () => {
           </Box>
 
           <FormControl fullWidth sx={{ mb: 3 }}>
-            <InputLabel>Preferred Contact Method</InputLabel>
+            <InputLabel>{t('maintenance.preferredContactMethod')}</InputLabel>
             <Select
               value={formData.preferredContact}
-              label="Preferred Contact Method"
+              label={t('maintenance.preferredContactMethod')}
               onChange={(e) => setFormData(prev => ({ ...prev, preferredContact: e.target.value }))}
             >
-              <MenuItem value="email">Email</MenuItem>
-              <MenuItem value="phone">Phone</MenuItem>
-              <MenuItem value="both">Both</MenuItem>
+              <MenuItem value="email">{t('maintenance.email')}</MenuItem>
+              <MenuItem value="phone">{t('maintenance.phone')}</MenuItem>
+              <MenuItem value="both">{t('maintenance.both')}</MenuItem>
             </Select>
           </FormControl>
 
@@ -271,7 +272,7 @@ const Maintenance: React.FC = () => {
               variant="outlined"
               onClick={() => window.history.back()}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
@@ -279,7 +280,7 @@ const Maintenance: React.FC = () => {
               disabled={loading}
               startIcon={loading ? <CircularProgress size={20} /> : <Send />}
             >
-              {loading ? 'Submitting...' : 'Submit Request'}
+              {loading ? t('maintenance.submitting') : t('maintenance.submitRequest')}
             </Button>
           </Box>
         </Box>
@@ -306,20 +307,20 @@ const Maintenance: React.FC = () => {
         }}
       >
         <Typography variant="h6" gutterBottom sx={{ color: 'white', fontWeight: 600 }}>
-          What happens next?
+          {t('maintenance.whatHappensNext')}
         </Typography>
         <Box component="ol" sx={{ pl: 2 }}>
           <Typography component="li" variant="body2" paragraph sx={{ color: 'rgba(255, 255, 255, 0.95)' }}>
-            Our technical team will review your request within 24-48 hours
+            {t('maintenance.nextStep1')}
           </Typography>
           <Typography component="li" variant="body2" paragraph sx={{ color: 'rgba(255, 255, 255, 0.95)' }}>
-            A certified technician will contact you to discuss the issue and schedule service
+            {t('maintenance.nextStep2')}
           </Typography>
           <Typography component="li" variant="body2" paragraph sx={{ color: 'rgba(255, 255, 255, 0.95)' }}>
-            You'll receive a cost estimate before any work begins
+            {t('maintenance.nextStep3')}
           </Typography>
           <Typography component="li" variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.95)' }}>
-            Track your service request status in your account dashboard
+            {t('maintenance.nextStep4')}
           </Typography>
         </Box>
       </Paper>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Container,
   Paper,
@@ -40,6 +41,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { items, updateQuantity, removeFromCart, getCartTotal, clearCart } = useCart();
   const [removingItem, setRemovingItem] = useState<string | null>(null);
@@ -133,10 +135,10 @@ const Cart: React.FC = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Your cart is empty
+              {t('cart.empty')}
             </Typography>
             <Typography variant="body1" sx={{ color: 'var(--text-secondary)', mb: 4 }}>
-              Discover amazing medical equipment in our marketplace
+              {t('cart.emptyDescription')}
             </Typography>
             <Button
               variant="contained"
@@ -154,7 +156,7 @@ const Cart: React.FC = () => {
                 },
               }}
             >
-              Start Shopping
+              {t('cart.startShopping')}
             </Button>
           </Card>
         </Fade>
@@ -180,10 +182,10 @@ const Cart: React.FC = () => {
                 mb: 1,
               }}
             >
-              Shopping Cart
+              {t('cart.title')}
             </Typography>
             <Typography variant="body1" sx={{ color: 'var(--text-secondary)' }}>
-              {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
+              {t('cart.itemCount', { count: items.length })}
             </Typography>
           </Box>
 
@@ -244,7 +246,7 @@ const Cart: React.FC = () => {
                                 width: 120,
                                 height: 120,
                                 objectFit: 'cover',
-                                borderRadius: 2,
+                                borderRadius: 1,
                                 border: '1px solid rgba(0,0,0,0.08)',
                               }}
                             />
@@ -350,7 +352,7 @@ const Cart: React.FC = () => {
                                 {/* Price */}
                                 <Box sx={{ textAlign: 'right' }}>
                                   <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                                    {formatPrice(price)} each
+                                    {t('cart.priceEach', { price: formatPrice(price) })}
                                   </Typography>
                                   <Typography 
                                     variant="h6" 
@@ -366,7 +368,7 @@ const Cart: React.FC = () => {
                                 </Box>
 
                                 {/* Remove Button */}
-                                <Tooltip title="Remove from cart" arrow>
+                                <Tooltip title={t('cart.removeFromCart')} arrow>
                                   <IconButton
                                     onClick={() => handleRemoveItem(item.product.id)}
                                     sx={{
@@ -406,7 +408,7 @@ const Cart: React.FC = () => {
                     },
                   }}
                 >
-                  Continue Shopping
+                  {t('cart.continueShopping')}
                 </Button>
                 <Button
                   variant="outlined"
@@ -422,7 +424,7 @@ const Cart: React.FC = () => {
                     },
                   }}
                 >
-                  Clear Cart
+                  {t('cart.clearCart')}
                 </Button>
               </Box>
             </Box>
@@ -451,25 +453,25 @@ const Cart: React.FC = () => {
                     }}
                   >
                     <AutoAwesome sx={{ color: 'var(--primary-color)' }} />
-                    Order Summary
+                    {t('cart.orderSummary')}
                   </Typography>
                   
                   <Box sx={{ mt: 3 }}>
                     <Stack spacing={2}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: 'var(--text-secondary)' }}>Subtotal</Typography>
+                        <Typography sx={{ color: 'var(--text-secondary)' }}>{t('cart.subtotal')}</Typography>
                         <Typography fontWeight={600}>{formatPrice(subtotal)}</Typography>
                       </Box>
                       
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <LocalShipping sx={{ fontSize: 18, color: 'var(--text-secondary)' }} />
-                          <Typography sx={{ color: 'var(--text-secondary)' }}>Shipping</Typography>
+                          <Typography sx={{ color: 'var(--text-secondary)' }}>{t('cart.shipping')}</Typography>
                         </Box>
                         {shipping === 0 ? (
-                          <Chip 
-                            label="FREE" 
-                            size="small" 
+                          <Chip
+                            label={t('cart.freeShipping')}
+                            size="small"
                             sx={{ 
                               bgcolor: 'var(--success-color)',
                               color: 'var(--text-primary)',
@@ -482,7 +484,7 @@ const Cart: React.FC = () => {
                       </Box>
                       
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: 'var(--text-secondary)' }}>VAT (19%)</Typography>
+                        <Typography sx={{ color: 'var(--text-secondary)' }}>{t('cart.vat')}</Typography>
                         <Typography fontWeight={600}>{formatPrice(tax)}</Typography>
                       </Box>
                     </Stack>
@@ -494,16 +496,16 @@ const Cart: React.FC = () => {
                           value={(subtotal / 5000) * 100}
                           sx={{
                             height: 8,
-                            borderRadius: 4,
+                            borderRadius: 1,
                             bgcolor: 'var(--bg-active)',
                             '& .MuiLinearProgress-bar': {
-                              borderRadius: 4,
+                              borderRadius: 1,
                               background: `linear-gradient(90deg, var(--primary-color) 0%, var(--success-color) 100%)`,
                             },
                           }}
                         />
                         <Typography variant="body2" sx={{ mt: 1, color: 'var(--text-secondary)' }}>
-                          Add {formatPrice(5000 - subtotal)} more for free shipping
+                          {t('cart.addMoreForFreeShipping', { amount: formatPrice(5000 - subtotal) })}
                         </Typography>
                       </Box>
                     )}
@@ -511,8 +513,8 @@ const Cart: React.FC = () => {
                     <Divider sx={{ my: 3, borderColor: 'var(--border-primary)' }} />
                     
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                      <Typography variant="h6" fontWeight={700}>Total</Typography>
-                      <Typography 
+                      <Typography variant="h6" fontWeight={700}>{t('cart.total')}</Typography>
+                      <Typography
                         variant="h5" 
                         sx={{
                           fontWeight: 800,
@@ -530,15 +532,15 @@ const Cart: React.FC = () => {
                   <Stack spacing={1.5} sx={{ mb: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <Shield sx={{ fontSize: 20, color: 'var(--success-color)' }} />
-                      <Typography variant="body2">Secure checkout</Typography>
+                      <Typography variant="body2">{t('cart.secureCheckout')}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <LocalOffer sx={{ fontSize: 20, color: 'var(--success-color)' }} />
-                      <Typography variant="body2">Best price guarantee</Typography>
+                      <Typography variant="body2">{t('cart.bestPriceGuarantee')}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <CreditCard sx={{ fontSize: 20, color: 'var(--success-color)' }} />
-                      <Typography variant="body2">Multiple payment options</Typography>
+                      <Typography variant="body2">{t('cart.multiplePaymentOptions')}</Typography>
                     </Box>
                   </Stack>
 
@@ -555,7 +557,7 @@ const Cart: React.FC = () => {
                         },
                       }}
                     >
-                      Please sign in to proceed to checkout
+                      {t('cart.signInRequired')}
                     </Alert>
                   )}
 
@@ -577,14 +579,14 @@ const Cart: React.FC = () => {
                       },
                     }}
                   >
-                    {user ? 'Proceed to Checkout' : 'Sign In to Checkout'}
+                    {user ? t('cart.proceedToCheckout') : t('cart.signInToCheckout')}
                   </Button>
 
                   <Typography
                     variant="body2"
                     sx={{ mt: 2, textAlign: 'center', color: 'var(--text-secondary)' }}
                   >
-                    Powered by Stripe
+                    {t('cart.poweredByStripe')}
                   </Typography>
                 </CardContent>
               </Card>

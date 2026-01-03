@@ -322,7 +322,7 @@ const ProductForm: React.FC = () => {
             </Box>
 
             {formData.price && formData.zetta_price && (
-              <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(255,0,128,0.1)', borderRadius: 2, border: '1px solid rgba(255,0,128,0.3)' }}>
+              <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(255,0,128,0.1)', borderRadius: 1, border: '1px solid rgba(255,0,128,0.3)' }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
                   Commission Calculation
                 </Typography>
@@ -387,7 +387,7 @@ const ProductForm: React.FC = () => {
                       sx={{
                         width: 150,
                         height: 150,
-                        borderRadius: 2,
+                        borderRadius: 1,
                         overflow: 'hidden',
                         border: '1px solid rgba(255,255,255,0.1)',
                         position: 'relative',

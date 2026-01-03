@@ -11,3 +11,4 @@ export { default as OurCustomers } from './OurCustomers';
 export { default as Services } from './Services';
 export { default as Footer } from './Footer';
 export { ScrollToTop } from './ScrollToTop';
+export { default as LanguageSwitcher } from './LanguageSwitcher';

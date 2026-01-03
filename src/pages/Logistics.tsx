@@ -25,15 +25,17 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabase';
 import { LogisticsRequest } from '../types';
-
-const steps = ['Service Details', 'Address Information', 'Review & Submit'];
+import { useTranslation } from 'react-i18next';
 
 const Logistics: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  
+  const steps = [t('logistics.serviceDetails'), t('logistics.addressInfo'), t('logistics.reviewSubmit')];
   
   const [formData, setFormData] = useState({
     serviceType: '',
@@ -110,7 +112,7 @@ const Logistics: React.FC = () => {
         .insert(requestData);
 
       if (submitError) {
-        setError('Failed to submit request. Please try again.');
+        setError(t('common.error'));
       } else {
         setSuccess(true);
         // Reset form after successful submission
@@ -130,7 +132,7 @@ const Logistics: React.FC = () => {
         }, 3000);
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError(t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -142,22 +144,22 @@ const Logistics: React.FC = () => {
         return (
           <Box sx={{ mt: 3 }}>
             <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Service Type</InputLabel>
+              <InputLabel>{t('logistics.serviceType')}</InputLabel>
               <Select
                 value={formData.serviceType}
-                label="Service Type"
+                label={t('logistics.serviceType')}
                 onChange={handleSelectChange('serviceType')}
                 required
               >
-                <MenuItem value="delivery">Delivery Service</MenuItem>
-                <MenuItem value="storage">Storage Service</MenuItem>
-                <MenuItem value="transport">Transport Service</MenuItem>
+                <MenuItem value="delivery">{t('logistics.deliveryService')}</MenuItem>
+                <MenuItem value="storage">{t('logistics.storageService')}</MenuItem>
+                <MenuItem value="transport">{t('logistics.transportService')}</MenuItem>
               </Select>
             </FormControl>
 
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                label="Preferred Date"
+                label={t('logistics.preferredDate')}
                 value={formData.preferredDate}
                 onChange={handleDateChange}
                 slotProps={{
@@ -173,11 +175,11 @@ const Logistics: React.FC = () => {
               fullWidth
               multiline
               rows={4}
-              label="Special Instructions"
+              label={t('logistics.specialInstructions')}
               name="specialInstructions"
               value={formData.specialInstructions}
               onChange={handleInputChange}
-              placeholder="Any special requirements or instructions..."
+              placeholder={t('logistics.specialInstructions')}
             />
           </Box>
         );
@@ -187,7 +189,7 @@ const Logistics: React.FC = () => {
           <Box sx={{ mt: 3 }}>
             <TextField
               fullWidth
-              label="Pickup Address"
+              label={t('logistics.pickupAddress')}
               name="pickupAddress"
               value={formData.pickupAddress}
               onChange={handleInputChange}
@@ -199,7 +201,7 @@ const Logistics: React.FC = () => {
 
             <TextField
               fullWidth
-              label="Delivery Address"
+              label={t('logistics.deliveryAddress')}
               name="deliveryAddress"
               value={formData.deliveryAddress}
               onChange={handleInputChange}
@@ -211,7 +213,7 @@ const Logistics: React.FC = () => {
 
             <TextField
               fullWidth
-              label="Contact Name"
+              label={t('logistics.contactName')}
               name="contactName"
               value={formData.contactName}
               onChange={handleInputChange}
@@ -221,7 +223,7 @@ const Logistics: React.FC = () => {
 
             <TextField
               fullWidth
-              label="Contact Phone"
+              label={t('logistics.contactPhone')}
               name="contactPhone"
               value={formData.contactPhone}
               onChange={handleInputChange}
@@ -235,17 +237,17 @@ const Logistics: React.FC = () => {
         return (
           <Box sx={{ mt: 3 }}>
             <Typography variant="h6" gutterBottom>
-              Service Summary
+              {t('logistics.serviceSummary')}
             </Typography>
             
             <Paper sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}>
-              <Typography><strong>Service Type:</strong> {formData.serviceType}</Typography>
-              <Typography><strong>Preferred Date:</strong> {formData.preferredDate?.toLocaleDateString()}</Typography>
-              <Typography><strong>Pickup Address:</strong> {formData.pickupAddress}</Typography>
-              <Typography><strong>Delivery Address:</strong> {formData.deliveryAddress}</Typography>
-              <Typography><strong>Contact:</strong> {formData.contactName} ({formData.contactPhone})</Typography>
+              <Typography><strong>{t('logistics.serviceType')}:</strong> {t(`logistics.${formData.serviceType}Service`)}</Typography>
+              <Typography><strong>{t('logistics.preferredDate')}:</strong> {formData.preferredDate?.toLocaleDateString()}</Typography>
+              <Typography><strong>{t('logistics.pickupAddress')}:</strong> {formData.pickupAddress}</Typography>
+              <Typography><strong>{t('logistics.deliveryAddress')}:</strong> {formData.deliveryAddress}</Typography>
+              <Typography><strong>{t('admin.contact')}:</strong> {formData.contactName} ({formData.contactPhone})</Typography>
               {formData.specialInstructions && (
-                <Typography><strong>Special Instructions:</strong> {formData.specialInstructions}</Typography>
+                <Typography><strong>{t('logistics.specialInstructions')}:</strong> {formData.specialInstructions}</Typography>
               )}
             </Paper>
 
@@ -257,20 +259,20 @@ const Logistics: React.FC = () => {
                   color="primary"
                 />
               }
-              label="I agree to the terms and conditions for logistics services"
+              label={t('logistics.agreeToTerms')}
             />
 
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             {success && (
               <Alert severity="success" sx={{ mt: 2 }}>
-                Your logistics request has been submitted successfully!
+                {t('logistics.requestSubmitted')}
               </Alert>
             )}
           </Box>
         );
 
       default:
-        return 'Unknown step';
+        return '';
     }
   };
 
@@ -298,7 +300,7 @@ const Logistics: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <LocalShipping sx={{ fontSize: 40, mr: 2, color: 'primary.main' }} />
           <Typography variant="h4">
-            Logistics Service Request
+            {t('logistics.title')}
           </Typography>
         </Box>
 
@@ -317,7 +319,7 @@ const Logistics: React.FC = () => {
             disabled={activeStep === 0}
             onClick={handleBack}
           >
-            Back
+            {t('common.back')}
           </Button>
 
           {activeStep === steps.length - 1 ? (
@@ -327,7 +329,7 @@ const Logistics: React.FC = () => {
               disabled={!isStepValid() || loading}
               startIcon={loading ? <CircularProgress size={20} /> : <Send />}
             >
-              {loading ? 'Submitting...' : 'Submit Request'}
+              {loading ? t('checkout.processing') : t('maintenance.submitRequest')}
             </Button>
           ) : (
             <Button
@@ -335,7 +337,7 @@ const Logistics: React.FC = () => {
               onClick={handleNext}
               disabled={!isStepValid()}
             >
-              Next
+              {t('common.next')}
             </Button>
           )}
         </Box>

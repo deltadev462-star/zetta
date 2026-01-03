@@ -7,6 +7,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { ArrowForwardIos, ArrowBackIosNew } from "@mui/icons-material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -27,6 +28,7 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
   products,
   onAddToCart,
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -137,7 +139,7 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
               onClick={() => navigate(`/products/${product.id}`)}
               sx={{
                 height: "100%",
-                borderRadius: 0,
+                borderRadius: 1,
 
                 boxShadow: "none",
                 cursor: "pointer",
@@ -159,7 +161,7 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
                     transition: "transform 0.3s ease",
                   }}
                 />
-                {product.warranty_duration &&
+                {/* {product.warranty_duration &&
                   product.warranty_duration > 12 && (
                     <Box
                       sx={{
@@ -170,15 +172,15 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
                         color: "white",
                         px: 1,
                         py: 0.5,
-                        borderRadius: 0,
+                        borderRadius: 0.5,
                         fontSize: "0.7rem",
                         fontWeight: 600,
                         boxShadow: "0 2px 10px rgba(255, 0, 128, 0.5)",
                       }}
                     >
-                      PREMIUM
+                      {t("products.premium", { defaultValue: "PREMIUM" })}
                     </Box>
-                  )}
+                  )} */}
               </Box>
               <CardContent sx={{ p: 2, border: "none" }}>
                 <Typography
@@ -195,7 +197,7 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
                 >
                   {product.title}
                 </Typography>
-                <Typography
+                {/* <Typography
                   variant="body2"
                   color="text.secondary"
                   sx={{
@@ -208,7 +210,7 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
                   }}
                 >
                   {product.description}
-                </Typography>
+                </Typography> */}
                 <Typography
                   variant="h6"
                   sx={{
@@ -216,7 +218,7 @@ const FeaturedEquipmentSwiper: React.FC<FeaturedEquipmentSwiperProps> = ({
                     color: "#00a1cc",
                   }}
                 >
-                  {formatPrice(product.zetta_price || product.price)}
+                 <span style={{ fontWeight: 600 , color:"#000", fontSize: "0.875rem" }}>From</span> {formatPrice(product.zetta_price || product.price)}
                 </Typography>
               </CardContent>
             </Card>

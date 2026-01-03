@@ -82,7 +82,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, prefix =
           <Box
             sx={{
               p: 1.5,
-              borderRadius: 2,
+              borderRadius: 1,
               bgcolor: `${color}20`,
               display: 'inline-flex',
             }}
@@ -563,10 +563,10 @@ const Reports: React.FC = () => {
                                   value={(item.revenue / reportData.totalRevenue) * 100}
                                   sx={{
                                     height: 8,
-                                    borderRadius: 4,
+                                    borderRadius: 1,
                                     bgcolor: 'rgba(255,255,255,0.1)',
                                     '& .MuiLinearProgress-bar': {
-                                      borderRadius: 4,
+                                      borderRadius: 1,
                                       bgcolor: '#00d4ff',
                                     },
                                   }}

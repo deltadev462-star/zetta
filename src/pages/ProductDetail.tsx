@@ -45,6 +45,7 @@ import { productService } from '../services/products';
 import { Product } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import { useTranslation } from 'react-i18next';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -52,6 +53,7 @@ const ProductDetail: React.FC = () => {
   const theme = useTheme();
   const { user } = useAuth();
   const { addToCart, items } = useCart();
+  const { t } = useTranslation();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -75,12 +77,12 @@ const ProductDetail: React.FC = () => {
     try {
       const { data, error } = await productService.getProductById(id);
       if (error) {
-        setError('Failed to load product details');
+        setError(t('products.failedToLoad'));
       } else if (data) {
         setProduct(data);
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError(t('products.unexpectedError'));
     } finally {
       setLoading(false);
     }
@@ -115,6 +117,8 @@ const ProductDetail: React.FC = () => {
         return '#00ff88';
       case 'good':
         return '#00d4ff';
+      case 'fair':
+        return '#ffaa00';
       default:
         return '#ffaa00';
     }
@@ -153,7 +157,7 @@ const ProductDetail: React.FC = () => {
             border: '1px solid rgba(255,51,102,0.3)',
           }}
         >
-          {error || 'Product not found'}
+          {error || t('products.productNotFound')}
         </Alert>
         <Button
           startIcon={<ArrowBack />}
@@ -168,7 +172,7 @@ const ProductDetail: React.FC = () => {
             },
           }}
         >
-          Back to Products
+          {t('products.backToProducts')}
         </Button>
       </Container>
     );
@@ -195,7 +199,7 @@ const ProductDetail: React.FC = () => {
               },
             }}
           >
-            Back to Products
+            {t('products.backToProducts')}
           </Button>
 
           <Box sx={{ display: 'flex', gap: 4, flexDirection: { xs: 'column', md: 'row' } }}>
@@ -209,7 +213,7 @@ const ProductDetail: React.FC = () => {
                     sx={{
                       position: 'relative',
                       mb: 2,
-                      borderRadius: 3,
+                      borderRadius: 1,
                       overflow: 'hidden',
                       bgcolor: 'rgba(15,15,25,0.6)',
                       backdropFilter: 'blur(20px)',
@@ -266,11 +270,11 @@ const ProductDetail: React.FC = () => {
                         },
                         '&::-webkit-scrollbar-track': {
                           background: 'rgba(255,255,255,0.05)',
-                          borderRadius: '3px',
+                          borderRadius: '4px',
                         },
                         '&::-webkit-scrollbar-thumb': {
                           background: 'rgba(0,212,255,0.5)',
-                          borderRadius: '3px',
+                          borderRadius: '4px',
                           '&:hover': {
                             background: 'rgba(0,212,255,0.7)',
                           },
@@ -288,7 +292,7 @@ const ProductDetail: React.FC = () => {
                             width: 100,
                             height: 100,
                             objectFit: 'cover',
-                            borderRadius: 2,
+                            borderRadius: 1,
                             cursor: 'pointer',
                             border: selectedImage === index 
                               ? '2px solid #00d4ff' 
@@ -367,7 +371,7 @@ const ProductDetail: React.FC = () => {
                     }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    (127 reviews)
+                    (127 {t('products.reviews')})
                   </Typography>
                 </Box>
 
@@ -384,7 +388,7 @@ const ProductDetail: React.FC = () => {
                     }}
                   />
                   <Chip
-                    label={product.condition}
+                    label={t(`products.${product.condition}`)}
                     sx={{
                       bgcolor: alpha(getConditionColor(product.condition), 0.1),
                       border: `1px solid ${alpha(getConditionColor(product.condition), 0.3)}`,
@@ -395,7 +399,7 @@ const ProductDetail: React.FC = () => {
                   {product.warranty_duration && (
                     <Chip
                       icon={<Shield />}
-                      label={`${product.warranty_duration} months warranty`}
+                      label={`${product.warranty_duration} ${t('products.monthsWarranty')}`}
                       sx={{
                         bgcolor: 'rgba(255,0,128,0.1)',
                         border: '1px solid rgba(255,0,128,0.3)',
@@ -407,7 +411,7 @@ const ProductDetail: React.FC = () => {
                   {product.status === 'available' && (
                     <Chip
                       icon={<Inventory />}
-                      label="In Stock"
+                      label={t('products.inStock')}
                       sx={{
                         bgcolor: 'rgba(0,255,136,0.1)',
                         border: '1px solid rgba(0,255,136,0.3)',
@@ -470,11 +474,11 @@ const ProductDetail: React.FC = () => {
                 {/* Description */}
                 <Box sx={{ mb: 4 }}>
                   <Typography variant="h5" gutterBottom sx={{ color: '#00d4ff', mb: 2 }}>
-                    Description
+                    {t('products.description')}
                   </Typography>
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
+                  <Typography
+                    variant="body1"
+                    sx={{
                       color: 'text.secondary',
                       lineHeight: 1.8,
                     }}
@@ -486,7 +490,7 @@ const ProductDetail: React.FC = () => {
                 {/* Features */}
                 <Box sx={{ mb: 4 }}>
                   <Typography variant="h5" gutterBottom sx={{ color: '#00d4ff', mb: 2 }}>
-                    Key Features
+                    {t('products.keyFeatures')}
                   </Typography>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
                     <Box>
@@ -494,10 +498,10 @@ const ProductDetail: React.FC = () => {
                         <Speed sx={{ color: '#00ff88', fontSize: 30 }} />
                         <Box>
                           <Typography variant="subtitle2" color="text.secondary">
-                            Condition
+                            {t('products.condition')}
                           </Typography>
                           <Typography variant="body1" fontWeight={600}>
-                            {product.condition.charAt(0).toUpperCase() + product.condition.slice(1)}
+                            {t(`products.${product.condition}`)}
                           </Typography>
                         </Box>
                       </Box>
@@ -507,10 +511,10 @@ const ProductDetail: React.FC = () => {
                         <VerifiedUser sx={{ color: '#00ff88', fontSize: 30 }} />
                         <Box>
                           <Typography variant="subtitle2" color="text.secondary">
-                            Verified
+                            {t('products.verified')}
                           </Typography>
                           <Typography variant="body1" fontWeight={600}>
-                            Quality Assured
+                            {t('products.qualityAssured')}
                           </Typography>
                         </Box>
                       </Box>
@@ -520,10 +524,10 @@ const ProductDetail: React.FC = () => {
                         <LocalShipping sx={{ color: '#00ff88', fontSize: 30 }} />
                         <Box>
                           <Typography variant="subtitle2" color="text.secondary">
-                            Shipping
+                            {t('products.shipping')}
                           </Typography>
                           <Typography variant="body1" fontWeight={600}>
-                            Free over €5,000
+                            {t('products.freeShippingOver')}
                           </Typography>
                         </Box>
                       </Box>
@@ -533,10 +537,10 @@ const ProductDetail: React.FC = () => {
                         <WorkspacePremium sx={{ color: '#00ff88', fontSize: 30 }} />
                         <Box>
                           <Typography variant="subtitle2" color="text.secondary">
-                            Warranty
+                            {t('products.warranty')}
                           </Typography>
                           <Typography variant="body1" fontWeight={600}>
-                            {product.warranty_duration || 'Standard'} months
+                            {product.warranty_duration || t('products.standard')} {t('warranty.months')}
                           </Typography>
                         </Box>
                       </Box>
@@ -581,12 +585,12 @@ const ProductDetail: React.FC = () => {
                     }}
                   >
                     {justAdded
-                      ? 'Added to Cart!'
+                      ? t('products.addedToCart')
                       : isInCart()
-                      ? 'Already in Cart'
+                      ? t('products.alreadyInCart')
                       : product.status === 'available'
-                      ? 'Add to Cart'
-                      : 'Out of Stock'}
+                      ? t('products.addToCart')
+                      : t('products.outOfStock')}
                   </Button>
 
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
@@ -607,7 +611,7 @@ const ProductDetail: React.FC = () => {
                           },
                         }}
                       >
-                        Request Logistics
+                        {t('products.requestLogistics')}
                       </Button>
                     )}
                     <Button
@@ -625,7 +629,7 @@ const ProductDetail: React.FC = () => {
                         },
                       }}
                     >
-                      Contact Support
+                      {t('products.contactSupport')}
                     </Button>
                   </Stack>
                 </Stack>
@@ -635,7 +639,7 @@ const ProductDetail: React.FC = () => {
                   sx={{ 
                     mt: 4,
                     p: 3,
-                    borderRadius: 2,
+                    borderRadius: 1,
                     bgcolor: 'rgba(0,255,136,0.05)',
                     border: '1px solid rgba(0,255,136,0.2)',
                   }}
@@ -644,19 +648,19 @@ const ProductDetail: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <AutoAwesome sx={{ color: '#00ff88' }} />
                       <Typography variant="body2">
-                        Quality verified by Zetta Med experts
+                        {t('products.qualityVerified')}
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Shield sx={{ color: '#00ff88' }} />
                       <Typography variant="body2">
-                        Secure payment & buyer protection
+                        {t('products.securePayment')}
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <LocalShipping sx={{ color: '#00ff88' }} />
                       <Typography variant="body2">
-                        Fast & reliable shipping worldwide
+                        {t('products.fastShipping')}
                       </Typography>
                     </Box>
                   </Stack>
@@ -678,7 +682,7 @@ const ProductDetail: React.FC = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Additional Information
+              {t('products.additionalInfo')}
             </Typography>
             
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
@@ -699,12 +703,12 @@ const ProductDetail: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                       <Category sx={{ color: '#00d4ff', fontSize: 30 }} />
-                      <Typography variant="h6">Product Details</Typography>
+                      <Typography variant="h6">{t('products.productDetails')}</Typography>
                     </Box>
                     <Stack spacing={2}>
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary">
-                          Category
+                          {t('products.category')}
                         </Typography>
                         <Typography variant="body1" fontWeight={600}>
                           {product.category}
@@ -712,18 +716,18 @@ const ProductDetail: React.FC = () => {
                       </Box>
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary">
-                          Condition
+                          {t('products.condition')}
                         </Typography>
                         <Typography variant="body1" fontWeight={600}>
-                          {product.condition.charAt(0).toUpperCase() + product.condition.slice(1)}
+                          {t(`products.${product.condition}`)}
                         </Typography>
                       </Box>
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary">
-                          Availability
+                          {t('products.availability')}
                         </Typography>
                         <Typography variant="body1" fontWeight={600} color={product.status === 'available' ? '#00ff88' : 'text.secondary'}>
-                          {product.status === 'available' ? 'In Stock' : 'Out of Stock'}
+                          {product.status === 'available' ? t('products.inStock') : t('products.outOfStock')}
                         </Typography>
                       </Box>
                     </Stack>
@@ -748,15 +752,15 @@ const ProductDetail: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                       <Shield sx={{ color: '#ff0080', fontSize: 30 }} />
-                      <Typography variant="h6">Warranty & Support</Typography>
+                      <Typography variant="h6">{t('warrantySupport.title')}</Typography>
                     </Box>
                     <Typography paragraph>
-                      {product.warranty_duration 
-                        ? `This product comes with ${product.warranty_duration} months of comprehensive warranty coverage.`
-                        : 'Standard warranty applies to this product.'}
+                      {product.warranty_duration
+                        ? t('warrantySupport.comprehensiveWarranty', { months: product.warranty_duration })
+                        : t('warrantySupport.standardWarranty')}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Our expert support team is available 24/7 to assist with any questions or concerns.
+                      {t('warrantySupport.expertSupport')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -779,13 +783,13 @@ const ProductDetail: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                       <VerifiedUser sx={{ color: '#00ff88', fontSize: 30 }} />
-                      <Typography variant="h6">Quality Assurance</Typography>
+                      <Typography variant="h6">{t('qualityAssurance.title')}</Typography>
                     </Box>
                     <Typography paragraph>
-                      All equipment undergoes rigorous testing and certification by our medical equipment specialists.
+                      {t('qualityAssurance.rigorousTesting')}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      We guarantee authenticity and quality for every product in our marketplace.
+                      {t('qualityAssurance.authenticity')}
                     </Typography>
                   </CardContent>
                 </Card>

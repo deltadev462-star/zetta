@@ -23,8 +23,8 @@ import {
   StepContent,
   alpha,
 } from '@mui/material';
-import { 
-  Visibility, 
+import {
+  Visibility,
   VisibilityOff,
   Email,
   Lock,
@@ -39,10 +39,12 @@ import {
   Badge,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
+  const { t } = useTranslation();
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     email: '',
@@ -60,9 +62,9 @@ const Register: React.FC = () => {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const steps = [
-    { label: 'Account Information', icon: <Email /> },
-    { label: 'Personal Details', icon: <Person /> },
-    { label: 'Complete Registration', icon: <CheckCircle /> },
+    { label: t('auth.accountInformation'), icon: <Email /> },
+    { label: t('auth.personalDetails'), icon: <Person /> },
+    { label: t('auth.completeRegistration'), icon: <CheckCircle /> },
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,33 +86,33 @@ const Register: React.FC = () => {
     switch (step) {
       case 0:
         if (!formData.email) {
-          errors.email = 'Email is required';
+          errors.email = t('auth.emailRequired');
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-          errors.email = 'Please enter a valid email';
+          errors.email = t('auth.enterValidEmail');
         }
         
         if (!formData.password) {
-          errors.password = 'Password is required';
+          errors.password = t('auth.passwordRequired');
         } else if (formData.password.length < 6) {
-          errors.password = 'Password must be at least 6 characters';
+          errors.password = t('auth.passwordMinLength');
         }
         
         if (!formData.confirmPassword) {
-          errors.confirmPassword = 'Please confirm your password';
+          errors.confirmPassword = t('auth.confirmPasswordRequired');
         } else if (formData.password !== formData.confirmPassword) {
-          errors.confirmPassword = 'Passwords do not match';
+          errors.confirmPassword = t('auth.passwordsDoNotMatch');
         }
         break;
         
       case 1:
         if (!formData.fullName) {
-          errors.fullName = 'Full name is required';
+          errors.fullName = t('auth.fullNameRequired');
         }
         break;
         
       case 2:
         if (!formData.acceptTerms) {
-          errors.acceptTerms = 'You must accept the terms and conditions';
+          errors.acceptTerms = t('auth.mustAcceptTerms');
         }
         break;
     }
@@ -146,7 +148,7 @@ const Register: React.FC = () => {
         navigate('/profile/setup');
       }
     } catch (err: any) {
-      setError('An unexpected error occurred');
+      setError(t('auth.unexpectedError'));
     } finally {
       setLoading(false);
     }
@@ -160,7 +162,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="email"
-              label="Email Address"
+              label={t('auth.emailAddress')}
               name="email"
               autoComplete="email"
               value={formData.email}
@@ -180,7 +182,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               name="password"
-              label="Password"
+              label={t('auth.password')}
               type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="new-password"
@@ -216,7 +218,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               name="confirmPassword"
-              label="Confirm Password"
+              label={t('auth.confirmPassword')}
               type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
               autoComplete="new-password"
@@ -257,7 +259,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="fullName"
-              label="Full Name"
+              label={t('auth.fullName')}
               name="fullName"
               autoComplete="name"
               value={formData.fullName}
@@ -277,7 +279,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="companyName"
-              label="Company Name (Optional)"
+              label={t('auth.companyNameOptional')}
               name="companyName"
               autoComplete="organization"
               value={formData.companyName}
@@ -295,7 +297,7 @@ const Register: React.FC = () => {
             <TextField
               fullWidth
               id="phone"
-              label="Phone Number (Optional)"
+              label={t('auth.phoneNumberOptional')}
               name="phone"
               autoComplete="tel"
               value={formData.phone}
@@ -323,23 +325,23 @@ const Register: React.FC = () => {
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ color: 'var(--primary-color)' }}>
-                Account Summary
+                {t('auth.accountSummary')}
               </Typography>
               <Stack spacing={1}>
                 <Typography variant="body2">
-                  <strong>Email:</strong> {formData.email}
+                  <strong>{t('auth.email')}</strong> {formData.email}
                 </Typography>
                 <Typography variant="body2">
-                  <strong>Name:</strong> {formData.fullName}
+                  <strong>{t('auth.name')}</strong> {formData.fullName}
                 </Typography>
                 {formData.companyName && (
                   <Typography variant="body2">
-                    <strong>Company:</strong> {formData.companyName}
+                    <strong>{t('auth.company')}</strong> {formData.companyName}
                   </Typography>
                 )}
                 {formData.phone && (
                   <Typography variant="body2">
-                    <strong>Phone:</strong> {formData.phone}
+                    <strong>{t('auth.phone')}</strong> {formData.phone}
                   </Typography>
                 )}
               </Stack>
@@ -361,7 +363,7 @@ const Register: React.FC = () => {
               }
               label={
                 <Typography variant="body2">
-                  I accept the{' '}
+                  {t('auth.iAcceptThe')}{' '}
                   <Link
                     href="#"
                     sx={{
@@ -370,9 +372,9 @@ const Register: React.FC = () => {
                       '&:hover': { textDecoration: 'underline' },
                     }}
                   >
-                    Terms of Service
+                    {t('auth.termsOfService')}
                   </Link>
-                  {' and '}
+                  {' '}{t('auth.and')}{' '}
                   <Link
                     href="#"
                     sx={{
@@ -381,7 +383,7 @@ const Register: React.FC = () => {
                       '&:hover': { textDecoration: 'underline' },
                     }}
                   >
-                    Privacy Policy
+                    {t('auth.privacyPolicy')}
                   </Link>
                 </Typography>
               }
@@ -444,7 +446,7 @@ const Register: React.FC = () => {
               bgcolor: 'var(--bg-secondary)',
               backdropFilter: 'blur(10px)',
               border: '1px solid var(--border-primary)',
-              borderRadius: 4,
+              borderRadius: 1,
               overflow: 'hidden',
               boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
               '&::before': {
@@ -501,10 +503,10 @@ const Register: React.FC = () => {
                       mb: 1,
                     }}
                   >
-                    Join Zetta Med
+                    {t('auth.joinZettaMed')}
                   </Typography>
                   <Typography variant="h6" sx={{ color: 'var(--text-secondary)' }}>
-                    Create your account
+                    {t('auth.createYourAccount')}
                   </Typography>
                 </Box>
               </Stack>
@@ -583,7 +585,7 @@ const Register: React.FC = () => {
                       },
                     }}
                   >
-                    Back
+                    {t('auth.back')}
                   </Button>
                 )}
                 
@@ -605,7 +607,7 @@ const Register: React.FC = () => {
                       },
                     }}
                   >
-                    Next
+                    {t('auth.next')}
                   </Button>
                 ) : (
                   <Button
@@ -626,7 +628,7 @@ const Register: React.FC = () => {
                       },
                     }}
                   >
-                    {loading ? 'Creating Account...' : 'Create Account'}
+                    {loading ? t('auth.creatingAccount') : t('auth.createAccount')}
                   </Button>
                 )}
               </Stack>
@@ -634,7 +636,7 @@ const Register: React.FC = () => {
               {/* Sign In Link */}
               <Box sx={{ mt: 4, textAlign: 'center' }}>
                 <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
-                  Already have an account?{' '}
+                  {t('auth.alreadyHaveAccount')}{' '}
                   <Link
                     component={RouterLink}
                     to="/login"
@@ -649,7 +651,7 @@ const Register: React.FC = () => {
                       },
                     }}
                   >
-                    Sign In
+                    {t('auth.signIn')}
                   </Link>
                 </Typography>
               </Box>

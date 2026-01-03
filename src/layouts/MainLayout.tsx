@@ -5,6 +5,7 @@ import {
   Link as RouterLink,
   useLocation,
 } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   AppBar,
   Box,
@@ -56,8 +57,10 @@ import { useCart } from "../contexts/CartContext";
 import LiveChat from "../components/LiveChat";
 import Footer from "../components/Footer";
 import { ScrollToTop } from "../components";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 const MainLayout: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -65,6 +68,7 @@ const MainLayout: React.FC = () => {
   const { getItemCount } = useCart();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isRTL = i18n.language === "ar";
 
   // Top bar search and filters state
   const [search, setSearch] = useState("");
@@ -102,34 +106,36 @@ const MainLayout: React.FC = () => {
   };
 
   const navItems = [
-    { path: "/", label: "Products", icon: <Store />, public: true },
+    { path: "/", label: t("nav.products"), icon: <Store />, public: true },
     {
       path: "/logistics",
-      label: "Logistics",
+      label: t("nav.logistics"),
       icon: <LocalShipping />,
       public: false,
     },
     {
       path: "/maintenance",
-      label: "Maintenance",
+      label: t("nav.maintenance"),
       icon: <Build />,
       public: false,
     },
   ];
 
   const categories = [
-    "Imaging",
-    "Surgical",
-    "Monitoring",
-    "Laboratory",
-    "Dental",
+    { key: "imaging", label: t("productCategories.imaging") },
+    { key: "surgical", label: t("productCategories.surgical") },
+    { key: "monitoring", label: t("productCategories.monitoring") },
+    { key: "laboratory", label: t("productCategories.laboratory") },
+    { key: "dental", label: t("productCategories.dental") },
   ];
 
   const drawerContent = (
     <Box
       sx={{
         height: "100%",
-        background: "oklch(98.7% 0.026 102.212)",
+        background: " #fffaecff",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Box
@@ -159,7 +165,164 @@ const MainLayout: React.FC = () => {
         </IconButton>
       </Box>
       <Divider sx={{ borderColor: "rgba(0,0,0,0.1)" }} />
-      <List sx={{ p: 2 }}>
+      
+      {/* User Section */}
+      <Box sx={{ p: 2 }}>
+        {user ? (
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: "rgba(0,212,255,0.05)",
+              borderRadius: 2,
+              mb: 2,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+              <Avatar
+                sx={{
+                  bgcolor: "rgba(0,212,255,0.2)",
+                  border: "2px solid rgba(0,212,255,0.3)",
+                  width: 48,
+                  height: 48,
+                }}
+              >
+                <AccountCircle sx={{ color: "#00d4ff", fontSize: 28 }} />
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle2" sx={{ color: "rgba(0,0,0,0.6)" }}>
+                  {t("common.welcome", { defaultValue: "Welcome" })}
+                </Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "#333" }}>
+                  {user.email}
+                </Typography>
+              </Box>
+            </Box>
+            <Stack spacing={1}>
+              <Button
+                fullWidth
+                component={RouterLink}
+                to="/profile"
+                onClick={handleDrawerToggle}
+                startIcon={<Person />}
+                sx={{
+                  justifyContent: "flex-start",
+                  color: "#00d4ff",
+                  "&:hover": {
+                    bgcolor: "rgba(0,212,255,0.1)",
+                  },
+                }}
+              >
+                {t("nav.profile")}
+              </Button>
+              <Button
+                fullWidth
+                component={RouterLink}
+                to="/orders"
+                onClick={handleDrawerToggle}
+                startIcon={<Store />}
+                sx={{
+                  justifyContent: "flex-start",
+                  color: "#00d4ff",
+                  "&:hover": {
+                    bgcolor: "rgba(0,212,255,0.1)",
+                  },
+                }}
+              >
+                {t("nav.orders")}
+              </Button>
+              <Button
+                fullWidth
+                component={RouterLink}
+                to="/cart"
+                onClick={handleDrawerToggle}
+                startIcon={
+                  <Badge
+                    badgeContent={getItemCount()}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        bgcolor: "#ff0080",
+                        color: "white",
+                        fontWeight: 600,
+                      },
+                    }}
+                  >
+                    <ShoppingCart />
+                  </Badge>
+                }
+                sx={{
+                  justifyContent: "flex-start",
+                  color: "#00d4ff",
+                  "&:hover": {
+                    bgcolor: "rgba(0,212,255,0.1)",
+                  },
+                }}
+              >
+                {t("nav.cart")}
+              </Button>
+              <Divider sx={{ my: 1 }} />
+              <Button
+                fullWidth
+                onClick={handleSignOut}
+                startIcon={<ExitToApp />}
+                sx={{
+                  justifyContent: "flex-start",
+                  color: "#ff0080",
+                  "&:hover": {
+                    bgcolor: "rgba(255,0,128,0.1)",
+                  },
+                }}
+              >
+                {t("nav.logout")}
+              </Button>
+            </Stack>
+          </Box>
+        ) : (
+          <Stack spacing={2} sx={{ mb: 3 }}>
+            <Button
+              fullWidth
+              component={RouterLink}
+              to="/login"
+              onClick={handleDrawerToggle}
+              variant="outlined"
+              sx={{
+                borderRadius: '8px',
+                borderColor: "rgba(0,212,255,0.5)",
+                color: "#00d4ff",
+                "&:hover": {
+                  borderColor: "#00d4ff",
+                  bgcolor: "rgba(0,212,255,0.1)",
+                },
+              }}
+            >
+              {t("auth.signIn")}
+            </Button>
+            <Button
+              fullWidth
+              component={RouterLink}
+              to="/register"
+              onClick={handleDrawerToggle}
+              variant="contained"
+              sx={{
+                borderRadius: '8px',
+                background: "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
+                boxShadow: "0 4px 20px rgba(0,212,255,0.4)",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #00a1cc 0%, #cc0066 100%)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 30px rgba(0,212,255,0.5)",
+                },
+              }}
+            >
+              {t("auth.signUp")}
+            </Button>
+          </Stack>
+        )}
+      </Box>
+      
+      <Divider sx={{ borderColor: "rgba(0,0,0,0.1)" }} />
+      
+      {/* Navigation Items */}
+      <List sx={{ p: 2, flexGrow: 1 }}>
         {navItems.map((item) => {
           if (!item.public && !user) return null;
           const isActive = location.pathname === item.path;
@@ -171,14 +334,15 @@ const MainLayout: React.FC = () => {
                 to={item.path}
                 onClick={handleDrawerToggle}
                 sx={{
-                  borderRadius: 2,
+                  borderRadius: '8px',
                   transition: "all 0.3s",
                   position: "relative",
                   overflow: "hidden",
                   bgcolor: isActive ? "rgba(0,212,255,0.1)" : "transparent",
-                  borderLeft: isActive
+                  [isRTL ? "borderRight" : "borderLeft"]: isActive
                     ? "4px solid #00d4ff"
                     : "4px solid transparent",
+                  [isRTL ? "borderLeft" : "borderRight"]: "none",
                   "&:hover": {
                     bgcolor: "rgba(0,212,255,0.15)",
                     "& .MuiListItemIcon-root": {
@@ -192,6 +356,8 @@ const MainLayout: React.FC = () => {
                     color: isActive ? "#00d4ff" : "rgba(0,0,0,0.7)",
                     transition: "color 0.3s",
                     minWidth: 40,
+                    [isRTL ? "ml" : "mr"]: 2,
+                    [isRTL ? "mr" : "ml"]: 0,
                   }}
                 >
                   {item.icon}
@@ -216,10 +382,11 @@ const MainLayout: React.FC = () => {
               to="/admin/dashboard"
               onClick={handleDrawerToggle}
               sx={{
-                borderRadius: 2,
+                borderRadius: '8px',
                 transition: "all 0.3s",
                 bgcolor: "rgba(255,0,128,0.1)",
-                borderLeft: "4px solid #ff0080",
+                [isRTL ? "borderRight" : "borderLeft"]: "4px solid #ff0080",
+                [isRTL ? "borderLeft" : "borderRight"]: "none",
                 "&:hover": {
                   bgcolor: "rgba(255,0,128,0.2)",
                 },
@@ -229,7 +396,7 @@ const MainLayout: React.FC = () => {
                 <Dashboard />
               </ListItemIcon>
               <ListItemText
-                primary="Admin Dashboard"
+                primary={t("nav.admin", { defaultValue: "Admin Dashboard" })}
                 sx={{
                   "& .MuiListItemText-primary": {
                     fontWeight: 600,
@@ -241,6 +408,16 @@ const MainLayout: React.FC = () => {
           </ListItem>
         )}
       </List>
+      
+      {/* Language Switcher at bottom */}
+      <Box sx={{ p: 2, borderTop: "1px solid rgba(0,0,0,0.1)" }}>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Typography variant="caption" sx={{ color: "rgba(0,0,0,0.6)" }}>
+            {t("common.language", { defaultValue: "Language" })}
+          </Typography>
+          <LanguageSwitcher />
+        </Box>
+      </Box>
     </Box>
   );
 
@@ -258,7 +435,7 @@ const MainLayout: React.FC = () => {
         sx={{
           zIndex: (theme) => theme.zIndex.drawer - 1,
           // background: "oklch(96.2% 0.059 95.617)",
-           backgroundColor: 'oklch(96.5% 0.026 102.212)',
+          backgroundColor: "oklch(96.5% 0.026 102.212)",
           borderBottom: "1px solid rgba(148, 145, 145, 0.47)",
           // boxShadow: "0 2px 4px rgba(243, 26, 26, 0.05)",
         }}
@@ -277,7 +454,7 @@ const MainLayout: React.FC = () => {
           >
             {/* Logo - Always on left */}
             <Typography
-              variant="h5"
+              variant="h6"
               noWrap
               component={RouterLink}
               to="/"
@@ -291,7 +468,7 @@ const MainLayout: React.FC = () => {
                 alignItems: "center",
                 gap: 1,
                 transition: "all 0.3s",
-                fontSize: { xs: "1.2rem", sm: "1.5rem" },
+                fontSize: { xs: "1.2rem", sm: "1.2rem" },
                 "&:hover": {
                   textShadow: "0 0 20px rgba(0,212,255,0.8)",
                 },
@@ -322,50 +499,64 @@ const MainLayout: React.FC = () => {
             >
               <Box>
                 <Stack direction="row" spacing={1}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    placeholder="Search for equipment..."
-                    value={search}
-                    onChange={handleSearchChange}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Search sx={{ color: "#00d4ff" }} />
-                        </InputAdornment>
-                      ),
-                      sx: {
-                        "& input": {
-                          color: "#333",
-                          py: 1,
-                        },
-                      },
-                    }}
-                    sx={{ flex: 2 }}
-                  />
-
+                  
+<TextField
+  fullWidth
+  size="small"
+  placeholder={t("common.searchPlaceholder")}
+  value={search}
+  onChange={handleSearchChange}
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position={isRTL ? "end" : "start"}>
+        <Search sx={{ color: "#00d4ff" }} />
+      </InputAdornment>
+    ),
+    sx: {
+      "& input": {
+        color: "#333",
+        py: 1,
+       
+        textAlign: isRTL ? "right" : "left",
+      },
+    },
+  }}
+ 
+  sx={{
+    flex: 2,
+    
+     '& .MuiOutlinedInput-root': {
+      borderRadius: 10, 
+    },
+  }}
+/>
                   <FormControl
                     size="small"
                     margin="dense"
-                    sx={{ minWidth: 180 }}
+                    sx={{ minWidth: { xs: 150, md: 140, lg: 180 } }}
                   >
                     <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
-                      Category
+                      {t("products.categories")}
                     </InputLabel>
                     <Select
                       value={category}
-                      label="Category"
+                      label={t("products.categories")}
                       onChange={(e) =>
                         handleFilterChange("category", e.target.value as string)
                       }
-                      sx={{ color: "#333" }}
+                      sx={{
+                        borderRadius: 10,
+                        marginRight: isRTL ?1 : 0,
+                        color: "#333",
+                        
+                      }}
                     >
                       <MenuItem value="">
-                        <em>All Categories</em>
+                        <em>{t("products.allCategories")}</em>
                       </MenuItem>
                       {categories.map((cat) => (
-                        <MenuItem key={cat} value={cat}>
-                          {cat}
+                        <MenuItem key={cat.key} value={cat.key}>
+                          {cat.label}
                         </MenuItem>
                       ))}
                     </Select>
@@ -374,57 +565,80 @@ const MainLayout: React.FC = () => {
                   <FormControl
                     size="small"
                     margin="dense"
-                    sx={{ minWidth: 150 }}
+                    sx={{ minWidth: { xs: 120, md: 120, lg: 150 } }}
                   >
                     <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
-                      Condition
+                      {t("products.condition", { defaultValue: "Condition" })}
                     </InputLabel>
                     <Select
                       value={condition}
-                      label="Condition"
+                      label={t("products.condition", {
+                        defaultValue: "Condition",
+                      })}
                       onChange={(e) =>
                         handleFilterChange(
                           "condition",
                           e.target.value as string
                         )
                       }
-                      sx={{ color: "#333" }}
+                      sx={{
+                        borderRadius: 10,
+                        color: "#333",
+                        "& .MuiSelect-select": {
+                          textAlign: isRTL ? "right" : "left",
+                        },
+                      }}
                     >
                       <MenuItem value="">
-                        <em>All Conditions</em>
+                        <em>
+                          {t("products.allConditions", {
+                            defaultValue: "All Conditions",
+                          })}
+                        </em>
                       </MenuItem>
-                      <MenuItem value="excellent">Excellent</MenuItem>
-                      <MenuItem value="good">Good</MenuItem>
-                      <MenuItem value="fair">Fair</MenuItem>
+                      <MenuItem value="excellent">{t("products.excellent")}</MenuItem>
+                      <MenuItem value="good">{t("products.good")}</MenuItem>
+                      <MenuItem value="fair">{t("products.fair")}</MenuItem>
                     </Select>
                   </FormControl>
 
                   <FormControl
                     size="small"
                     margin="dense"
-                    sx={{ minWidth: 180 }}
+                    sx={{ minWidth: { xs: 150, md: 140, lg: 180 } }}
                   >
                     <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
-                      Price Range
+                      {t("products.priceRange")}
                     </InputLabel>
                     <Select
                       value={priceRange}
-                      label="Price Range"
+                      label={t("products.priceRange")}
                       onChange={(e) =>
                         handleFilterChange(
                           "priceRange",
                           e.target.value as string
                         )
                       }
-                      sx={{ color: "#333" }}
+                      sx={{
+                        borderRadius: 10,
+                        color: "#333",
+                        "& .MuiSelect-select": {
+                          textAlign: isRTL ? "right" : "left",
+                        },
+                      }}
                     >
                       <MenuItem value="">
-                        <em>All Prices</em>
+                        <em>
+                          {t("products.allPrices", {
+                            defaultValue: "All Prices",
+                          })}
+                        </em>
                       </MenuItem>
-                      <MenuItem value="0-1000">€0 - €1,000</MenuItem>
-                      <MenuItem value="1000-5000">€1,000 - €5,000</MenuItem>
-                      <MenuItem value="5000-10000">€5,000 - €10,000</MenuItem>
-                      <MenuItem value="10000-">€10,000+</MenuItem>
+                      <MenuItem value="0-5000">{t("products.under5000")}</MenuItem>
+                      <MenuItem value="5000-20000">{t("products.5000to20000")}</MenuItem>
+                      <MenuItem value="20000-50000">{t("products.20000to50000")}</MenuItem>
+                      <MenuItem value="50000-100000">{t("products.50000to100000")}</MenuItem>
+                      <MenuItem value="100000-">{t("products.over100000")}</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
@@ -440,165 +654,176 @@ const MainLayout: React.FC = () => {
                 alignItems: "center",
               }}
             >
-              {user ? (
-                <>
-                  <Tooltip title="Account" arrow>
-                    <IconButton
-                      onClick={handleOpenUserMenu}
-                      sx={{
-                        p: 0,
-                        border: "2px solid rgba(0,212,255,0.3)",
-                        "&:hover": {
-                          borderColor: "#00d4ff",
-                          boxShadow: "0 0 20px rgba(0,212,255,0.5)",
-                        },
-                        width: { xs: 36, sm: 40 },
-                        height: { xs: 36, sm: 40 },
-                      }}
-                    >
-                      <Avatar
-                        sx={{
-                          bgcolor: "rgba(0,212,255,0.2)",
-                          border: "1px solid rgba(0,212,255,0.3)",
-                          width: { xs: 36, sm: 40 },
-                          height: { xs: 36, sm: 40 },
-                        }}
-                      >
-                        <AccountCircle
-                          sx={{
-                            color: "#00d4ff",
-                            fontSize: { xs: 20, sm: 24 },
-                          }}
-                        />
-                      </Avatar>
-                    </IconButton>
-                  </Tooltip>
-                  <Menu
-                    sx={{ mt: "45px" }}
-                    anchorEl={anchorElUser}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    open={Boolean(anchorElUser)}
-                    onClose={handleCloseUserMenu}
-                    TransitionComponent={Fade}
-                    PaperProps={{
-                      sx: {
-                        bgcolor: "oklch(98.7% 0.026 102.212)",
-                        border: "1px solid rgba(0,0,0,0.1)",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                        mt: 1,
-                        "& .MuiMenuItem-root": {
-                          transition: "all 0.3s",
-                          "&:hover": {
-                            bgcolor: "rgba(0,212,255,0.1)",
-                            pl: 3,
-                          },
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem
-                      component={RouterLink}
-                      to="/profile"
-                      onClick={handleCloseUserMenu}
-                    >
-                      <Person sx={{ mr: 2, color: "#00d4ff" }} />
-                      <Typography>Profile</Typography>
-                    </MenuItem>
-                    <MenuItem
-                      component={RouterLink}
-                      to="/orders"
-                      onClick={handleCloseUserMenu}
-                    >
-                      <Store sx={{ mr: 2, color: "#00d4ff" }} />
-                      <Typography>My Orders</Typography>
-                    </MenuItem>
-                    <Divider sx={{ my: 1, borderColor: "rgba(0,0,0,0.1)" }} />
-                    <MenuItem onClick={handleSignOut}>
-                      <ExitToApp sx={{ mr: 2, color: "#ff0080" }} />
-                      <Typography color="#ff0080">Sign Out</Typography>
-                    </MenuItem>
-                  </Menu>
-                  <Tooltip title="Shopping Cart" arrow>
-                    <IconButton
-                      component={RouterLink}
-                      to="/cart"
-                      sx={{
-                        position: "relative",
-                        color: "#333",
-                        "&:hover": {
-                          bgcolor: "rgba(0,212,255,0.1)",
-                        },
-                        width: { xs: 36, sm: 40 },
-                        height: { xs: 36, sm: 40 },
-                      }}
-                    >
-                      <Badge
-                        badgeContent={getItemCount()}
-                        sx={{
-                          "& .MuiBadge-badge": {
-                            bgcolor: "#ff0080",
-                            color: "white",
-                            fontWeight: 600,
-                            boxShadow: "0 0 10px rgba(255,0,128,0.8)",
-                          },
-                        }}
-                      >
-                        <ShoppingCart />
-                      </Badge>
-                    </IconButton>
-                  </Tooltip>
-                </>
-              ) : (
-                <>
-                  <Button
-                    component={RouterLink}
-                    to="/login"
-                    variant="outlined"
-                    size={theme.breakpoints.down("sm") ? "small" : "medium"}
+            {user ? (
+              <>
+                <Tooltip title={t("nav.profile")} arrow>
+                  <IconButton
+                    onClick={handleOpenUserMenu}
                     sx={{
-                      borderColor: "rgba(0,212,255,0.5)",
-                      color: "#00d4ff",
-                      fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                      px: { xs: 1.5, sm: 2 },
+                      p: 0,
+                      display: { xs: "none", md: "flex" }, // Hide on mobile
+                      border: "2px solid rgba(0,212,255,0.3)",
                       "&:hover": {
                         borderColor: "#00d4ff",
+                        boxShadow: "0 0 20px rgba(0,212,255,0.5)",
+                      },
+                      width: { xs: 36, sm: 40 },
+                      height: { xs: 36, sm: 40 },
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        bgcolor: "rgba(0,212,255,0.2)",
+                        border: "1px solid rgba(0,212,255,0.3)",
+                        width: { xs: 36, sm: 40 },
+                        height: { xs: 36, sm: 40 },
+                      }}
+                    >
+                      <AccountCircle
+                        sx={{
+                          color: "#00d4ff",
+                          fontSize: { xs: 20, sm: 24 },
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                  TransitionComponent={Fade}
+                  PaperProps={{
+                    sx: {
+                      bgcolor: "oklch(98.7% 0.026 102.212)",
+                      border: "1px solid rgba(0,0,0,0.1)",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      mt: 1,
+                      "& .MuiMenuItem-root": {
+                        transition: "all 0.3s",
+                        "&:hover": {
+                          bgcolor: "rgba(0,212,255,0.1)",
+                          pl: 3,
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem
+                    component={RouterLink}
+                    to="/profile"
+                    onClick={handleCloseUserMenu}
+                  >
+                    <Person sx={{ mr: 2, color: "#00d4ff" }} />
+                    <Typography>{t("nav.profile")}</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    component={RouterLink}
+                    to="/orders"
+                    onClick={handleCloseUserMenu}
+                  >
+                    <Store sx={{ mr: 2, color: "#00d4ff" }} />
+                    <Typography>{t("nav.orders")}</Typography>
+                  </MenuItem>
+                  <Divider sx={{ my: 1, borderColor: "rgba(0,0,0,0.1)" }} />
+                  <MenuItem onClick={handleSignOut}>
+                    <ExitToApp sx={{ mr: 2, color: "#ff0080" }} />
+                    <Typography color="#ff0080">{t("nav.logout")}</Typography>
+                  </MenuItem>
+                </Menu>
+                <Tooltip title={t("nav.cart")} arrow>
+                  <IconButton
+                    component={RouterLink}
+                    to="/cart"
+                    sx={{
+                      position: "relative",
+                      display: { xs: "none", md: "flex" }, // Hide on mobile
+                      color: "#333",
+                      "&:hover": {
                         bgcolor: "rgba(0,212,255,0.1)",
                       },
+                      width: { xs: 36, sm: 40 },
+                      height: { xs: 36, sm: 40 },
                     }}
                   >
-                    Sign In
-                  </Button>
-                  <Button
-                    component={RouterLink}
-                    to="/register"
-                    variant="contained"
-                    size={theme.breakpoints.down("sm") ? "small" : "medium"}
-                    sx={{
+                    <Badge
+                      badgeContent={getItemCount()}
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          bgcolor: "#ff0080",
+                          color: "white",
+                          fontWeight: 600,
+                          boxShadow: "0 0 10px rgba(255,0,128,0.8)",
+                        },
+                      }}
+                    >
+                      <ShoppingCart />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  variant="outlined"
+                  size={theme.breakpoints.down("sm") ? "small" : "medium"}
+                  sx={{
+                    display: { xs: "none", md: "inline-flex" }, // Hide on mobile
+                    borderRadius: 10,
+                    borderColor: "rgba(0,212,255,0.5)",
+                    color: "#00d4ff",
+                    fontSize: { xs: "0.55rem", sm: "0.675rem" },
+                    px: { xs: 1, sm: 1.5 },
+                    "&:hover": {
+                      borderColor: "#00d4ff",
+                      bgcolor: "rgba(0,212,255,0.1)",
+                    },
+                  }}
+                >
+                  {t("auth.signIn")}
+                </Button>
+                <Button
+                  component={RouterLink}
+                  to="/register"
+                  variant="contained"
+                  size={theme.breakpoints.down("sm") ? "small" : "medium"}
+                  sx={{
+                    display: { xs: "none", md: "inline-flex" }, // Hide on mobile
+                    borderRadius: 10,
+                    background:
+                      "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
+                    boxShadow: "0 4px 20px rgba(0,212,255,0.4)",
+                    fontSize: { xs: "0.55rem", sm: "0.675rem" },
+                    px: { xs: 1, sm: 1.5 },
+                    "&:hover": {
                       background:
-                        "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
-                      boxShadow: "0 4px 20px rgba(0,212,255,0.4)",
-                      fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                      px: { xs: 1.5, sm: 2 },
-                      "&:hover": {
-                        background:
-                          "linear-gradient(135deg, #00a1cc 0%, #cc0066 100%)",
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 6px 30px rgba(0,212,255,0.5)",
-                      },
-                    }}
-                  >
-                    Sign Up
-                  </Button>
-                </>
-              )}
+                        "linear-gradient(135deg, #00a1cc 0%, #cc0066 100%)",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 6px 30px rgba(0,212,255,0.5)",
+                    },
+                  }}
+                >
+                  {t("auth.signUp")}
+                </Button>
+              </>
+            )}
+
+              {/* Language Switcher - Hidden on mobile since it's in drawer */}
+              <Box sx={{ display: { xs: "none", md: "block" } }}>
+                <LanguageSwitcher />
+              </Box>
 
               {/* Mobile Menu Button - Only on mobile */}
               <IconButton
@@ -627,8 +852,8 @@ const MainLayout: React.FC = () => {
               minHeight: 56,
               gap: 1,
               justifyContent: "center",
-              borderTop: "1px solid rgba(129, 128, 128, 0.1)",
-              borderBottom: "1px solid rgba(156, 151, 151, 0.1)",
+              // borderTop: "1px solid rgba(129, 128, 128, 0.1)",
+              // borderBottom: "1px solid rgba(156, 151, 151, 0.1)",
             }}
           >
             <Box
@@ -656,9 +881,13 @@ const MainLayout: React.FC = () => {
                       position: "relative",
                       px: 3,
                       py: 1,
-                      borderRadius: 2,
+                      borderRadius: '8px',
                       transition: "all 0.3s",
                       fontWeight: isActive ? 600 : 400,
+                      "& .MuiButton-startIcon": {
+                        [isRTL ? "ml" : "mr"]: 1,
+                        [isRTL ? "mr" : "ml"]: 0,
+                      },
                       "&:after": {
                         content: '""',
                         position: "absolute",
@@ -669,7 +898,7 @@ const MainLayout: React.FC = () => {
                         height: "3px",
                         bgcolor: "#00d4ff",
                         transition: "width 0.3s",
-                        borderRadius: "3px 3px 0 0",
+                        borderRadius: "4px 4px 0 0",
                         boxShadow: isActive
                           ? "0 0 10px rgba(0,212,255,0.8)"
                           : "none",
@@ -696,7 +925,7 @@ const MainLayout: React.FC = () => {
                     color: "#ff0080",
                     px: 3,
                     py: 1,
-                    borderRadius: 2,
+                    borderRadius: '8px',
                     border: "1px solid rgba(255,0,128,0.3)",
                     bgcolor: "rgba(255,0,128,0.1)",
                     transition: "all 0.3s",
@@ -709,7 +938,7 @@ const MainLayout: React.FC = () => {
                     },
                   }}
                 >
-                  Admin
+                  {t("nav.admin", { defaultValue: "Admin" })}
                 </Button>
               )}
             </Box>
@@ -728,23 +957,31 @@ const MainLayout: React.FC = () => {
               <TextField
                 fullWidth
                 size="small"
-                placeholder="Search for equipment..."
+                placeholder={t("common.searchPlaceholder")}
                 value={search}
                 onChange={handleSearchChange}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position={isRTL ? "end" : "start"}>
                       <Search sx={{ color: "#00d4ff" }} />
                     </InputAdornment>
                   ),
                   sx: {
+                    borderRadius: '8px',
                     "& input": {
                       color: "#333",
                       py: 0.5,
                       fontSize: "0.875rem",
+                      textAlign: isRTL ? "right" : "left",
                     },
                   },
                 }}
+                 sx={{
+    flex: 2,
+     '& .MuiOutlinedInput-root': {
+      borderRadius: 10, 
+    },
+  }}
               />
               <Stack direction="row" spacing={1}>
                 <FormControl size="small" sx={{ flex: 1 }}>
@@ -755,17 +992,18 @@ const MainLayout: React.FC = () => {
                       handleFilterChange("category", e.target.value as string)
                     }
                     sx={{
+                      borderRadius: 10,
                       color: "#333",
                       fontSize: "0.75rem",
                       "& .MuiSelect-select": { py: 0.5 },
                     }}
                   >
                     <MenuItem value="">
-                      <em>Category</em>
+                      <em>{t("products.categories")}</em>
                     </MenuItem>
                     {categories.map((cat) => (
-                      <MenuItem key={cat} value={cat}>
-                        {cat}
+                      <MenuItem key={cat.key} value={cat.key}>
+                        {cat.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -779,17 +1017,20 @@ const MainLayout: React.FC = () => {
                       handleFilterChange("condition", e.target.value as string)
                     }
                     sx={{
+                      borderRadius: 10,
                       color: "#333",
                       fontSize: "0.75rem",
                       "& .MuiSelect-select": { py: 0.5 },
                     }}
                   >
                     <MenuItem value="">
-                      <em>Condition</em>
+                      <em>
+                        {t("products.condition", { defaultValue: "Condition" })}
+                      </em>
                     </MenuItem>
-                    <MenuItem value="excellent">Excellent</MenuItem>
-                    <MenuItem value="good">Good</MenuItem>
-                    <MenuItem value="fair">Fair</MenuItem>
+                    <MenuItem value="excellent">{t("products.excellent")}</MenuItem>
+                    <MenuItem value="good">{t("products.good")}</MenuItem>
+                    <MenuItem value="fair">{t("products.fair")}</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -801,18 +1042,20 @@ const MainLayout: React.FC = () => {
                       handleFilterChange("priceRange", e.target.value as string)
                     }
                     sx={{
+                      borderRadius: 10,
                       color: "#333",
                       fontSize: "0.75rem",
                       "& .MuiSelect-select": { py: 0.5 },
                     }}
                   >
                     <MenuItem value="">
-                      <em>Price</em>
+                      <em>{t("products.price")}</em>
                     </MenuItem>
-                    <MenuItem value="0-1000">€0-1K</MenuItem>
-                    <MenuItem value="1000-5000">€1K-5K</MenuItem>
-                    <MenuItem value="5000-10000">€5K-10K</MenuItem>
-                    <MenuItem value="10000-">€10K+</MenuItem>
+                    <MenuItem value="0-5000">{t('products.under5000')}</MenuItem>
+                    <MenuItem value="5000-20000">{t('products.5000to20000')}</MenuItem>
+                    <MenuItem value="20000-50000">{t('products.20000to50000')}</MenuItem>
+                    <MenuItem value="50000-100000">{t('products.50000to100000')}</MenuItem>
+                    <MenuItem value="100000-">{t('products.over100000')}</MenuItem>
                   </Select>
                 </FormControl>
               </Stack>
@@ -836,7 +1079,7 @@ const MainLayout: React.FC = () => {
                 },
                 "&::-webkit-scrollbar-thumb": {
                   bgcolor: "rgba(255,255,255,0.2)",
-                  borderRadius: 3,
+                  borderRadius: 8,
                 },
                 "&::-webkit-scrollbar-track": {
                   bgcolor: "rgba(255,255,255,0.05)",
@@ -855,7 +1098,7 @@ const MainLayout: React.FC = () => {
                   py: { xs: 0.25, sm: 0.5 },
                   minHeight: { xs: 28, sm: 32 },
                   fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  borderRadius: 999,
+                  borderRadius: "24px",
                   border:
                     category === ""
                       ? "1px solid rgba(0,212,255,0.5)"
@@ -869,29 +1112,33 @@ const MainLayout: React.FC = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                All
+                {
+                  t("products.allCategories", { defaultValue: "All" }).split(
+                    " "
+                  )[0]
+                }
               </Button>
               {categories.map((cat) => (
                 <Button
-                  key={cat}
+                  key={cat.key}
                   size="small"
                   onClick={() => {
-                    handleFilterChange("category", cat);
+                    handleFilterChange("category", cat.key);
                     if (location.pathname !== "/") navigate("/");
                   }}
                   sx={{
-                    color: category === cat ? "#00d4ff" : "rgba(0,0,0,0.8)",
+                    color: category === cat.key ? "#00d4ff" : "rgba(0,0,0,0.8)",
                     px: { xs: 1.5, sm: 2 },
                     py: { xs: 0.25, sm: 0.5 },
                     minHeight: { xs: 28, sm: 32 },
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    borderRadius: 999,
+                    borderRadius: "24px",
                     border:
-                      category === cat
+                      category === cat.key
                         ? "1px solid rgba(0,212,255,0.5)"
                         : "1px solid transparent",
                     bgcolor:
-                      category === cat ? "rgba(0,212,255,0.12)" : "transparent",
+                      category === cat.key ? "rgba(0,212,255,0.12)" : "transparent",
                     "&:hover": {
                       bgcolor: "rgba(0,212,255,0.15)",
                       color: "#00d4ff",
@@ -899,7 +1146,7 @@ const MainLayout: React.FC = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {cat}
+                  {cat.label}
                 </Button>
               ))}
             </Box>
@@ -912,6 +1159,7 @@ const MainLayout: React.FC = () => {
         variant="temporary"
         open={mobileOpen}
         onClose={handleDrawerToggle}
+        anchor={isRTL ? "right" : "left"}
         ModalProps={{
           keepMounted: true,
           sx: {
