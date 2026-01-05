@@ -46,8 +46,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { productService } from '../../services/products';
 import { Product } from '../../types';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ProductManagement: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
@@ -74,7 +76,7 @@ const ProductManagement: React.FC = () => {
       if (error) throw error;
       setProducts(data || []);
     } catch (err: any) {
-      setError('Failed to fetch products');
+      setError(t('common.error'));
       console.error('Error fetching products:', err);
     } finally {
       setLoading(false);
@@ -102,11 +104,11 @@ const ProductManagement: React.FC = () => {
       const { error } = await productService.deleteProduct(selectedProduct.id);
       if (error) throw error;
       
-      setSuccess('Product deleted successfully');
+      setSuccess(t('admin.productDeleted'));
       setProducts(products.filter(p => p.id !== selectedProduct.id));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
-      setError('Failed to delete product');
+      setError(t('common.error'));
     }
     
     setDeleteDialogOpen(false);
@@ -122,10 +124,10 @@ const ProductManagement: React.FC = () => {
       setProducts(products.map(p => 
         p.id === product.id ? { ...p, status: newStatus } : p
       ));
-      setSuccess(`Product marked as ${newStatus}`);
+      setSuccess(t('admin.productMarkedAs', { status: newStatus }));
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
-      setError('Failed to update product status');
+      setError(t('admin.failedToUpdateStatus'));
     }
   };
 
@@ -179,30 +181,50 @@ const ProductManagement: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       {/* Header */}
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{
+        mb: 4,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: { xs: 2, md: 0 }
+      }}>
         <Box>
-          <Typography 
-            variant="h3" 
+          <Typography
+            variant="h3"
             component="h1"
             gutterBottom
             sx={{
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' },
               fontWeight: 800,
               background: 'linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Product Management
+            {t('admin.productManagement')}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage your medical equipment catalog
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+          >
+            {t('admin.manageCatalogDescription')}
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{
+          display: 'flex',
+          gap: { xs: 1, sm: 2 },
+          width: { xs: '100%', sm: 'auto' },
+          flexWrap: 'wrap'
+        }}>
           <Button
             variant="outlined"
             startIcon={<CloudUpload />}
+            size="small"
             sx={{
+              flex: { xs: 1, sm: 'none' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
               borderColor: 'rgba(0,212,255,0.5)',
               color: '#00d4ff',
               '&:hover': {
@@ -211,22 +233,25 @@ const ProductManagement: React.FC = () => {
               },
             }}
           >
-            Import Catalog
+            {t('admin.import')}
           </Button>
           <Button
             variant="contained"
             startIcon={<Add />}
             onClick={() => navigate('/admin/products/new')}
+            size="small"
             sx={{
+              flex: { xs: 1, sm: 'none' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
               background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-              boxShadow: '0 4px 20px rgba(0,212,255,0.3)',
+              boxShadow: '0 2px 8px rgba(0,212,255,0.2)',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: '0 6px 30px rgba(0,212,255,0.4)',
+                boxShadow: '0 3px 12px rgba(0,212,255,0.25)',
               },
             }}
           >
-            Add Product
+            {t('admin.addProduct')}
           </Button>
         </Box>
       </Box>
@@ -244,21 +269,31 @@ const ProductManagement: React.FC = () => {
       )}
 
       {/* Filters */}
-      <Paper 
-        sx={{ 
-          p: 3, 
+      <Paper
+        sx={{
+          p: 3,
           mb: 3,
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{
+          display: 'flex',
+          gap: 2,
+          flexWrap: 'wrap',
+          flexDirection: { xs: 'column', sm: 'row' }
+        }}>
           <TextField
-            placeholder="Search products..."
+            placeholder={t('admin.searchProducts')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ flex: 1, minWidth: 300 }}
+            size="small"
+            sx={{
+              flex: { xs: 'none', sm: 1 },
+              minWidth: { xs: '100%', sm: 300 }
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -267,31 +302,32 @@ const ProductManagement: React.FC = () => {
               ),
             }}
           />
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Category</InputLabel>
+          <FormControl sx={{ minWidth: { xs: '100%', sm: 200 } }} size="small">
+            <InputLabel>{t('products.category')}</InputLabel>
             <Select
               value={filterCategory}
-              label="Category"
+              label={t('products.category')}
               onChange={(e) => setFilterCategory(e.target.value as string)}
               startAdornment={<FilterList sx={{ mr: 1, color: 'text.secondary' }} />}
             >
-              <MenuItem value="">All Categories</MenuItem>
-              <MenuItem value="imaging">Imaging Equipment</MenuItem>
-              <MenuItem value="surgical">Surgical Equipment</MenuItem>
-              <MenuItem value="diagnostic">Diagnostic Equipment</MenuItem>
-              <MenuItem value="monitoring">Monitoring Equipment</MenuItem>
-              <MenuItem value="laboratory">Laboratory Equipment</MenuItem>
+              <MenuItem value="">{t('products.allCategories')}</MenuItem>
+              <MenuItem value="imaging">{t('productCategories.imagingEquipment')}</MenuItem>
+              <MenuItem value="surgical">{t('productCategories.surgicalEquipment')}</MenuItem>
+              <MenuItem value="diagnostic">{t('productCategories.diagnosticEquipment')}</MenuItem>
+              <MenuItem value="monitoring">{t('productCategories.monitoringEquipment')}</MenuItem>
+              <MenuItem value="laboratory">{t('productCategories.laboratoryEquipment')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
       </Paper>
 
       {/* Products Table */}
-      <Paper 
-        sx={{ 
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+      <Paper
+        sx={{
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
           overflow: 'hidden',
         }}
       >
@@ -301,18 +337,18 @@ const ProductManagement: React.FC = () => {
           </Box>
         ) : (
           <>
-            <TableContainer>
-              <Table>
+            <TableContainer sx={{ overflowX: 'auto' }}>
+              <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Image</TableCell>
-                    <TableCell>Product</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Condition</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell align="right">Zetta Price</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell align="center">Actions</TableCell>
+                    <TableCell sx={{ minWidth: 80 }}>{t('admin.image')}</TableCell>
+                    <TableCell sx={{ minWidth: 200 }}>{t('admin.product')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 100 }}>{t('products.category')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 100 }}>{t('products.condition')}</TableCell>
+                    <TableCell align="right" sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>{t('products.price')}</TableCell>
+                    <TableCell align="right" sx={{ minWidth: 100 }}>{t('admin.zettaPrice')}</TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>{t('common.status')}</TableCell>
+                    <TableCell align="center" sx={{ minWidth: 120 }}>{t('common.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -321,11 +357,11 @@ const ProductManagement: React.FC = () => {
                       <TableCell>
                         <Box
                           sx={{
-                            width: 60,
-                            height: 60,
-                            borderRadius: 1,
+                            width: { xs: 40, sm: 60 },
+                            height: { xs: 40, sm: 60 },
+                            borderRadius: '8px',
                             overflow: 'hidden',
-                            bgcolor: 'rgba(255,255,255,0.05)',
+                            bgcolor: 'rgba(255,255,255,0.02)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -343,19 +379,29 @@ const ProductManagement: React.FC = () => {
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1" fontWeight={600}>
+                        <Typography
+                          variant="body1"
+                          fontWeight={600}
+                          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                        >
                           {product.title}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ 
-                          maxWidth: 300,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            maxWidth: { xs: 200, sm: 300 },
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            display: { xs: 'none', sm: 'block' },
+                            fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                          }}
+                        >
                           {product.description}
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                         <Chip 
                           label={product.category} 
                           size="small"
@@ -366,11 +412,11 @@ const ProductManagement: React.FC = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell>
-                        <Chip 
-                          label={product.condition} 
+                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                        <Chip
+                          label={product.condition}
                           size="small"
-                          sx={{ 
+                          sx={{
                             bgcolor: `${getConditionColor(product.condition)}20`,
                             color: getConditionColor(product.condition),
                             border: `1px solid ${getConditionColor(product.condition)}50`,
@@ -378,13 +424,17 @@ const ProductManagement: React.FC = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                         <Typography variant="body2" color="text.secondary">
                           €{product.price.toFixed(2)}
                         </Typography>
                       </TableCell>
                       <TableCell align="right">
-                        <Typography variant="body1" fontWeight={600}>
+                        <Typography
+                          variant="body1"
+                          fontWeight={600}
+                          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                        >
                           €{(product.zetta_price || product.price).toFixed(2)}
                         </Typography>
                       </TableCell>
@@ -398,7 +448,7 @@ const ProductManagement: React.FC = () => {
                       </TableCell>
                       <TableCell align="center">
                         <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                          <Tooltip title="Edit">
+                          <Tooltip title={t('common.edit')}>
                             <IconButton
                               size="small"
                               onClick={() => navigate(`/admin/products/${product.id}/edit`)}
@@ -407,7 +457,7 @@ const ProductManagement: React.FC = () => {
                               <Edit fontSize="small" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Toggle Status">
+                          <Tooltip title={t('admin.toggleStatus')}>
                             <IconButton
                               size="small"
                               onClick={() => handleStatusToggle(product)}
@@ -438,7 +488,16 @@ const ProductManagement: React.FC = () => {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               sx={{
-                borderTop: '1px solid rgba(255,255,255,0.1)',
+                borderTop: '1px solid',
+                borderTopColor: 'divider',
+                '.MuiTablePagination-toolbar': {
+                  flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                  justifyContent: { xs: 'center', sm: 'flex-end' },
+                  gap: { xs: 1, sm: 0 },
+                },
+                '.MuiTablePagination-selectLabel': {
+                  display: { xs: 'none', sm: 'block' },
+                },
               }}
             />
           </>
@@ -452,9 +511,8 @@ const ProductManagement: React.FC = () => {
         onClose={handleMenuClose}
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(15,15,25,0.95)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(20px)',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
           },
         }}
       >
@@ -462,16 +520,16 @@ const ProductManagement: React.FC = () => {
           navigate(`/admin/products/${selectedProduct?.id}/edit`);
           handleMenuClose();
         }}>
-          <Edit sx={{ mr: 1, fontSize: 18 }} /> Edit Product
+          <Edit sx={{ mr: 1, fontSize: 18 }} /> {t('admin.editProductAction')}
         </MenuItem>
         <MenuItem onClick={() => {
           navigate(`/admin/products/${selectedProduct?.id}/duplicate`);
           handleMenuClose();
         }}>
-          <Upload sx={{ mr: 1, fontSize: 18 }} /> Duplicate
+          <Upload sx={{ mr: 1, fontSize: 18 }} /> {t('admin.duplicate')}
         </MenuItem>
         <MenuItem onClick={handleDeleteClick} sx={{ color: '#ff3366' }}>
-          <Delete sx={{ mr: 1, fontSize: 18 }} /> Delete
+          <Delete sx={{ mr: 1, fontSize: 18 }} /> {t('admin.deleteAction')}
         </MenuItem>
       </Menu>
 
@@ -481,30 +539,31 @@ const ProductManagement: React.FC = () => {
         onClose={() => setDeleteDialogOpen(false)}
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(15,15,25,0.95)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(20px)',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
           },
         }}
       >
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          {t('admin.confirmDelete')}
+        </DialogTitle>
         <DialogContent>
-          <Typography>
-            Are you sure you want to delete "{selectedProduct?.title}"? This action cannot be undone.
+          <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+            {t('admin.areYouSureDelete')} "{selectedProduct?.title}"? {t('admin.cannotBeUndone')}.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button 
-            onClick={handleDeleteConfirm} 
-            color="error" 
+          <Button onClick={() => setDeleteDialogOpen(false)}>{t('common.cancel')}</Button>
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
             variant="contained"
             sx={{
               bgcolor: '#ff3366',
               '&:hover': { bgcolor: '#cc0033' },
             }}
           >
-            Delete
+            {t('common.delete')}
           </Button>
         </DialogActions>
       </Dialog>

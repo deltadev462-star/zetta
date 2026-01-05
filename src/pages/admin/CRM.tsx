@@ -64,6 +64,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../services/supabase';
 import { emailService } from '../../services/email';
+import { useTranslation } from 'react-i18next';
 
 interface Customer {
   id: string;
@@ -92,6 +93,7 @@ interface EmailCampaign {
 
 const CRM: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -312,29 +314,47 @@ const CRM: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       {/* Header */}
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{
+        mb: 4,
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: { xs: 2, md: 0 },
+        justifyContent: { xs: 'flex-start', md: 'space-between' },
+        alignItems: { xs: 'stretch', md: 'center' }
+      }}>
         <Box>
-          <Typography 
-            variant="h3" 
+          <Typography
+            variant="h3"
             component="h1"
             gutterBottom
             sx={{
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
               fontWeight: 800,
               background: 'linear-gradient(135deg, #ff0080 0%, #00d4ff 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            CRM & Marketing
+            {t('admin.crmAndMarketing')}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage customers and marketing campaigns
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+          >
+            {t('admin.manageCustomersAndMarketingCampaigns')}
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{
+          display: 'flex',
+          gap: { xs: 1, sm: 2 },
+          flexDirection: { xs: 'column', sm: 'row' },
+          width: { xs: '100%', sm: 'auto' }
+        }}>
           <Button
             variant="outlined"
             startIcon={<PersonAdd />}
+            fullWidth
             sx={{
               borderColor: 'rgba(0,212,255,0.5)',
               color: '#00d4ff',
@@ -344,22 +364,23 @@ const CRM: React.FC = () => {
               },
             }}
           >
-            Add Customer
+            {t('admin.addCustomer')}
           </Button>
           <Button
             variant="contained"
             startIcon={<Campaign />}
             onClick={() => setCampaignDialogOpen(true)}
+            fullWidth
             sx={{
               background: 'linear-gradient(135deg, #ff0080 0%, #cc0066 100%)',
-              boxShadow: '0 4px 20px rgba(255,0,128,0.3)',
+              boxShadow: '0 2px 8px rgba(255,0,128,0.2)',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: '0 6px 30px rgba(255,0,128,0.4)',
+                boxShadow: '0 3px 12px rgba(255,0,128,0.25)',
               },
             }}
           >
-            New Campaign
+            {t('admin.newCampaign')}
           </Button>
         </Box>
       </Box>
@@ -379,15 +400,16 @@ const CRM: React.FC = () => {
           <Card
             key={segment.name}
             sx={{
-              bgcolor: 'rgba(15,15,25,0.8)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              bgcolor: 'oklch(98.5% 0.001 106.423)',
+              borderRadius: '8px',
+              border: '1px solid',
+              borderColor: 'divider',
               cursor: 'pointer',
               transition: 'all 0.3s',
               '&:hover': {
                 transform: 'translateY(-4px)',
-                border: `1px solid ${segment.color}50`,
-                boxShadow: `0 12px 40px ${segment.color}30`,
+                borderColor: `${segment.color}50`,
+                boxShadow: `0 4px 12px ${segment.color}15`,
               },
             }}
             onClick={() => setFilterTag(segment.name === 'All Customers' ? '' : segment.name)}
@@ -421,18 +443,24 @@ const CRM: React.FC = () => {
       {/* Main Content */}
       <Paper
         sx={{
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
             borderBottom: '1px solid rgba(255,255,255,0.1)',
             '& .MuiTab-root': {
               fontWeight: 600,
+              minWidth: { xs: 'auto', sm: 120 },
+              fontSize: { xs: '0.8rem', sm: '0.875rem' },
               '&.Mui-selected': {
                 color: '#00d4ff',
               },
@@ -452,12 +480,20 @@ const CRM: React.FC = () => {
           {activeTab === 0 && (
             <Box>
               {/* Filters */}
-              <Box sx={{ display: 'flex', gap: 2, mb: 3, alignItems: 'center' }}>
+              <Box sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: 2,
+                mb: 3,
+                alignItems: { xs: 'stretch', sm: 'center' }
+              }}>
                 <TextField
-                  placeholder="Search customers..."
+                  placeholder={t('admin.searchCustomers')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   sx={{ flex: 1 }}
+                  fullWidth
+                  size="medium"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -466,32 +502,43 @@ const CRM: React.FC = () => {
                     ),
                   }}
                 />
-                <FormControl sx={{ minWidth: 200 }}>
-                  <InputLabel>Filter by Tag</InputLabel>
-                  <Select
-                    value={filterTag}
-                    label="Filter by Tag"
-                    onChange={(e) => setFilterTag(e.target.value as string)}
-                    startAdornment={<FilterList sx={{ mr: 1, color: 'text.secondary' }} />}
+                <Box sx={{
+                  display: 'flex',
+                  gap: 1,
+                  flexDirection: { xs: 'row', sm: 'row' },
+                  width: { xs: '100%', sm: 'auto' }
+                }}>
+                  <FormControl sx={{
+                    minWidth: { xs: '160px', sm: 200 },
+                    flex: { xs: 1, sm: 0 }
+                  }}>
+                    <InputLabel>{t('admin.filterByTag')}</InputLabel>
+                    <Select
+                      value={filterTag}
+                      label="Filter by Tag"
+                      onChange={(e) => setFilterTag(e.target.value as string)}
+                      startAdornment={<FilterList sx={{ mr: 1, color: 'text.secondary' }} />}
+                    >
+                      <MenuItem value="">{t('admin.allCustomers')}</MenuItem>
+                      <MenuItem value="VIP">{t('admin.vip')}</MenuItem>
+                      <MenuItem value="Frequent Buyer">{t('admin.frequentBuyer')}</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <ToggleButtonGroup
+                    value={viewMode}
+                    exclusive
+                    onChange={(_e, newMode) => newMode && setViewMode(newMode)}
+                    size="small"
+                    sx={{ display: { xs: 'none', sm: 'flex' } }}
                   >
-                    <MenuItem value="">All Customers</MenuItem>
-                    <MenuItem value="VIP">VIP</MenuItem>
-                    <MenuItem value="Frequent Buyer">Frequent Buyer</MenuItem>
-                  </Select>
-                </FormControl>
-                <ToggleButtonGroup
-                  value={viewMode}
-                  exclusive
-                  onChange={(_e, newMode) => newMode && setViewMode(newMode)}
-                  size="small"
-                >
-                  <ToggleButton value="list">
-                    <ViewList />
-                  </ToggleButton>
-                  <ToggleButton value="grid">
-                    <ViewModule />
-                  </ToggleButton>
-                </ToggleButtonGroup>
+                    <ToggleButton value="list">
+                      <ViewList />
+                    </ToggleButton>
+                    <ToggleButton value="grid">
+                      <ViewModule />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Box>
               </Box>
 
               {/* Customer List/Grid */}
@@ -501,37 +548,52 @@ const CRM: React.FC = () => {
                 </Box>
               ) : viewMode === 'list' ? (
                 <>
-                  <TableContainer>
-                    <Table>
+                  <TableContainer sx={{ overflowX: 'auto' }}>
+                    <Table sx={{ minWidth: { xs: 600, sm: 750 } }}>
                       <TableHead>
                         <TableRow>
-                          <TableCell>Customer</TableCell>
-                          <TableCell>Contact</TableCell>
-                          <TableCell align="right">Total Spent</TableCell>
-                          <TableCell align="center">Orders</TableCell>
-                          <TableCell>Tags</TableCell>
-                          <TableCell align="center">Actions</TableCell>
+                          <TableCell>{t('admin.customer')}</TableCell>
+                          <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('admin.contact')}</TableCell>
+                          <TableCell align="right">{t('admin.totalSpent')}</TableCell>
+                          <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('nav.orders')}</TableCell>
+                          <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>{t('admin.tags')}</TableCell>
+                          <TableCell align="center">{t('common.actions')}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {paginatedCustomers.map((customer) => (
                           <TableRow key={customer.id} hover>
                             <TableCell>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                <Avatar sx={{ bgcolor: customer.isVip ? '#ff0080' : 'rgba(0,212,255,0.2)' }}>
-                                  <Person />
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+                                <Avatar sx={{
+                                  bgcolor: customer.isVip ? '#ff0080' : 'rgba(0,212,255,0.2)',
+                                  width: { xs: 32, sm: 40 },
+                                  height: { xs: 32, sm: 40 }
+                                }}>
+                                  <Person fontSize="small" />
                                 </Avatar>
                                 <Box>
-                                  <Typography variant="body2" fontWeight={600}>
+                                  <Typography
+                                    variant="body2"
+                                    fontWeight={600}
+                                    sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}
+                                  >
                                     {customer.profile?.full_name || 'Customer'}
                                   </Typography>
-                                  <Typography variant="caption" color="text.secondary">
+                                  <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                    sx={{
+                                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                                      display: { xs: 'none', sm: 'block' }
+                                    }}
+                                  >
                                     {customer.profile?.company_name || 'Individual'}
                                   </Typography>
                                 </Box>
                               </Box>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                   <Email sx={{ fontSize: 14, color: 'text.secondary' }} />
@@ -548,16 +610,20 @@ const CRM: React.FC = () => {
                               </Box>
                             </TableCell>
                             <TableCell align="right">
-                              <Typography variant="body1" fontWeight={700}>
+                              <Typography
+                                variant="body1"
+                                fontWeight={700}
+                                sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                              >
                                 €{customer.totalSpent.toFixed(2)}
                               </Typography>
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                               <Badge badgeContent={customer.orders.length} color="primary">
-                                <ShoppingCart />
+                                <ShoppingCart fontSize="small" />
                               </Badge>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                               <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                                 {customer.tags.map((tag) => (
                                   <Chip
@@ -568,6 +634,7 @@ const CRM: React.FC = () => {
                                       bgcolor: tag === 'VIP' ? 'rgba(255,0,128,0.2)' : 'rgba(0,212,255,0.2)',
                                       color: tag === 'VIP' ? '#ff0080' : '#00d4ff',
                                       border: tag === 'VIP' ? '1px solid rgba(255,0,128,0.3)' : '1px solid rgba(0,212,255,0.3)',
+                                      fontSize: { xs: '0.7rem', sm: '0.75rem' }
                                     }}
                                   />
                                 ))}
@@ -625,11 +692,14 @@ const CRM: React.FC = () => {
                     <Card
                       key={customer.id}
                       sx={{
-                        bgcolor: 'rgba(255,255,255,0.03)',
+                        bgcolor: 'oklch(98.5% 0.001 106.423)',
+                        borderRadius: '8px',
+                        border: '1px solid',
+                        borderColor: 'divider',
                         transition: 'all 0.3s',
                         '&:hover': {
                           transform: 'translateY(-4px)',
-                          boxShadow: '0 8px 32px rgba(0,212,255,0.2)',
+                          boxShadow: '0 4px 12px rgba(0,212,255,0.1)',
                         },
                       }}
                     >
@@ -654,7 +724,7 @@ const CRM: React.FC = () => {
                         </Typography>
                         <Box sx={{ mt: 2, mb: 2 }}>
                           <Typography variant="body2" color="text.secondary">
-                            Total Spent
+                            {t('admin.totalSpent')}
                           </Typography>
                           <Typography variant="h5" fontWeight={700}>
                             €{customer.totalSpent.toFixed(2)}
@@ -684,40 +754,49 @@ const CRM: React.FC = () => {
 
           {activeTab === 1 && (
             <Box>
-              <Typography variant="h6" gutterBottom>
-                Email Campaigns
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+              >
+                {t('admin.emailCampaigns')}
               </Typography>
-              <TableContainer>
-                <Table>
+              <TableContainer sx={{ overflowX: 'auto' }}>
+                <Table sx={{ minWidth: { xs: 500, sm: 650 } }}>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Campaign Name</TableCell>
-                      <TableCell>Subject</TableCell>
-                      <TableCell>Recipients</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Performance</TableCell>
-                      <TableCell align="center">Actions</TableCell>
+                      <TableCell>{t('admin.campaignName')}</TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('admin.subject')}</TableCell>
+                      <TableCell>{t('admin.recipients')}</TableCell>
+                      <TableCell>{t('common.status')}</TableCell>
+                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('admin.performance')}</TableCell>
+                      <TableCell align="center">{t('common.actions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {campaigns.map((campaign) => (
                       <TableRow key={campaign.id}>
                         <TableCell>
-                          <Typography variant="body2" fontWeight={600}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}
+                          >
                             {campaign.name}
                           </Typography>
                         </TableCell>
-                        <TableCell>{campaign.subject}</TableCell>
-                        <TableCell>{campaign.recipients.length}</TableCell>
+                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>{campaign.subject}</TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>{campaign.recipients.length}</TableCell>
                         <TableCell>
                           <Chip
                             label={campaign.status}
                             size="small"
                             color={campaign.status === 'sent' ? 'success' : 'default'}
                             icon={campaign.status === 'sent' ? <CheckCircle /> : undefined}
+                            sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
                           />
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                           {campaign.status === 'sent' && (
                             <Box>
                               <Typography variant="caption" display="block">
@@ -743,7 +822,7 @@ const CRM: React.FC = () => {
                               },
                             }}
                           >
-                            Edit
+                            {t('common.edit')}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -757,35 +836,45 @@ const CRM: React.FC = () => {
           {activeTab === 2 && (
             <Box>
               <Typography variant="h6" gutterBottom>
-                Customer Analytics
+                {t('admin.customerAnalytics')}
               </Typography>
-              <Alert severity="info" sx={{ mb: 3 }}>
-                Detailed analytics and insights coming soon...
+              <Alert severity="info" sx={{ mb: 3, borderRadius: '8px' }}>
+                {t('admin.detailedAnalyticsComingSoon')}
               </Alert>
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
-                <Card sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}>
+                <Card sx={{
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  borderRadius: '8px',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      Customer Lifetime Value
+                      {t('admin.customerLifetimeValue')}
                     </Typography>
                     <Typography variant="h3" fontWeight={700} color="primary">
                       €{(customers.reduce((sum, c) => sum + c.totalSpent, 0) / customers.length || 0).toFixed(2)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Average per customer
+                      {t('admin.averagePerCustomer')}
                     </Typography>
                   </CardContent>
                 </Card>
-                <Card sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}>
+                <Card sx={{
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  borderRadius: '8px',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      Repeat Purchase Rate
+                      {t('admin.repeatPurchaseRate')}
                     </Typography>
                     <Typography variant="h3" fontWeight={700} color="secondary.main">
                       {((customers.filter(c => c.orders.length > 1).length / customers.length) * 100 || 0).toFixed(1)}%
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Customers with 2+ orders
+                      {t('admin.customersWithMultipleOrders')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -803,25 +892,24 @@ const CRM: React.FC = () => {
         fullWidth
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(15,15,25,0.95)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(20px)',
+            borderRadius: '8px',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
           },
         }}
       >
-        <DialogTitle>Create Email Campaign</DialogTitle>
+        <DialogTitle>{t('admin.createEmailCampaign')}</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <TextField
               fullWidth
-              label="Campaign Name"
+              label={t('admin.campaignName')}
               value={campaignForm.name}
               onChange={(e) => setCampaignForm({ ...campaignForm, name: e.target.value })}
               sx={{ mb: 3 }}
             />
             <TextField
               fullWidth
-              label="Subject Line"
+              label={t('admin.subjectLine')}
               value={campaignForm.subject}
               onChange={(e) => setCampaignForm({ ...campaignForm, subject: e.target.value })}
               sx={{ mb: 3 }}
@@ -830,18 +918,18 @@ const CRM: React.FC = () => {
               fullWidth
               multiline
               rows={6}
-              label="Email Content"
+              label={t('admin.emailContent')}
               value={campaignForm.content}
               onChange={(e) => setCampaignForm({ ...campaignForm, content: e.target.value })}
               sx={{ mb: 3 }}
             />
             <FormControl fullWidth>
-              <InputLabel>Select Recipients</InputLabel>
+              <InputLabel>{t('admin.selectRecipients')}</InputLabel>
               <Select
                 multiple
                 value={campaignForm.recipients}
                 onChange={(e) => setCampaignForm({ ...campaignForm, recipients: e.target.value as string[] })}
-                renderValue={(selected) => `${selected.length} recipients selected`}
+                renderValue={(selected) => t('admin.recipientsSelected', { count: selected.length })}
               >
                 {customers.map((customer) => (
                   <MenuItem key={customer.id} value={customer.email}>
@@ -854,7 +942,7 @@ const CRM: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCampaignDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => setCampaignDialogOpen(false)}>{t('common.cancel')}</Button>
           <Button 
             onClick={sendCampaign} 
             variant="contained"
@@ -866,7 +954,7 @@ const CRM: React.FC = () => {
               },
             }}
           >
-            Send Campaign
+            {t('admin.sendCampaign')}
           </Button>
         </DialogActions>
       </Dialog>

@@ -43,10 +43,10 @@ const Footer: React.FC = () => {
       }}
     >
        {/* Services Section */}
-         <Box >
-           <Services />
-         </Box>
-      <Container maxWidth="xl" sx={{ py: 6 }}>
+          <Box >
+            <Services />
+          </Box>
+      <Box sx={{ py: 6, px: { xs: 2, sm: 3, md: 4 } }}>
         {/* Logo and About Section */}
         <Box sx={{ mb: 6, textAlign: 'center' }}>
           <Typography
@@ -613,7 +613,7 @@ const Footer: React.FC = () => {
             </Link>
           </Stack>
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 };

@@ -46,6 +46,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { enhancedCatalogSyncService } from '../../services/catalogSyncEnhanced';
+import { useTranslation } from 'react-i18next';
 
 interface MappingRule {
   internalField: string;
@@ -54,6 +55,7 @@ interface MappingRule {
 
 const CatalogSync: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [configs, setConfigs] = useState<any[]>([]);
   const [syncLogs, setSyncLogs] = useState<any[]>([]);
@@ -238,38 +240,59 @@ const CatalogSync: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Catalog Sync Management
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' } }}
+        >
+          {t('admin.catalogSyncManagement')}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Configure automatic synchronization with your external product catalogs
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
+          {t('admin.configureSyncDescription')}
         </Typography>
       </Box>
 
       {/* Create New Config Button */}
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-end' }}>
+      <Box sx={{
+        mb: 3,
+        display: 'flex',
+        justifyContent: { xs: 'stretch', sm: 'flex-end' }
+      }}>
         <Button
           variant="contained"
           startIcon={<Add />}
           onClick={handleCreateConfig}
+          fullWidth
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
         >
-          New Sync Configuration
+          {t('admin.newSyncConfiguration')}
         </Button>
       </Box>
 
       {/* Sync Configurations */}
-      <Paper sx={{ mb: 4 }}>
-        <TableContainer>
-          <Table>
+      <Paper sx={{
+        mb: 4,
+        bgcolor: 'oklch(98.5% 0.001 106.423)',
+        borderRadius: '8px',
+        border: '1px solid',
+        borderColor: 'divider',
+      }}>
+        <TableContainer sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: { xs: 600, sm: 750 } }}>
             <TableHead>
               <TableRow>
-                <TableCell>Type</TableCell>
-                <TableCell>Source</TableCell>
-                <TableCell>Schedule</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Last Sync</TableCell>
-                <TableCell>Auto Approve</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell>{t('admin.type')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('admin.source')}</TableCell>
+                <TableCell>{t('admin.schedule')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('admin.lastSync')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>{t('admin.autoApprove')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -277,7 +300,7 @@ const CatalogSync: React.FC = () => {
                 <TableRow>
                   <TableCell colSpan={7} align="center">
                     <Typography variant="body2" color="text.secondary" sx={{ py: 3 }}>
-                      No sync configurations found. Create one to start syncing your catalog.
+                      {t('admin.noSyncConfigurationsFound')}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -287,45 +310,64 @@ const CatalogSync: React.FC = () => {
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         {getSyncTypeIcon(config.sync_type)}
-                        <Typography variant="body2">{config.sync_type.toUpperCase()}</Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                        >
+                          {config.sync_type.toUpperCase()}
+                        </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>
-                        {config.source_url || 'Webhook Endpoint'}
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                      <Typography
+                        variant="body2"
+                        noWrap
+                        sx={{
+                          maxWidth: { sm: 150, md: 200 },
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        }}
+                      >
+                        {config.source_url || t('admin.webhookEndpoint')}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Chip label={config.schedule} size="small" />
+                      <Chip
+                        label={config.schedule}
+                        size="small"
+                        sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                      />
                     </TableCell>
                     <TableCell>{getStatusChip(config.status)}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                       {config.last_sync
                         ? new Date(config.last_sync).toLocaleString()
                         : 'Never'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                       <Chip
                         label={config.auto_approve ? 'Yes' : 'No'}
                         color={config.auto_approve ? 'success' : 'default'}
                         size="small"
+                        sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
                       />
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => handleEditConfig(config)}
-                        color="primary"
-                      >
-                        <Edit />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => handleManualSync(config.id)}
-                        color="info"
-                      >
-                        <Sync />
-                      </IconButton>
+                      <Box sx={{ display: 'flex', gap: { xs: 0, sm: 1 }, justifyContent: 'flex-end' }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleEditConfig(config)}
+                          color="primary"
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleManualSync(config.id)}
+                          color="info"
+                        >
+                          <Sync fontSize="small" />
+                        </IconButton>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
@@ -336,22 +378,36 @@ const CatalogSync: React.FC = () => {
       </Paper>
 
       {/* Recent Sync Logs */}
-      <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-        Recent Sync History
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          mt: 4,
+          mb: 2,
+          fontSize: { xs: '1.25rem', sm: '1.5rem' }
+        }}
+      >
+        {t('admin.recentSyncHistory')}
       </Typography>
       
-      <Paper>
+      <Paper sx={{
+        bgcolor: 'oklch(98.5% 0.001 106.423)',
+        borderRadius: '8px',
+        border: '1px solid',
+        borderColor: 'divider',
+        overflowX: 'auto',
+      }}>
         <TableContainer>
-          <Table size="small">
+          <Table size="small" sx={{ minWidth: { xs: 500, sm: 650 } }}>
             <TableHead>
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Added</TableCell>
-                <TableCell>Updated</TableCell>
-                <TableCell>Removed</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Error</TableCell>
+                <TableCell>{t('admin.date')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('admin.added')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('admin.updated')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('admin.removed')}</TableCell>
+                <TableCell>{t('admin.duration')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>{t('common.error')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -359,14 +415,14 @@ const CatalogSync: React.FC = () => {
                 <TableRow>
                   <TableCell colSpan={7} align="center">
                     <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
-                      No sync history available
+                      {t('admin.noSyncHistoryAvailable')}
                     </Typography>
                   </TableCell>
                 </TableRow>
               ) : (
                 syncLogs.map((log) => (
                   <TableRow key={log.id}>
-                    <TableCell>
+                    <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                       {new Date(log.started_at).toLocaleString()}
                     </TableCell>
                     <TableCell>
@@ -378,10 +434,10 @@ const CatalogSync: React.FC = () => {
                         <CircularProgress size={16} />
                       )}
                     </TableCell>
-                    <TableCell>{log.products_added}</TableCell>
-                    <TableCell>{log.products_updated}</TableCell>
-                    <TableCell>{log.products_removed}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{log.products_added}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{log.products_updated}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{log.products_removed}</TableCell>
+                    <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                       {log.completed_at
                         ? `${Math.round(
                             (new Date(log.completed_at).getTime() -
@@ -390,7 +446,7 @@ const CatalogSync: React.FC = () => {
                           )}s`
                         : '-'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                       {log.error_message && (
                         <Typography variant="caption" color="error">
                           {log.error_message}
@@ -406,16 +462,27 @@ const CatalogSync: React.FC = () => {
       </Paper>
 
       {/* Configuration Dialog */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '8px',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+          }
+        }}
+      >
         <DialogTitle>
-          {editingConfig ? 'Edit Sync Configuration' : 'New Sync Configuration'}
+          {editingConfig ? t('admin.editSyncConfiguration') : t('admin.newSyncConfiguration')}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl fullWidth>
-                  <InputLabel>Sync Type</InputLabel>
+                  <InputLabel>{t('admin.syncType')}</InputLabel>
                   <Select
                     value={formData.sync_type}
                     onChange={(e) => setFormData({ ...formData, sync_type: e.target.value })}
@@ -431,7 +498,7 @@ const CatalogSync: React.FC = () => {
               
               <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl fullWidth>
-                  <InputLabel>Schedule</InputLabel>
+                  <InputLabel>{t('admin.schedule')}</InputLabel>
                   <Select
                     value={formData.schedule}
                     onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
@@ -449,7 +516,7 @@ const CatalogSync: React.FC = () => {
                 <Grid size={12}>
                   <TextField
                     fullWidth
-                    label="Source URL"
+                    label={t('admin.sourceUrl')}
                     value={formData.source_url}
                     onChange={(e) => setFormData({ ...formData, source_url: e.target.value })}
                     placeholder="https://api.example.com/products"
@@ -461,7 +528,7 @@ const CatalogSync: React.FC = () => {
                 <Grid size={12}>
                   <TextField
                     fullWidth
-                    label="API Key (Optional)"
+                    label={t('admin.apiKey')}
                     value={formData.api_key}
                     onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
                     type="password"
@@ -471,8 +538,8 @@ const CatalogSync: React.FC = () => {
 
               {formData.sync_type === 'webhook' && (
                 <Grid size={12}>
-                  <Alert severity="info">
-                    Webhook URL will be generated after saving. Use this URL in your external system.
+                  <Alert severity="info" sx={{ borderRadius: '8px' }}>
+                    {t('admin.webhookUrlGenerated')}
                   </Alert>
                 </Grid>
               )}
@@ -485,41 +552,58 @@ const CatalogSync: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, auto_approve: e.target.checked })}
                     />
                   }
-                  label="Auto-approve synced products"
+                  label={t('admin.autoApproveSyncedProducts')}
                 />
               </Grid>
 
               {/* Mapping Rules */}
               <Grid size={12}>
-                <Accordion defaultExpanded>
+                <Accordion defaultExpanded sx={{
+                  borderRadius: '8px',
+                  '&:before': {
+                    display: 'none',
+                  },
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    <Typography>Field Mapping Rules</Typography>
+                    <Typography>{t('admin.fieldMappingRules')}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box>
                       {mappingRules.map((rule, index) => (
-                        <Box key={index} sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                        <Box key={index} sx={{
+                          display: 'flex',
+                          flexDirection: { xs: 'column', sm: 'row' },
+                          gap: { xs: 1, sm: 2 },
+                          mb: 2
+                        }}>
                           <TextField
-                            label="Zetta Field"
+                            label={t('admin.zettaField')}
                             value={rule.internalField}
                             onChange={(e) => handleMappingRuleChange(index, 'internalField', e.target.value)}
                             size="small"
                             sx={{ flex: 1 }}
+                            fullWidth
                           />
                           <TextField
-                            label="External Field"
+                            label={t('admin.externalField')}
                             value={rule.externalField}
                             onChange={(e) => handleMappingRuleChange(index, 'externalField', e.target.value)}
                             size="small"
                             sx={{ flex: 1 }}
+                            fullWidth
                           />
-                          <IconButton
-                            onClick={() => handleRemoveMappingRule(index)}
-                            color="error"
-                            size="small"
-                          >
-                            <Delete />
-                          </IconButton>
+                          <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-end', sm: 'center' } }}>
+                            <IconButton
+                              onClick={() => handleRemoveMappingRule(index)}
+                              color="error"
+                              size="small"
+                            >
+                              <Delete />
+                            </IconButton>
+                          </Box>
                         </Box>
                       ))}
                       <Button
@@ -527,7 +611,7 @@ const CatalogSync: React.FC = () => {
                         onClick={handleAddMappingRule}
                         size="small"
                       >
-                        Add Mapping Rule
+                        {t('admin.addMappingRule')}
                       </Button>
                     </Box>
                   </AccordionDetails>
@@ -537,9 +621,9 @@ const CatalogSync: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
           <Button onClick={handleSaveConfig} variant="contained">
-            {editingConfig ? 'Update' : 'Create'}
+            {editingConfig ? t('common.update') : t('common.create')}
           </Button>
         </DialogActions>
       </Dialog>

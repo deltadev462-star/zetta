@@ -35,7 +35,7 @@ import { Product } from "../types";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { PageTitle, FeaturedEquipmentSwiper, ExploreSection, RecentlyAddedOffers, BrandSpotlight, OurBrands, OurCustomers, Services } from "../components";
+import { PageTitle, FeaturedEquipmentSwiper, ExploreSection, RecentlyAddedOffers, BrandSpotlight, OurBrands, OurCustomers, Services, OurProcess } from "../components";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -890,36 +890,43 @@ const Products: React.FC = () => {
          )}
  
          {/* Brand Spotlight Section */}
-         {allProducts.length > 0 && (
-           <Box  >
-             <PageTitle
-               text={t('brandSpotlight.title')}
-               align="left"
-                size="medium"
-              />
-             <BrandSpotlight
-               products={allProducts.filter(p =>
-                 // Filter for products that could be from Thermo Fisher (based on category/type)
-                 p.category === 'Laboratory Equipment' ||
-                 p.category === 'Diagnostic Equipment' ||
-                 p.title.toLowerCase().includes('analyzer') ||
-                 p.title.toLowerCase().includes('centrifuge')
-               ).slice(0, 10)}
-               onAddToCart={handleAddToCart}
+        {allProducts.length > 0 && (
+          <Box  >
+            <PageTitle
+              text={t('brandSpotlight.title')}
+              align="left"
+               size="medium"
              />
-           </Box>
-         )}
-         {/* Our Brands Section */}
-         <Box  >
-           <OurBrands />
+            <BrandSpotlight
+              products={allProducts.filter(p =>
+                // Filter for products that could be from Thermo Fisher (based on category/type)
+                p.category === 'Laboratory Equipment' ||
+                p.category === 'Diagnostic Equipment' ||
+                p.title.toLowerCase().includes('analyzer') ||
+                p.title.toLowerCase().includes('centrifuge')
+              ).slice(0, 10)}
+              onAddToCart={handleAddToCart}
+            />
+          </Box>
+        )}
+        
+      
+          {/* Our Process Section */}
+         <Box>
+           <OurProcess />
          </Box>
+          
+        {/* Our Brands Section */}
+        <Box  >
+          <OurBrands />
+        </Box>
          
          {/* Our customer Section */}
          <Box >
            <OurCustomers />
          </Box>
          
-         
+       
        
          {/* Products Grid */}
           {/* {loading ? (

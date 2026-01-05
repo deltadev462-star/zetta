@@ -43,6 +43,7 @@ import { supabase } from '../../services/supabase';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { useTranslation } from 'react-i18next';
 
 interface ReportData {
   totalRevenue: number;
@@ -72,9 +73,10 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, prefix =
     <Card
       sx={{
         height: '100%',
-        bgcolor: 'rgba(15,15,25,0.8)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        bgcolor: 'oklch(98.5% 0.001 106.423)',
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: '8px',
       }}
     >
       <CardContent>
@@ -82,7 +84,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, prefix =
           <Box
             sx={{
               p: 1.5,
-              borderRadius: 1,
+              borderRadius: '8px',
               bgcolor: `${color}20`,
               display: 'inline-flex',
             }}
@@ -110,10 +112,21 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, prefix =
             </Box>
           )}
         </Box>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            mb: 1,
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+          }}
+        >
           {prefix}{value}{suffix}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+        >
           {title}
         </Typography>
       </CardContent>
@@ -122,6 +135,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, prefix =
 };
 
 const Reports: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
@@ -267,29 +281,47 @@ const Reports: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       {/* Header */}
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{
+        mb: 4,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: { xs: 2, md: 0 }
+      }}>
         <Box>
-          <Typography 
-            variant="h3" 
+          <Typography
+            variant="h3"
             component="h1"
             gutterBottom
             sx={{
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' },
               fontWeight: 800,
               background: 'linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Reports & Analytics
+            {t('admin.reportsAnalytics')}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Track your sales performance and business metrics
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+          >
+            {t('admin.trackSalesPerformance')}
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <IconButton 
+        <Box sx={{
+          display: 'flex',
+          gap: { xs: 1, sm: 2 },
+          width: { xs: '100%', sm: 'auto' },
+          justifyContent: { xs: 'flex-start', sm: 'flex-end' }
+        }}>
+          <IconButton
             onClick={fetchReportData}
-            sx={{ 
+            size="small"
+            sx={{
               bgcolor: 'rgba(0,212,255,0.1)',
               '&:hover': { bgcolor: 'rgba(0,212,255,0.2)' },
             }}
@@ -300,73 +332,92 @@ const Reports: React.FC = () => {
             variant="outlined"
             startIcon={<Download />}
             onClick={handleExport}
+            size="small"
             sx={{
+              fontSize: { xs: '0.875rem', sm: '1rem' },
               borderColor: 'rgba(0,212,255,0.5)',
               color: '#00d4ff',
               '&:hover': {
                 borderColor: '#00d4ff',
                 bgcolor: 'rgba(0,212,255,0.1)',
               },
+              '.MuiButton-startIcon': {
+                display: { xs: 'none', sm: 'inherit' }
+              }
             }}
           >
-            Export Report
+            {t('common.export')}
           </Button>
           <Button
             variant="contained"
             startIcon={<Print />}
+            size="small"
             sx={{
+              fontSize: { xs: '0.875rem', sm: '1rem' },
               background: 'linear-gradient(135deg, #ff0080 0%, #cc0066 100%)',
-              boxShadow: '0 4px 20px rgba(255,0,128,0.3)',
+              boxShadow: '0 2px 8px rgba(255,0,128,0.2)',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: '0 6px 30px rgba(255,0,128,0.4)',
+                boxShadow: '0 3px 12px rgba(255,0,128,0.25)',
               },
+              '.MuiButton-startIcon': {
+                display: { xs: 'none', sm: 'inherit' }
+              }
             }}
           >
-            Print
+            {t('admin.print')}
           </Button>
         </Box>
       </Box>
 
       {/* Date Range Selector */}
-      <Paper 
-        sx={{ 
-          p: 3, 
+      <Paper
+        sx={{
+          p: 3,
           mb: 4,
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: '8px',
         }}
       >
-        <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-          <CalendarToday sx={{ color: '#00d4ff' }} />
+        <Box sx={{
+          display: 'flex',
+          gap: { xs: 2, sm: 3 },
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          flexDirection: { xs: 'column', sm: 'row' },
+          flexWrap: 'wrap'
+        }}>
+          <CalendarToday sx={{ color: '#00d4ff', display: { xs: 'none', sm: 'block' } }} />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
-              label="Start Date"
+              label={t('admin.startDate')}
               value={dateRange.start}
               onChange={(newValue) => newValue && setDateRange(prev => ({ ...prev, start: newValue }))}
               slotProps={{
                 textField: {
                   size: 'small',
+                  sx: { width: { xs: '100%', sm: 'auto' } }
                 },
               }}
             />
             <DatePicker
-              label="End Date"
+              label={t('admin.endDate')}
               value={dateRange.end}
               onChange={(newValue) => newValue && setDateRange(prev => ({ ...prev, end: newValue }))}
               slotProps={{
                 textField: {
                   size: 'small',
+                  sx: { width: { xs: '100%', sm: 'auto' } }
                 },
               }}
             />
           </LocalizationProvider>
-          <FormControl size="small" sx={{ minWidth: 200 }}>
-            <InputLabel>Quick Select</InputLabel>
+          <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 200 } }}>
+            <InputLabel>{t('admin.quickSelect')}</InputLabel>
             <Select
               value=""
-              label="Quick Select"
+              label={t('admin.quickSelect')}
               onChange={(e) => {
                 const value = e.target.value as string;
                 const today = new Date();
@@ -394,9 +445,9 @@ const Reports: React.FC = () => {
                 }
               }}
             >
-              <MenuItem value="last7days">Last 7 Days</MenuItem>
-              <MenuItem value="last30days">Last 30 Days</MenuItem>
-              <MenuItem value="last90days">Last 90 Days</MenuItem>
+              <MenuItem value="last7days">{t('admin.last7Days')}</MenuItem>
+              <MenuItem value="last30days">{t('admin.last30Days')}</MenuItem>
+              <MenuItem value="last90days">{t('admin.last90Days')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -420,7 +471,7 @@ const Reports: React.FC = () => {
             mb: 4 
           }}>
             <StatCard
-              title="Total Revenue"
+              title={t('admin.totalRevenue')}
               value={reportData.totalRevenue.toFixed(2)}
               icon={<AttachMoney />}
               trend={15}
@@ -428,14 +479,14 @@ const Reports: React.FC = () => {
               color="#00ff88"
             />
             <StatCard
-              title="Total Orders"
+              title={t('admin.totalOrders')}
               value={reportData.totalOrders}
               icon={<ShoppingCart />}
               trend={8}
               color="#00d4ff"
             />
             <StatCard
-              title="Average Order Value"
+              title={t('admin.averageOrderValueLabel')}
               value={reportData.averageOrderValue.toFixed(2)}
               icon={<Assessment />}
               trend={-3}
@@ -443,7 +494,7 @@ const Reports: React.FC = () => {
               color="#ff0080"
             />
             <StatCard
-              title="Commission Earned"
+              title={t('admin.commissionEarnedLabel')}
               value={reportData.commissionEarned.toFixed(2)}
               icon={<TrendingUp />}
               trend={12}
@@ -455,18 +506,24 @@ const Reports: React.FC = () => {
           {/* Detailed Reports */}
           <Paper
             sx={{
-              bgcolor: 'rgba(15,15,25,0.8)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              bgcolor: 'oklch(98.5% 0.001 106.423)',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: '8px',
             }}
           >
             <Tabs
               value={activeTab}
               onChange={handleTabChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              allowScrollButtonsMobile
               sx={{
                 borderBottom: '1px solid rgba(255,255,255,0.1)',
                 '& .MuiTab-root': {
                   fontWeight: 600,
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  minWidth: { xs: 100, sm: 120 },
                   '&.Mui-selected': {
                     color: '#00d4ff',
                   },
@@ -477,26 +534,30 @@ const Reports: React.FC = () => {
                 },
               }}
             >
-              <Tab label="Sales Overview" />
-              <Tab label="Top Products" />
-              <Tab label="Order Analysis" />
-              <Tab label="Customer Insights" />
+              <Tab label={t('admin.salesOverview')} />
+              <Tab label={t('admin.topProducts')} />
+              <Tab label={t('admin.orderAnalysis')} />
+              <Tab label={t('admin.customerInsights')} />
             </Tabs>
 
             <Box sx={{ p: 3 }}>
               {activeTab === 0 && (
                 <Box>
-                  <Typography variant="h6" gutterBottom>
-                    Revenue Trend
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+                  >
+                    {t('admin.revenueTrend')}
                   </Typography>
                   {reportData.revenueByMonth.length > 0 ? (
-                    <TableContainer>
-                      <Table>
+                    <TableContainer sx={{ overflowX: 'auto' }}>
+                      <Table sx={{ minWidth: 300 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Month</TableCell>
-                            <TableCell align="right">Revenue</TableCell>
-                            <TableCell align="right">Growth</TableCell>
+                            <TableCell>{t('admin.month')}</TableCell>
+                            <TableCell align="right">{t('admin.revenue')}</TableCell>
+                            <TableCell align="right">{t('admin.growth')}</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -526,36 +587,50 @@ const Reports: React.FC = () => {
                       </Table>
                     </TableContainer>
                   ) : (
-                    <Alert severity="info">No revenue data available for the selected period</Alert>
+                    <Alert severity="info">{t('admin.noRevenueData')}</Alert>
                   )}
                 </Box>
               )}
               
               {activeTab === 1 && (
                 <Box>
-                  <Typography variant="h6" gutterBottom>
-                    Best Performing Products
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+                  >
+                    {t('admin.bestPerformingProducts')}
                   </Typography>
                   {reportData.topProducts.length > 0 ? (
-                    <TableContainer>
-                      <Table>
+                    <TableContainer sx={{ overflowX: 'auto' }}>
+                      <Table sx={{ minWidth: 400 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Product</TableCell>
-                            <TableCell align="right">Units Sold</TableCell>
-                            <TableCell align="right">Revenue</TableCell>
-                            <TableCell align="right">% of Total</TableCell>
+                            <TableCell sx={{ minWidth: 150 }}>{t('admin.productLabel')}</TableCell>
+                            <TableCell align="right" sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('admin.unitsSold')}</TableCell>
+                            <TableCell align="right" sx={{ minWidth: 100 }}>{t('admin.revenue')}</TableCell>
+                            <TableCell align="right" sx={{ minWidth: 120 }}>{t('admin.percentOfTotal')}</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {reportData.topProducts.map((item) => (
                             <TableRow key={item.product?.id}>
                               <TableCell>
-                                <Typography variant="body2" fontWeight={500}>
-                                  {item.product?.title || 'Unknown Product'}
+                                <Typography
+                                  variant="body2"
+                                  fontWeight={500}
+                                  sx={{
+                                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    maxWidth: { xs: 150, sm: 'none' }
+                                  }}
+                                >
+                                  {item.product?.title || t('admin.unknownProduct')}
                                 </Typography>
                               </TableCell>
-                              <TableCell align="right">{item.quantity}</TableCell>
+                              <TableCell align="right" sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{item.quantity}</TableCell>
                               <TableCell align="right">€{item.revenue.toFixed(2)}</TableCell>
                               <TableCell align="right">
                                 <LinearProgress
@@ -563,10 +638,10 @@ const Reports: React.FC = () => {
                                   value={(item.revenue / reportData.totalRevenue) * 100}
                                   sx={{
                                     height: 8,
-                                    borderRadius: 1,
-                                    bgcolor: 'rgba(255,255,255,0.1)',
+                                    borderRadius: '8px',
+                                    bgcolor: 'action.disabled',
                                     '& .MuiLinearProgress-bar': {
-                                      borderRadius: 1,
+                                      borderRadius: '8px',
                                       bgcolor: '#00d4ff',
                                     },
                                   }}
@@ -581,25 +656,37 @@ const Reports: React.FC = () => {
                       </Table>
                     </TableContainer>
                   ) : (
-                    <Alert severity="info">No product sales data available</Alert>
+                    <Alert severity="info">{t('admin.noProductSalesData')}</Alert>
                   )}
                 </Box>
               )}
               
               {activeTab === 2 && (
                 <Box>
-                  <Typography variant="h6" gutterBottom>
-                    Orders by Status
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+                  >
+                    {t('admin.ordersByStatus')}
                   </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(auto-fit, minmax(200px, 1fr))' }, gap: 2 }}>
                     {reportData.ordersByStatus.map((item) => (
-                      <Card key={item.status} sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}>
+                      <Card key={item.status} sx={{ bgcolor: 'oklch(98.5% 0.001 106.423)', border: '1px solid', borderColor: 'divider', borderRadius: '8px' }}>
                         <CardContent>
-                          <Typography variant="h4" fontWeight={700}>
+                          <Typography
+                            variant="h4"
+                            fontWeight={700}
+                            sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}
+                          >
                             {item.count}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {item.status} Orders
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                          >
+                            {item.status} {t('admin.orders')}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -610,29 +697,49 @@ const Reports: React.FC = () => {
               
               {activeTab === 3 && (
                 <Box>
-                  <Typography variant="h6" gutterBottom>
-                    Customer Metrics
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+                  >
+                    {t('admin.customerMetrics')}
                   </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
-                    <Card sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: { xs: 2, sm: 3 } }}>
+                    <Card sx={{ bgcolor: 'oklch(98.5% 0.001 106.423)', border: '1px solid', borderColor: 'divider', borderRadius: '8px' }}>
                       <CardContent>
                         <People sx={{ fontSize: 40, color: '#00d4ff', mb: 2 }} />
-                        <Typography variant="h4" fontWeight={700}>
+                        <Typography
+                          variant="h4"
+                          fontWeight={700}
+                          sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}
+                        >
                           {reportData.totalCustomers}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Total Customers
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                        >
+                          {t('admin.totalCustomers')}
                         </Typography>
                       </CardContent>
                     </Card>
-                    <Card sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}>
+                    <Card sx={{ bgcolor: 'oklch(98.5% 0.001 106.423)', border: '1px solid', borderColor: 'divider', borderRadius: '8px' }}>
                       <CardContent>
                         <Inventory sx={{ fontSize: 40, color: '#ff0080', mb: 2 }} />
-                        <Typography variant="h4" fontWeight={700}>
+                        <Typography
+                          variant="h4"
+                          fontWeight={700}
+                          sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}
+                        >
                           {reportData.totalProducts}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Active Products
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                        >
+                          {t('admin.activeProducts')}
                         </Typography>
                       </CardContent>
                     </Card>

@@ -66,14 +66,15 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, color, d
       <Card
         sx={{
           height: '100%',
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
           transition: 'all 0.3s',
           '&:hover': {
             transform: 'translateY(-4px)',
-            border: `1px solid ${color}30`,
-            boxShadow: `0 12px 40px ${color}30`,
+            borderColor: `${color}30`,
+            boxShadow: `0 4px 12px ${color}15`,
           },
         }}
       >
@@ -289,13 +290,21 @@ const AdminDashboard: React.FC = () => {
       <Fade in timeout={600}>
         <Box>
           {/* Header */}
-          <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box sx={{
+            mb: 4,
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: { xs: 2, md: 0 },
+            justifyContent: { xs: 'flex-start', md: 'space-between' },
+            alignItems: { xs: 'stretch', md: 'center' }
+          }}>
             <Box>
-              <Typography 
-                variant="h3" 
+              <Typography
+                variant="h3"
                 component="h1"
                 gutterBottom
                 sx={{
+                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
                   fontWeight: 800,
                   background: 'linear-gradient(135deg, #ff0080 0%, #00d4ff 100%)',
                   WebkitBackgroundClip: 'text',
@@ -304,14 +313,19 @@ const AdminDashboard: React.FC = () => {
               >
                 {t('dashboard.sellerDashboard')}
               </Typography>
-              <Typography variant="body1" color="text.secondary">
+              <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                 {user ? t('dashboard.welcomeBack', { name: user?.profile?.full_name || user?.email }) : t('dashboard.welcomeToPortal')}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <IconButton 
+            <Box sx={{
+              display: 'flex',
+              gap: 1,
+              flexWrap: 'wrap',
+              justifyContent: { xs: 'stretch', md: 'flex-end' }
+            }}>
+              <IconButton
                 onClick={fetchDashboardStats}
-                sx={{ 
+                sx={{
                   bgcolor: 'rgba(0,212,255,0.1)',
                   '&:hover': { bgcolor: 'rgba(0,212,255,0.2)' },
                 }}
@@ -322,13 +336,14 @@ const AdminDashboard: React.FC = () => {
                 <Button
                   variant="contained"
                   onClick={() => navigate('/register')}
+                  fullWidth
                   sx={{
                     background: 'linear-gradient(135deg, #ff0080 0%, #cc0066 100%)',
-                    boxShadow: '0 4px 20px rgba(255,0,128,0.3)',
-                    mr: 2,
+                    boxShadow: '0 2px 8px rgba(255,0,128,0.2)',
+                    flex: { xs: '1 1 100%', sm: '0 1 auto' },
                     '&:hover': {
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 6px 30px rgba(255,0,128,0.4)',
+                      boxShadow: '0 3px 12px rgba(255,0,128,0.25)',
                     },
                   }}
                 >
@@ -340,12 +355,14 @@ const AdminDashboard: React.FC = () => {
                 startIcon={<Add />}
                 onClick={() => navigate('/admin/products/new')}
                 disabled={!user}
+                fullWidth
                 sx={{
                   background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-                  boxShadow: '0 4px 20px rgba(0,212,255,0.3)',
+                  boxShadow: '0 2px 8px rgba(0,212,255,0.2)',
+                  flex: { xs: '1 1 100%', sm: '0 1 auto' },
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 30px rgba(0,212,255,0.4)',
+                    boxShadow: '0 3px 12px rgba(0,212,255,0.25)',
                   },
                 }}
               >
@@ -404,18 +421,24 @@ const AdminDashboard: React.FC = () => {
           {/* Main Content Tabs */}
           <Paper
             sx={{
-              bgcolor: 'rgba(15,15,25,0.8)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              bgcolor: 'oklch(98.5% 0.001 106.423)',
+              borderRadius: '8px',
+              border: '1px solid',
+              borderColor: 'divider',
             }}
           >
             <Tabs
               value={activeTab}
               onChange={handleTabChange}
+              variant="scrollable"
+              scrollButtons="auto"
+              allowScrollButtonsMobile
               sx={{
                 borderBottom: '1px solid rgba(255,255,255,0.1)',
                 '& .MuiTab-root': {
                   fontWeight: 600,
+                  minWidth: { xs: 'auto', sm: 90 },
+                  fontSize: { xs: '0.8rem', sm: '0.875rem' },
                   '&.Mui-selected': {
                     color: '#00d4ff',
                   },
@@ -423,6 +446,11 @@ const AdminDashboard: React.FC = () => {
                 '& .MuiTabs-indicator': {
                   bgcolor: '#00d4ff',
                   height: 3,
+                },
+                '& .MuiTabs-scrollButtons': {
+                  '&.Mui-disabled': {
+                    opacity: 0.3,
+                  },
                 },
               }}
             >
@@ -502,8 +530,9 @@ const AdminDashboard: React.FC = () => {
                   </Typography>
                   <Card
                     sx={{
-                      bgcolor: 'rgba(255,0,128,0.1)',
-                      border: '1px solid rgba(255,0,128,0.3)',
+                      bgcolor: 'rgba(255,0,128,0.05)',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(255,0,128,0.2)',
                     }}
                   >
                     <CardContent>
@@ -553,14 +582,14 @@ const AdminDashboard: React.FC = () => {
                   ) : orders.length === 0 ? (
                     <Alert severity="info">{t('dashboard.noOrdersYet')}</Alert>
                   ) : (
-                    <TableContainer component={Paper} sx={{ bgcolor: 'transparent' }}>
-                      <Table>
+                    <TableContainer component={Paper} sx={{ bgcolor: 'transparent', borderRadius: '8px', maxWidth: '100%', overflowX: 'auto' }}>
+                      <Table sx={{ minWidth: { xs: 500, sm: 650 } }}>
                         <TableHead>
                           <TableRow>
                             <TableCell>{t('dashboard.orderId')}</TableCell>
-                            <TableCell>{t('dashboard.date')}</TableCell>
+                            <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('dashboard.date')}</TableCell>
                             <TableCell>{t('dashboard.customer')}</TableCell>
-                            <TableCell>{t('dashboard.items')}</TableCell>
+                            <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('dashboard.items')}</TableCell>
                             <TableCell>{t('dashboard.total')}</TableCell>
                             <TableCell>{t('dashboard.status')}</TableCell>
                             <TableCell>{t('dashboard.actions')}</TableCell>
@@ -569,11 +598,11 @@ const AdminDashboard: React.FC = () => {
                         <TableBody>
                           {orders.map((order) => (
                             <TableRow key={order.id}>
-                              <TableCell>#{order.id.slice(0, 8)}</TableCell>
-                              <TableCell>{formatDate(order.created_at)}</TableCell>
-                              <TableCell>{order.shipping_address.full_name}</TableCell>
-                              <TableCell>{order.items?.length || 0} {t('dashboard.items').toLowerCase()}</TableCell>
-                              <TableCell>€{order.total_amount.toFixed(2)}</TableCell>
+                              <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>#{order.id.slice(0, 8)}</TableCell>
+                              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{formatDate(order.created_at)}</TableCell>
+                              <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{order.shipping_address.full_name}</TableCell>
+                              <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{order.items?.length || 0} {t('dashboard.items').toLowerCase()}</TableCell>
+                              <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>€{order.total_amount.toFixed(2)}</TableCell>
                               <TableCell>
                                 <Chip
                                   label={order.status}
@@ -582,6 +611,7 @@ const AdminDashboard: React.FC = () => {
                                     bgcolor: `${getStatusColor(order.status)}30`,
                                     color: getStatusColor(order.status),
                                     fontWeight: 600,
+                                    fontSize: { xs: '0.7rem', sm: '0.75rem' },
                                   }}
                                 />
                               </TableCell>
@@ -605,22 +635,31 @@ const AdminDashboard: React.FC = () => {
               
               {activeTab === 2 && (
                 <Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h5">
-                      {t('dashboard.myProducts')}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      startIcon={<Add />}
-                      onClick={() => navigate('/admin/products/new')}
-                      sx={{
-                        background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-                        boxShadow: '0 4px 20px rgba(0,212,255,0.3)',
-                      }}
-                    >
-                      {t('dashboard.addProduct')}
-                    </Button>
-                  </Box>
+                  <Box sx={{
+                      display: 'flex',
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      gap: { xs: 2, sm: 0 },
+                      justifyContent: 'space-between',
+                      alignItems: { xs: 'stretch', sm: 'center' },
+                      mb: 3
+                    }}>
+                      <Typography variant="h5" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                        {t('dashboard.myProducts')}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => navigate('/admin/products/new')}
+                        fullWidth
+                        sx={{
+                          background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
+                          boxShadow: '0 2px 8px rgba(0,212,255,0.2)',
+                          width: { xs: '100%', sm: 'auto' },
+                        }}
+                      >
+                        {t('dashboard.addProduct')}
+                      </Button>
+                    </Box>
                   
                   {productsLoading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
@@ -643,18 +682,19 @@ const AdminDashboard: React.FC = () => {
                           <Card
                             sx={{
                               height: '100%',
-                              bgcolor: 'rgba(15,15,25,0.8)',
-                              backdropFilter: 'blur(20px)',
-                              border: '1px solid rgba(255,255,255,0.1)',
+                              bgcolor: 'oklch(98.5% 0.001 106.423)',
+                              borderRadius: '8px',
+                              border: '1px solid',
+                              borderColor: 'divider',
                               transition: 'all 0.3s',
                               '&:hover': {
                                 transform: 'translateY(-4px)',
-                                boxShadow: '0 12px 40px rgba(0,212,255,0.3)',
+                                boxShadow: '0 4px 12px rgba(0,212,255,0.15)',
                               },
                             }}
                           >
                             <CardContent>
-                              <Box sx={{ mb: 2, height: 150, overflow: 'hidden', borderRadius: 1, bgcolor: 'rgba(255,255,255,0.05)' }}>
+                              <Box sx={{ mb: 2, height: 150, overflow: 'hidden', borderRadius: '8px', bgcolor: 'rgba(255,255,255,0.02)' }}>
                                 {product.images && product.images.length > 0 ? (
                                   <img
                                     src={product.images[0]}
@@ -745,9 +785,10 @@ const AdminDashboard: React.FC = () => {
                     <Box>
                       <Card
                         sx={{
-                          bgcolor: 'rgba(15,15,25,0.8)',
-                          backdropFilter: 'blur(20px)',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          bgcolor: 'oklch(98.5% 0.001 106.423)',
+                          borderRadius: '8px',
+                          border: '1px solid',
+                          borderColor: 'divider',
                         }}
                       >
                         <CardContent>
@@ -780,9 +821,10 @@ const AdminDashboard: React.FC = () => {
                     <Box>
                       <Card
                         sx={{
-                          bgcolor: 'rgba(15,15,25,0.8)',
-                          backdropFilter: 'blur(20px)',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          bgcolor: 'oklch(98.5% 0.001 106.423)',
+                          borderRadius: '8px',
+                          border: '1px solid',
+                          borderColor: 'divider',
                         }}
                       >
                         <CardContent>
@@ -827,9 +869,10 @@ const AdminDashboard: React.FC = () => {
                     <Box sx={{ gridColumn: { xs: '1', md: 'span 2' } }}>
                       <Card
                         sx={{
-                          bgcolor: 'rgba(15,15,25,0.8)',
-                          backdropFilter: 'blur(20px)',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          bgcolor: 'oklch(98.5% 0.001 106.423)',
+                          borderRadius: '8px',
+                          border: '1px solid',
+                          borderColor: 'divider',
                         }}
                       >
                         <CardContent>
@@ -898,10 +941,10 @@ const AdminDashboard: React.FC = () => {
                         sx={{
                           py: 2,
                           background: 'linear-gradient(135deg, #00ff88 0%, #00cc6f 100%)',
-                          boxShadow: '0 4px 20px rgba(0,255,136,0.3)',
+                          boxShadow: '0 2px 8px rgba(0,255,136,0.2)',
                           '&:hover': {
                             transform: 'translateY(-2px)',
-                            boxShadow: '0 6px 30px rgba(0,255,136,0.4)',
+                            boxShadow: '0 3px 12px rgba(0,255,136,0.25)',
                           },
                         }}
                       >

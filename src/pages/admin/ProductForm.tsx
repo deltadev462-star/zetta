@@ -32,10 +32,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { productService } from '../../services/products';
 import { Product } from '../../types';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const steps = ['Basic Information', 'Pricing & Inventory', 'Images & Details'];
+import { useTranslation } from 'react-i18next';
 
 const ProductForm: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -46,6 +46,12 @@ const ProductForm: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [activeStep, setActiveStep] = useState(0);
+
+  const steps = [
+    t('admin.basicInformation'),
+    t('admin.pricingInventory'),
+    t('admin.imagesDetails')
+  ];
 
   const [formData, setFormData] = useState<Partial<Product>>({
     title: '',
@@ -77,7 +83,7 @@ const ProductForm: React.FC = () => {
         setImageUrls(data.images?.length ? data.images : ['']);
       }
     } catch (err: any) {
-      setError('Failed to fetch product');
+      setError(t('common.error'));
       console.error('Error fetching product:', err);
     } finally {
       setLoading(false);
@@ -150,12 +156,12 @@ const ProductForm: React.FC = () => {
 
   const validateForm = () => {
     if (!formData.title || !formData.description || !formData.category) {
-      setError('Please fill in all required fields');
+      setError(t('checkout.fillAllRequiredFields'));
       setActiveStep(0);
       return false;
     }
     if (!formData.price || formData.price <= 0) {
-      setError('Please enter a valid price');
+      setError(t('auth.enterValidEmail')); // Using a similar validation message
       setActiveStep(1);
       return false;
     }
@@ -179,18 +185,18 @@ const ProductForm: React.FC = () => {
       if (isEditMode) {
         const { error } = await productService.updateProduct(id!, productData);
         if (error) throw error;
-        setSuccess('Product updated successfully!');
+        setSuccess(t('common.success'));
       } else {
         const { error } = await productService.createProduct(productData as Omit<Product, 'id' | 'created_at' | 'updated_at'>);
         if (error) throw error;
-        setSuccess('Product created successfully!');
+        setSuccess(t('common.success'));
       }
 
       setTimeout(() => {
         navigate('/admin/products');
       }, 1500);
     } catch (err: any) {
-      setError(err.message || 'Failed to save product');
+      setError(err.message || t('common.error'));
     } finally {
       setSaving(false);
     }
@@ -203,61 +209,61 @@ const ProductForm: React.FC = () => {
           <Box sx={{ mt: 3 }}>
             <TextField
               fullWidth
-              label="Product Title"
+              label={t('admin.productTitle')}
               name="title"
               value={formData.title}
               onChange={handleInputChange}
               required
               sx={{ mb: 3 }}
-              placeholder="e.g., Siemens MAGNETOM Altea 1.5T MRI Scanner"
+              placeholder={`${t('products.viewDetails')}...`}
             />
 
             <TextField
               fullWidth
               multiline
               rows={4}
-              label="Description"
+              label={t('products.description')}
               name="description"
               value={formData.description}
               onChange={handleInputChange}
               required
               sx={{ mb: 3 }}
-              placeholder="Provide detailed information about the equipment, including specifications, condition, and service history..."
+              placeholder={`${t('maintenance.issuePlaceholder')}...`}
             />
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 1fr' }, gap: { xs: 2, md: 3 } }}>
               <FormControl fullWidth required>
-                <InputLabel>Category</InputLabel>
+                <InputLabel>{t('products.category')}</InputLabel>
                 <Select
                   value={formData.category}
                   label="Category"
                   onChange={handleSelectChange('category')}
                 >
-                  <MenuItem value="">Select Category</MenuItem>
-                  <MenuItem value="imaging">Imaging Equipment</MenuItem>
-                  <MenuItem value="surgical">Surgical Equipment</MenuItem>
-                  <MenuItem value="diagnostic">Diagnostic Equipment</MenuItem>
-                  <MenuItem value="monitoring">Patient Monitoring</MenuItem>
-                  <MenuItem value="laboratory">Laboratory Equipment</MenuItem>
-                  <MenuItem value="respiratory">Respiratory Equipment</MenuItem>
-                  <MenuItem value="sterilization">Sterilization Equipment</MenuItem>
-                  <MenuItem value="emergency">Emergency Equipment</MenuItem>
-                  <MenuItem value="infusion">Infusion Equipment</MenuItem>
+                  <MenuItem value="">{t('common.select')}</MenuItem>
+                  <MenuItem value="imaging">{t('productCategories.imagingEquipment')}</MenuItem>
+                  <MenuItem value="surgical">{t('productCategories.surgicalEquipment')}</MenuItem>
+                  <MenuItem value="diagnostic">{t('productCategories.diagnosticEquipment')}</MenuItem>
+                  <MenuItem value="monitoring">{t('productCategories.monitoringEquipment')}</MenuItem>
+                  <MenuItem value="laboratory">{t('productCategories.laboratoryEquipment')}</MenuItem>
+                  <MenuItem value="respiratory">{t('productCategories.respiratoryEquipment')}</MenuItem>
+                  <MenuItem value="sterilization">{t('productCategories.sterilizationEquipment') || 'Sterilization Equipment'}</MenuItem>
+                  <MenuItem value="emergency">{t('productCategories.emergencyEquipment')}</MenuItem>
+                  <MenuItem value="infusion">{t('productCategories.infusionEquipment')}</MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl fullWidth required>
-                <InputLabel>Condition</InputLabel>
+                <InputLabel>{t('products.condition')}</InputLabel>
                 <Select
                   value={formData.condition}
                   label="Condition"
                   onChange={handleSelectChange('condition')}
                 >
-                  <MenuItem value="excellent">Excellent</MenuItem>
-                  <MenuItem value="good">Good</MenuItem>
-                  <MenuItem value="fair">Fair</MenuItem>
+                  <MenuItem value="excellent">{t('products.excellent')}</MenuItem>
+                  <MenuItem value="good">{t('products.good')}</MenuItem>
+                  <MenuItem value="fair">{t('products.fair')}</MenuItem>
                 </Select>
-                <FormHelperText>Overall condition of the equipment</FormHelperText>
+                <FormHelperText>{t('products.condition')}</FormHelperText>
               </FormControl>
             </Box>
           </Box>
@@ -266,10 +272,10 @@ const ProductForm: React.FC = () => {
       case 1:
         return (
           <Box sx={{ mt: 3 }}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 1fr' }, gap: { xs: 2, md: 3 } }}>
               <TextField
                 fullWidth
-                label="Original Price"
+                label={t('admin.originalPrice')}
                 name="price"
                 type="number"
                 value={formData.price}
@@ -278,12 +284,12 @@ const ProductForm: React.FC = () => {
                 InputProps={{
                   startAdornment: <InputAdornment position="start">€</InputAdornment>,
                 }}
-                helperText="Your selling price before Zetta commission"
+                helperText={t('admin.sellingPriceBeforeCommission')}
               />
 
               <TextField
                 fullWidth
-                label="Zetta Price"
+                label={t('admin.zettaPrice')}
                 name="zetta_price"
                 type="number"
                 value={formData.zetta_price}
@@ -291,46 +297,52 @@ const ProductForm: React.FC = () => {
                 InputProps={{
                   startAdornment: <InputAdornment position="start">€</InputAdornment>,
                 }}
-                helperText="Final price shown to buyers (after commission)"
+                helperText={t('admin.finalPriceAfterCommission')}
               />
 
               <TextField
                 fullWidth
-                label="Warranty Duration"
+                label={t('admin.warrantyDuration')}
                 name="warranty_duration"
                 type="number"
                 value={formData.warranty_duration}
                 onChange={handleInputChange}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end">months</InputAdornment>,
+                  endAdornment: <InputAdornment position="end">{t('warranty.months')}</InputAdornment>,
                 }}
-                helperText="Warranty period in months"
+                helperText={t('admin.warrantyPeriodInMonths')}
               />
 
               <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
+                <InputLabel>{t('common.status')}</InputLabel>
                 <Select
                   value={formData.status}
                   label="Status"
                   onChange={handleSelectChange('status')}
                 >
-                  <MenuItem value="available">Available</MenuItem>
-                  <MenuItem value="sold">Sold</MenuItem>
-                  <MenuItem value="pending">Pending</MenuItem>
+                  <MenuItem value="available">{t('admin.available')}</MenuItem>
+                  <MenuItem value="sold">{t('admin.sold')}</MenuItem>
+                  <MenuItem value="pending">{t('warranty.pending')}</MenuItem>
                 </Select>
               </FormControl>
             </Box>
 
             {formData.price && formData.zetta_price && (
-              <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(255,0,128,0.1)', borderRadius: 1, border: '1px solid rgba(255,0,128,0.3)' }}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Commission Calculation
+              <Box sx={{
+                mt: 3,
+                p: { xs: 1.5, sm: 2 },
+                bgcolor: 'rgba(255,0,128,0.05)',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,0,128,0.2)'
+              }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+                  {t('admin.commissionCalculation')}
                 </Typography>
-                <Typography variant="body1">
-                  Commission Amount: <strong>€{(formData.price - (formData.zetta_price || 0)).toFixed(2)}</strong>
+                <Typography variant="body1" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                  {t('admin.commissionAmount')}: <strong>€{(formData.price - (formData.zetta_price || 0)).toFixed(2)}</strong>
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Commission Rate: {((1 - ((formData.zetta_price || 0) / formData.price)) * 100).toFixed(1)}%
+                <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.625rem', sm: '0.75rem' } }}>
+                  {t('admin.commissionRate')}: {((1 - ((formData.zetta_price || 0) / formData.price)) * 100).toFixed(1)}%
                 </Typography>
               </Box>
             )}
@@ -340,26 +352,33 @@ const ProductForm: React.FC = () => {
       case 2:
         return (
           <Box sx={{ mt: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Product Images
+            <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+              {t('admin.productImages')}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Add image URLs for your product. The first image will be the main product image.
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+              {t('admin.addImageUrlsDescription')}
             </Typography>
 
             {imageUrls.map((url, index) => (
-              <Box key={index} sx={{ display: 'flex', gap: 2, mb: 2 }}>
+              <Box key={index} sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mb: 2 }}>
                 <TextField
                   fullWidth
-                  label={`Image URL ${index + 1}`}
+                  label={`${t('admin.imageUrl')} ${index + 1}`}
                   value={url}
                   onChange={(e) => handleImageUrlChange(index, e.target.value)}
                   placeholder="https://example.com/image.jpg"
-                  sx={{ flex: 1 }}
+                  size="small"
+                  sx={{
+                    flex: 1,
+                    '& input': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }
+                  }}
                 />
                 <IconButton
                   onClick={() => removeImageUrl(index)}
                   disabled={imageUrls.length === 1}
+                  size="small"
                   sx={{ color: '#ff3366' }}
                 >
                   <Delete />
@@ -370,26 +389,27 @@ const ProductForm: React.FC = () => {
             <Button
               startIcon={<AddPhotoAlternate />}
               onClick={addImageUrl}
-              sx={{ mt: 1 }}
+              size="small"
+              sx={{ mt: 1, fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
-              Add Another Image
+              {t('admin.addAnotherImage')}
             </Button>
 
             {imageUrls.some(url => url.trim() !== '') && (
               <Box sx={{ mt: 3 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Image Preview
+                  {t('admin.imagePreview')}
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', md: 'repeat(4, 1fr)' }, gap: { xs: 1, sm: 2 } }}>
                   {imageUrls.filter(url => url.trim() !== '').map((url, index) => (
                     <Box
                       key={index}
                       sx={{
-                        width: 150,
-                        height: 150,
-                        borderRadius: 1,
+                        aspectRatio: '1 / 1',
+                        borderRadius: '8px',
                         overflow: 'hidden',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        border: '1px solid',
+                        borderColor: 'divider',
                         position: 'relative',
                       }}
                     >
@@ -403,7 +423,7 @@ const ProductForm: React.FC = () => {
                       />
                       {index === 0 && (
                         <Chip
-                          label="Main"
+                          label={t('admin.main')}
                           size="small"
                           sx={{
                             position: 'absolute',
@@ -438,23 +458,25 @@ const ProductForm: React.FC = () => {
     <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
       <Paper
         sx={{
-          p: 4,
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          p: { xs: 2, sm: 3, md: 4 },
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
-        <Typography 
-          variant="h4" 
+        <Typography
+          variant="h4"
           gutterBottom
           sx={{
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
             fontWeight: 700,
             background: 'linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}
         >
-          {isEditMode ? 'Edit Product' : 'Add New Product'}
+          {isEditMode ? t('admin.editProduct') : t('admin.addNewProduct')}
         </Typography>
 
         {error && (
@@ -469,40 +491,66 @@ const ProductForm: React.FC = () => {
           </Alert>
         )}
 
-        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-          {steps.map((label) => (
+        <Stepper
+          activeStep={activeStep}
+          sx={{
+            mb: 4,
+            '& .MuiStepLabel-label': {
+              fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
+            },
+            '& .MuiStepIcon-root': {
+              fontSize: { xs: '1.25rem', sm: '1.5rem' }
+            }
+          }}
+        >
+          {steps.map((label, index) => (
             <Step key={label}>
-              <StepLabel>{label}</StepLabel>
+              <StepLabel sx={{
+                '& .MuiStepLabel-label': {
+                  display: { xs: activeStep === index ? 'block' : 'none', sm: 'block' }
+                }
+              }}>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
 
         {renderStepContent(activeStep)}
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          mt: 4,
+          flexWrap: 'wrap',
+          gap: 2
+        }}>
           <Button
             variant="outlined"
             onClick={() => navigate('/admin/products')}
             startIcon={<Cancel />}
+            size="small"
             sx={{
+              minWidth: { xs: '100px', sm: 'auto' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
               borderColor: 'rgba(255,255,255,0.3)',
               color: 'rgba(255,255,255,0.7)',
               '&:hover': {
                 borderColor: 'rgba(255,255,255,0.5)',
-                bgcolor: 'rgba(255,255,255,0.05)',
+                bgcolor: 'oklch(98.5% 0.001 106.423)',
               },
             }}
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap' }}>
             <Button
               disabled={activeStep === 0}
               onClick={handleBack}
               startIcon={<ArrowBack />}
+              size="small"
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
-              Back
+              {t('common.back')}
             </Button>
 
             {activeStep === steps.length - 1 ? (
@@ -510,36 +558,41 @@ const ProductForm: React.FC = () => {
                 variant="contained"
                 onClick={handleSubmit}
                 disabled={saving}
-                startIcon={saving ? <CircularProgress size={20} /> : <Save />}
+                startIcon={saving ? <CircularProgress size={16} /> : <Save />}
+                size="small"
                 sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  minWidth: { xs: '120px', sm: '150px' },
                   background: 'linear-gradient(135deg, #00ff88 0%, #00cc55 100%)',
-                  boxShadow: '0 4px 20px rgba(0,255,136,0.3)',
+                  boxShadow: '0 2px 8px rgba(0,255,136,0.2)',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 30px rgba(0,255,136,0.4)',
+                    boxShadow: '0 3px 12px rgba(0,255,136,0.25)',
                   },
                   '&:disabled': {
                     background: 'rgba(128,128,128,0.3)',
                   },
                 }}
               >
-                {saving ? 'Saving...' : (isEditMode ? 'Update Product' : 'Create Product')}
+                {saving ? `${t('common.loading')}...` : (isEditMode ? t('admin.update') : t('admin.create'))}
               </Button>
             ) : (
               <Button
                 variant="contained"
                 onClick={handleNext}
                 endIcon={<ArrowForward />}
+                size="small"
                 sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
                   background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-                  boxShadow: '0 4px 20px rgba(0,212,255,0.3)',
+                  boxShadow: '0 2px 8px rgba(0,212,255,0.2)',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 30px rgba(0,212,255,0.4)',
+                    boxShadow: '0 3px 12px rgba(0,212,255,0.25)',
                   },
                 }}
               >
-                Next
+                {t('common.next')}
               </Button>
             )}
           </Box>

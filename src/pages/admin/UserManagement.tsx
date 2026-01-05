@@ -293,72 +293,151 @@ const UserManagement: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}
+        >
           {t('admin.userManagement')}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {t('admin.userManagement')}
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
+          {t('admin.manageUsersPermissionsActivity')}
         </Typography>
       </Box>
 
       {/* Stats Cards */}
       {userStats && (
         <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
-          <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' } }}>
+          <Card sx={{
+            flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)', lg: '1 1 calc(20% - 24px)' },
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
+            border: '1px solid',
+            borderColor: 'divider',
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <People sx={{ color: '#00d4ff', mr: 1 }} />
-                <Typography variant="h6">{t('admin.totalUsers')}</Typography>
+                <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                  {t('admin.totalUsers')}
+                </Typography>
               </Box>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                }}
+              >
                 {userStats.totalUsers}
               </Typography>
             </CardContent>
           </Card>
 
-          <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' } }}>
+          <Card sx={{
+            flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' },
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
+            border: '1px solid',
+            borderColor: 'divider',
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <CheckCircle sx={{ color: '#00ff88', mr: 1 }} />
-                <Typography variant="h6">{t('warranty.active')}</Typography>
+                <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                  {t('warranty.active')}
+                </Typography>
               </Box>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                }}
+              >
                 {userStats.activeUsers}
               </Typography>
             </CardContent>
           </Card>
 
-          <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' } }}>
+          <Card sx={{
+            flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' },
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
+            border: '1px solid',
+            borderColor: 'divider',
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Warning sx={{ color: '#ffaa00', mr: 1 }} />
-                <Typography variant="h6">{t('warranty.pending')}</Typography>
+                <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                  {t('warranty.pending')}
+                </Typography>
               </Box>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                }}
+              >
                 {userStats.suspendedUsers}
               </Typography>
             </CardContent>
           </Card>
 
-          <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' } }}>
+          <Card sx={{
+            flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' },
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
+            border: '1px solid',
+            borderColor: 'divider',
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Block sx={{ color: '#ff0080', mr: 1 }} />
-                <Typography variant="h6">{t('admin.deactivated')}</Typography>
+                <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                  {t('admin.deactivated')}
+                </Typography>
               </Box>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                }}
+              >
                 {userStats.deactivatedUsers}
               </Typography>
             </CardContent>
           </Card>
 
-          <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' } }}>
+          <Card sx={{
+            flex: { xs: '1 1 100%', sm: '1 1 calc(20% - 24px)' },
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            borderRadius: '8px',
+            border: '1px solid',
+            borderColor: 'divider',
+          }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <PersonAdd sx={{ color: '#00d4ff', mr: 1 }} />
-                <Typography variant="h6">{t('admin.newThisMonth')}</Typography>
+                <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                  {t('admin.newThisMonth')}
+                </Typography>
               </Box>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                }}
+              >
                 {userStats.newUsersThisMonth}
               </Typography>
             </CardContent>
@@ -367,8 +446,21 @@ const UserManagement: React.FC = () => {
       )}
 
       {/* Filters */}
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+      <Paper sx={{
+        p: 2,
+        mb: 3,
+        bgcolor: 'oklch(98.5% 0.001 106.423)',
+        borderRadius: '8px',
+        border: '1px solid',
+        borderColor: 'divider',
+      }}>
+        <Box sx={{
+          display: 'flex',
+          gap: 2,
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          flexWrap: 'wrap',
+          flexDirection: { xs: 'column', sm: 'row' }
+        }}>
           <TextField
             size="small"
             placeholder={t('admin.searchUsers')}
@@ -377,10 +469,10 @@ const UserManagement: React.FC = () => {
             InputProps={{
               startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />,
             }}
-            sx={{ minWidth: 300 }}
+            sx={{ minWidth: { xs: '100%', sm: 300 } }}
           />
           
-          <FormControl size="small" sx={{ minWidth: 120 }}>
+          <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 120 } }}>
             <InputLabel>{t('auth.role')}</InputLabel>
             <Select
               value={filters.role}
@@ -393,7 +485,7 @@ const UserManagement: React.FC = () => {
             </Select>
           </FormControl>
           
-          <FormControl size="small" sx={{ minWidth: 120 }}>
+          <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 120 } }}>
             <InputLabel>{t('common.status')}</InputLabel>
             <Select
               value={filters.status}
@@ -412,6 +504,11 @@ const UserManagement: React.FC = () => {
               variant="outlined"
               color="warning"
               onClick={() => setBulkActionDialog(true)}
+              size="small"
+              sx={{
+                minWidth: { xs: '100%', sm: 'auto' },
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }}
             >
               {t('admin.bulkSuspend')} ({selectedUsers.length})
             </Button>
@@ -420,19 +517,40 @@ const UserManagement: React.FC = () => {
       </Paper>
 
       {/* Tabs */}
-      <Paper sx={{ width: '100%' }}>
+      <Paper sx={{
+        width: '100%',
+        bgcolor: 'oklch(98.5% 0.001 106.423)',
+        borderRadius: '8px',
+        border: '1px solid',
+        borderColor: 'divider',
+      }}>
         <Tabs
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}
           sx={{ borderBottom: 1, borderColor: 'divider' }}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
         >
-          <Tab label={t('admin.allUsers')} />
-          <Tab label={t('admin.suspensionHistory')} />
+          <Tab
+            label={t('admin.allUsers')}
+            sx={{
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              minWidth: { xs: 100, sm: 120 }
+            }}
+          />
+          <Tab
+            label={t('admin.suspensionHistory')}
+            sx={{
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              minWidth: { xs: 100, sm: 120 }
+            }}
+          />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
                   <TableCell padding="checkbox">
@@ -447,15 +565,15 @@ const UserManagement: React.FC = () => {
                       }}
                     />
                   </TableCell>
-                  <TableCell>{t('admin.user')}</TableCell>
-                  <TableCell>{t('common.email')}</TableCell>
-                  <TableCell>{t('auth.role')}</TableCell>
-                  <TableCell>{t('common.status')}</TableCell>
-                  <TableCell>{t('nav.orders')}</TableCell>
-                  <TableCell>{t('cart.total')}</TableCell>
-                  <TableCell>{t('orders.created')}</TableCell>
-                  <TableCell>{t('admin.lastLogin')}</TableCell>
-                  <TableCell align="right">{t('common.actions')}</TableCell>
+                  <TableCell sx={{ minWidth: 150 }}>{t('admin.user')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 200 }}>{t('common.email')}</TableCell>
+                  <TableCell sx={{ minWidth: 80 }}>{t('auth.role')}</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>{t('common.status')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 80 }}>{t('nav.orders')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>{t('cart.total')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 100 }}>{t('orders.created')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>{t('admin.lastLogin')}</TableCell>
+                  <TableCell align="right" sx={{ minWidth: 80 }}>{t('common.actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -470,7 +588,7 @@ const UserManagement: React.FC = () => {
                     <TableCell>
                       <Box>
                         <Typography variant="body2">
-                          {user.profile?.full_name || 'N/A'}
+                          {user.profile?.full_name || t('common.na')}
                         </Typography>
                         {user.profile?.company_name && (
                           <Typography variant="caption" color="text.secondary">
@@ -479,7 +597,7 @@ const UserManagement: React.FC = () => {
                         )}
                       </Box>
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{user.email}</TableCell>
                     <TableCell>
                       <Chip 
                         label={user.role} 
@@ -488,14 +606,14 @@ const UserManagement: React.FC = () => {
                       />
                     </TableCell>
                     <TableCell>{getUserStatus(user)}</TableCell>
-                    <TableCell>{user.activity_summary?.total_orders || 0}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{user.activity_summary?.total_orders || 0}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                       €{user.activity_summary?.total_spent?.toFixed(2) || '0.00'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                       {format(new Date(user.created_at), 'MMM dd, yyyy')}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                       {user.last_sign_in
                         ? format(new Date(user.last_sign_in), 'MMM dd, yyyy')
                         : t('admin.never')}
@@ -516,16 +634,16 @@ const UserManagement: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>{t('logistics.preferredDate')}</TableCell>
-                  <TableCell>{t('admin.user')}</TableCell>
-                  <TableCell>{t('common.actions')}</TableCell>
-                  <TableCell>{t('admin.reasonForSuspension')}</TableCell>
-                  <TableCell>{t('auth.admin')}</TableCell>
-                  <TableCell>{t('admin.suspensionDuration')}</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>{t('logistics.preferredDate')}</TableCell>
+                  <TableCell sx={{ minWidth: 150 }}>{t('admin.user')}</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>{t('common.actions')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 200 }}>{t('admin.reasonForSuspension')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 150 }}>{t('auth.admin')}</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>{t('admin.suspensionDuration')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -542,8 +660,8 @@ const UserManagement: React.FC = () => {
                         color={log.action.includes('suspend') ? 'warning' : 'default'}
                       />
                     </TableCell>
-                    <TableCell>{log.reason}</TableCell>
-                    <TableCell>{log.admin?.full_name || log.admin_id}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{log.reason}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{log.admin?.full_name || log.admin_id}</TableCell>
                     <TableCell>
                       {log.suspended_until 
                         ? format(new Date(log.suspended_until), 'MMM dd, yyyy')
@@ -599,7 +717,7 @@ const UserManagement: React.FC = () => {
         {selectedUser?.status !== 'deactivated' && (
           <MenuItem onClick={() => {
             handleMenuClose();
-            handleDeactivateUser(selectedUser.id, 'Admin action');
+            handleDeactivateUser(selectedUser.id, t('admin.adminAction'));
           }} sx={{ color: 'error.main' }}>
             <ListItemIcon><Delete /></ListItemIcon>
             <ListItemText>{t('admin.deactivateUser')}</ListItemText>
@@ -608,12 +726,25 @@ const UserManagement: React.FC = () => {
       </Menu>
 
       {/* Suspend Dialog */}
-      <Dialog open={suspendDialog} onClose={() => setSuspendDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t('admin.suspendUser')}</DialogTitle>
+      <Dialog
+        open={suspendDialog}
+        onClose={() => setSuspendDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '8px',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          {t('admin.suspendUser')}
+        </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="warning" sx={{ mb: 2 }}>
-              {t('admin.suspendUser')}: {selectedUser?.email}
+              {t('admin.thisWillSuspendUser', { email: selectedUser?.email })}
             </Alert>
             
             <TextField
@@ -623,7 +754,7 @@ const UserManagement: React.FC = () => {
               label={t('admin.reasonForSuspension')}
               value={suspendForm.reason}
               onChange={(e) => setSuspendForm({ ...suspendForm, reason: e.target.value })}
-              placeholder={t('admin.reasonForSuspension')}
+              placeholder={t('admin.enterReasonForSuspension')}
               sx={{ mb: 2 }}
             />
             
@@ -666,8 +797,21 @@ const UserManagement: React.FC = () => {
       </Dialog>
 
       {/* Bulk Action Dialog */}
-      <Dialog open={bulkActionDialog} onClose={() => setBulkActionDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t('admin.bulkSuspend')}</DialogTitle>
+      <Dialog
+        open={bulkActionDialog}
+        onClose={() => setBulkActionDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '8px',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          {t('admin.bulkSuspend')}
+        </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="warning" sx={{ mb: 2 }}>
@@ -681,7 +825,7 @@ const UserManagement: React.FC = () => {
               label={t('admin.reasonForSuspension')}
               value={suspendForm.reason}
               onChange={(e) => setSuspendForm({ ...suspendForm, reason: e.target.value })}
-              placeholder={t('admin.reasonForSuspension')}
+              placeholder={t('admin.enterReasonForSuspension')}
             />
           </Box>
         </DialogContent>
@@ -693,7 +837,7 @@ const UserManagement: React.FC = () => {
             color="warning"
             disabled={!suspendForm.reason || processing}
           >
-            {processing ? <CircularProgress size={20} /> : `${t('admin.bulkSuspend')} ${selectedUsers.length} ${t('admin.totalUsers')}`}
+            {processing ? <CircularProgress size={20} /> : t('admin.suspendXUsers', { count: selectedUsers.length })}
           </Button>
         </DialogActions>
       </Dialog>

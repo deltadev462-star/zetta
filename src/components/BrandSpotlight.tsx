@@ -153,7 +153,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
             right: { xs: -30, md: -50 },
             width: { xs: 100, sm: 150, md: 200 },
             height: { xs: 100, sm: 150, md: 200 },
-            background: alpha(brandColor, 0.05),
+            
             borderRadius: 1,
           },
         }}
@@ -211,7 +211,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                   sx={{
                     fontWeight: 800,
                     color: brandColor,
-                    fontSize: { xs: "1.3rem", sm: "1.8rem", md: "2.125rem" },
+                    fontSize: { xs: "1.2rem", sm: "1.6rem", md: "2.125rem" },
                     lineHeight: 1.2,
                   }}
                 >
@@ -738,10 +738,10 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                             mb: 0.5,
                           }}
                         >
-                          <Security sx={{ fontSize: 14, color: "#FF6B35" }} />
+                          <Security sx={{ fontSize: { xs: 12, sm: 14 }, color: "#FF6B35" }} />
                           <Typography
                             variant="caption"
-                            sx={{ color: "rgba(51,51,51,0.7)" }}
+                            sx={{ color: "rgba(51,51,51,0.7)", fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                           >
                             {product.warranty_duration} {t('brandSpotlight.monthWarranty', { defaultValue: 'Month Warranty' })}
                           </Typography>
@@ -758,8 +758,8 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                         mb: 2,
                       }}
                     >
-                      <Verified sx={{ fontSize: 16, color: "#4CAF50" }} />
-                      <Typography variant="caption" sx={{ color: "#4CAF50" }}>
+                      <Verified sx={{ fontSize: { xs: 14, sm: 16 }, color: "#4CAF50" }} />
+                      <Typography variant="caption" sx={{ color: "#4CAF50", fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
                         {t('brandSpotlight.qualityGuarantee', { defaultValue: 'Thermo Fisher Quality Guarantee' })}
                       </Typography>
                     </Box>
@@ -881,7 +881,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
       <Box
         sx={{
           mt: 4,
-          p: 4,
+          p: { xs: 3, sm: 3.5, md: 4 },
           borderRadius: 1,
           background: `linear-gradient(135deg, ${alpha(
             brandColor,
@@ -896,10 +896,10 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
         <Box
           sx={{
             position: "absolute",
-            top: -100,
-            right: -100,
-            width: 300,
-            height: 300,
+            top: { xs: -50, md: -100 },
+            right: { xs: -50, md: -100 },
+            width: { xs: 200, sm: 250, md: 300 },
+            height: { xs: 200, sm: 250, md: 300 },
             borderRadius: 1,
             background: alpha(brandColor, 0.05),
           }}
@@ -909,19 +909,30 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" },
-            gap: 4,
+            gap: { xs: 3, md: 4 },
             alignItems: "center",
             position: "relative",
             zIndex: 1,
           }}
         >
           <Box>
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }
+              }}
+            >
               {t('brandSpotlight.discoverPortfolio', { defaultValue: 'Discover the Complete Thermo Fisher Portfolio' })}
             </Typography>
             <Typography
               variant="body1"
-              sx={{ color: "rgba(51,51,51,0.7)", mb: 2 }}
+              sx={{
+                color: "rgba(51,51,51,0.7)",
+                mb: 2,
+                fontSize: { xs: '0.875rem', sm: '0.95rem', md: '1rem' }
+              }}
             >
               {t('brandSpotlight.accessProducts', { defaultValue: 'Access over 100,000 products spanning life sciences, diagnostics, and applied markets' })}
             </Typography>
@@ -934,7 +945,7 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
                     sx={{ display: "flex", alignItems: "center", gap: 1 }}
                   >
                     <IconComponent sx={{ color: feature.color }} />
-                    <Typography variant="body2">{feature.text}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{feature.text}</Typography>
                   </Box>
                 );
               })}
@@ -945,12 +956,12 @@ const BrandSpotlight: React.FC<BrandSpotlightProps> = ({
               variant="contained"
               size="large"
               sx={{
-                px: 4,
-                py: 1.5,
+                px: { xs: 3, sm: 4 },
+                py: { xs: 1, sm: 1.5 },
                 bgcolor: brandColor,
                 color: "white",
                 fontWeight: 700,
-                fontSize: "1rem",
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 boxShadow: `0 8px 32px ${alpha(brandColor, 0.3)}`,
                 "&:hover": {
                   bgcolor: accentColor,

@@ -16,7 +16,6 @@ const CUSTOMERS = [
     id: 3,
     logo: '/brands/1 (3).png',
   },
-  
   {
     id: 5,
     logo: '/brands/1 (1).png',
@@ -27,6 +26,19 @@ const CUSTOMERS = [
   },
   {
     id: 7,
+    logo: '/brands/1 (3).png',
+  },
+  
+  {
+    id: 8,
+    logo: '/brands/1 (1).png',
+  },
+  {
+    id: 9,
+    logo: '/brands/1 (2).png',
+  },
+  {
+    id: 10,
     logo: '/brands/1 (3).png',
   },
   
@@ -86,20 +98,18 @@ const OurCustomers: React.FC = () => {
           className="customers-track"
           sx={{
             display: 'flex',
+            width: 'max-content',
             animation: {
-              xs: 'scrollReverse 20s linear infinite',
-              sm: 'scrollReverse 28s linear infinite',
-              md: 'scrollReverse 35s linear infinite'
+              xs: 'customersSlideLoop 25s linear infinite',
+              sm: 'customersSlideLoop 35s linear infinite',
+              md: 'customersSlideLoop 45s linear infinite'
             },
-            '&:hover': {
-              animationPlayState: 'paused',
-            },
-            '@keyframes scrollReverse': {
+            '@keyframes customersSlideLoop': {
               '0%': {
                 transform: 'translateX(0)',
               },
               '100%': {
-                transform: 'translateX(50%)',
+                transform: 'translateX(calc(-100% / 2))',
               },
             },
           }}

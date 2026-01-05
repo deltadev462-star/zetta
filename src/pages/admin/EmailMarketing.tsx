@@ -54,6 +54,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { emailMarketingService } from '../../services/emailMarketing';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -78,6 +79,7 @@ function TabPanel(props: TabPanelProps) {
 
 const EmailMarketing: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [tabValue, setTabValue] = useState(0);
   const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -238,21 +240,36 @@ const EmailMarketing: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Email Marketing
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}
+        >
+          {t('admin.emailMarketing')}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Create and manage email campaigns, templates, and customer segments
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
+          {t('admin.createManageEmailCampaigns')}
         </Typography>
       </Box>
 
       {/* Stats Cards */}
       <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
-        <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' } }}>
+        <Card sx={{
+          flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' },
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Campaign sx={{ color: '#00d4ff', mr: 1 }} />
-              <Typography variant="h6">Total Campaigns</Typography>
+              <Typography variant="h6">{t('admin.totalCampaigns')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {campaigns.length}
@@ -260,11 +277,17 @@ const EmailMarketing: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' } }}>
+        <Card sx={{
+          flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' },
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Email sx={{ color: '#ff0080', mr: 1 }} />
-              <Typography variant="h6">Emails Sent</Typography>
+              <Typography variant="h6">{t('admin.emailsSent')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {campaigns.reduce((sum, c) => sum + c.sent_count, 0)}
@@ -272,11 +295,17 @@ const EmailMarketing: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' } }}>
+        <Card sx={{
+          flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' },
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <TrendingUp sx={{ color: '#00ff88', mr: 1 }} />
-              <Typography variant="h6">Avg Open Rate</Typography>
+              <Typography variant="h6">{t('admin.avgOpenRate')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {campaigns.length > 0 
@@ -288,11 +317,17 @@ const EmailMarketing: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' } }}>
+        <Card sx={{
+          flex: { xs: '1 1 100%', sm: '1 1 calc(25% - 24px)' },
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          borderRadius: '8px',
+          border: '1px solid',
+          borderColor: 'divider',
+        }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <People sx={{ color: '#ffaa00', mr: 1 }} />
-              <Typography variant="h6">Total Subscribers</Typography>
+              <Typography variant="h6">{t('admin.totalSubscribers')}</Typography>
             </Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               {segments.find(s => s.criteria.type === 'all_customers')?.customer_count || 0}
@@ -302,65 +337,85 @@ const EmailMarketing: React.FC = () => {
       </Box>
 
       {/* Tabs */}
-      <Paper sx={{ width: '100%' }}>
+      <Paper sx={{
+        width: '100%',
+        bgcolor: 'oklch(98.5% 0.001 106.423)',
+        borderRadius: '8px',
+        border: '1px solid',
+        borderColor: 'divider',
+      }}>
         <Tabs
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}
           sx={{ borderBottom: 1, borderColor: 'divider' }}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
         >
-          <Tab label="Campaigns" />
-          <Tab label="Templates" />
-          <Tab label="Segments" />
+          <Tab label={t('admin.campaigns')} sx={{ minWidth: { xs: 100, sm: 120 } }} />
+          <Tab label={t('admin.templates')} sx={{ minWidth: { xs: 100, sm: 120 } }} />
+          <Tab label={t('admin.segments')} sx={{ minWidth: { xs: 100, sm: 120 } }} />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
-          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h6">Email Campaigns</Typography>
+          <Box sx={{
+            mb: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 2
+          }}>
+            <Typography variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+              {t('admin.emailCampaigns')}
+            </Typography>
             <Button
               variant="contained"
               startIcon={<Add />}
               onClick={() => setCampaignDialog(true)}
+              size="small"
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
-              Create Campaign
+              {t('admin.createCampaign')}
             </Button>
           </Box>
 
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Campaign Name</TableCell>
-                  <TableCell>Subject</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Sent</TableCell>
-                  <TableCell>Opened</TableCell>
-                  <TableCell>Clicked</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell sx={{ minWidth: 150 }}>{t('admin.campaignName')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 200 }}>{t('admin.subject')}</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>{t('common.status')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 80 }}>{t('admin.sent')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>{t('admin.opens')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>{t('admin.clicks')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 120 }}>{t('admin.date')}</TableCell>
+                  <TableCell align="right" sx={{ minWidth: 100 }}>{t('common.actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {campaigns.map((campaign) => (
                   <TableRow key={campaign.id}>
                     <TableCell>{campaign.name}</TableCell>
-                    <TableCell>{campaign.subject}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{campaign.subject}</TableCell>
                     <TableCell>{getCampaignStatus(campaign.status)}</TableCell>
-                    <TableCell>{campaign.sent_count}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{campaign.sent_count}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                       {campaign.sent_count > 0 
                         ? `${campaign.open_count} (${Math.round((campaign.open_count / campaign.sent_count) * 100)}%)`
                         : '-'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' } }}>
                       {campaign.open_count > 0 
                         ? `${campaign.click_count} (${Math.round((campaign.click_count / campaign.open_count) * 100)}%)`
                         : '-'}
                     </TableCell>
-                    <TableCell>
-                      {campaign.sent_at 
-                        ? format(new Date(campaign.sent_at), 'MMM dd, yyyy')
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                      {campaign.sent_at
+                        ? format(new Date(campaign.sent_at), 'MMM dd')
                         : campaign.scheduled_at
-                        ? `Scheduled: ${format(new Date(campaign.scheduled_at), 'MMM dd, yyyy')}`
+                        ? `${format(new Date(campaign.scheduled_at), 'MMM dd')}`
                         : '-'}
                     </TableCell>
                     <TableCell align="right">
@@ -394,20 +449,36 @@ const EmailMarketing: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h6">Email Templates</Typography>
+          <Box sx={{
+            mb: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 2
+          }}>
+            <Typography variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+              {t('admin.emailTemplates')}
+            </Typography>
             <Button
               variant="contained"
               startIcon={<Add />}
               onClick={() => setTemplateDialog(true)}
+              size="small"
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
-              Create Template
+              {t('admin.createTemplate')}
             </Button>
           </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
             {templates.map((template) => (
-              <Card key={template.id}>
+              <Card key={template.id} sx={{
+                bgcolor: 'oklch(98.5% 0.001 106.423)',
+                borderRadius: '8px',
+                border: '1px solid',
+                borderColor: 'divider',
+              }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
                     <Box>
@@ -419,14 +490,22 @@ const EmailMarketing: React.FC = () => {
                     <Chip label={template.category} size="small" />
                   </Box>
                   <Typography variant="body2" sx={{ mb: 2 }}>
-                    Variables: {template.variables.join(', ')}
+                    {t('admin.variables')}: {template.variables.join(', ')}
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button size="small" startIcon={<Visibility />}>
-                      Preview
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Button
+                      size="small"
+                      startIcon={<Visibility />}
+                      sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                    >
+                      {t('admin.preview')}
                     </Button>
-                    <Button size="small" startIcon={<Edit />}>
-                      Edit
+                    <Button
+                      size="small"
+                      startIcon={<Edit />}
+                      sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                    >
+                      {t('common.edit')}
                     </Button>
                   </Box>
                 </CardContent>
@@ -436,28 +515,44 @@ const EmailMarketing: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={2}>
-          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h6">Customer Segments</Typography>
+          <Box sx={{
+            mb: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 2
+          }}>
+            <Typography variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+              {t('admin.customerSegments')}
+            </Typography>
             <Button
               variant="contained"
               startIcon={<Add />}
               onClick={() => setSegmentDialog(true)}
+              size="small"
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
             >
-              Create Segment
+              {t('admin.createSegment')}
             </Button>
           </Box>
 
           <List>
             {segments.map((segment) => (
               <React.Fragment key={segment.id}>
-                <ListItem>
+                <ListItem sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: 2, py: 2 }}>
                   <ListItemText
                     primary={segment.name}
                     secondary={`${segment.customer_count} customers • Type: ${segment.criteria.type}`}
+                    sx={{ m: 0, minWidth: 0 }}
                   />
-                  <ListItemSecondaryAction>
-                    <Button size="small" startIcon={<People />}>
-                      View Customers
+                  <ListItemSecondaryAction sx={{ position: { xs: 'relative', sm: 'absolute' }, right: { xs: 0, sm: 16 } }}>
+                    <Button
+                      size="small"
+                      startIcon={<People />}
+                      sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                    >
+                      {t('admin.view')}
                     </Button>
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -469,26 +564,49 @@ const EmailMarketing: React.FC = () => {
       </Paper>
 
       {/* Campaign Dialog */}
-      <Dialog open={campaignDialog} onClose={() => setCampaignDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Create Email Campaign</DialogTitle>
+      <Dialog
+        open={campaignDialog}
+        onClose={() => setCampaignDialog(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '8px',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          {t('admin.createEmailCampaign')}
+        </DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{
+            mt: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            '& .MuiTextField-root': {
+              '& input': {
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }
+            }
+          }}>
             <TextField
               fullWidth
-              label="Campaign Name"
+              label={t('admin.campaignName')}
               value={campaignForm.name}
               onChange={(e) => setCampaignForm({ ...campaignForm, name: e.target.value })}
             />
             
             <TextField
               fullWidth
-              label="Subject Line"
+              label={t('admin.subjectLine')}
               value={campaignForm.subject}
               onChange={(e) => setCampaignForm({ ...campaignForm, subject: e.target.value })}
             />
             
             <FormControl fullWidth>
-              <InputLabel>Template</InputLabel>
+              <InputLabel>{t('admin.template')}</InputLabel>
               <Select
                 value={campaignForm.template_id}
                 onChange={(e) => setCampaignForm({ ...campaignForm, template_id: e.target.value })}
@@ -503,7 +621,7 @@ const EmailMarketing: React.FC = () => {
             </FormControl>
             
             <FormControl fullWidth>
-              <InputLabel>Target Segment</InputLabel>
+              <InputLabel>{t('admin.targetSegment')}</InputLabel>
               <Select
                 value={campaignForm.segment_id}
                 onChange={(e) => setCampaignForm({ ...campaignForm, segment_id: e.target.value })}
@@ -520,29 +638,42 @@ const EmailMarketing: React.FC = () => {
             <TextField
               fullWidth
               type="datetime-local"
-              label="Schedule For"
+              label={t('admin.scheduleFor')}
               value={campaignForm.scheduled_at}
               onChange={(e) => setCampaignForm({ ...campaignForm, scheduled_at: e.target.value })}
               InputLabelProps={{ shrink: true }}
-              helperText="Leave empty to save as draft"
+              helperText={t('admin.leaveEmptyForDraft')}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCampaignDialog(false)}>Cancel</Button>
+          <Button onClick={() => setCampaignDialog(false)}>{t('common.cancel')}</Button>
           <Button 
             onClick={handleCreateCampaign} 
             variant="contained"
             disabled={processing || !campaignForm.name || !campaignForm.subject || !campaignForm.template_id}
           >
-            {processing ? <CircularProgress size={20} /> : 'Create Campaign'}
+            {processing ? <CircularProgress size={20} /> : t('admin.createCampaign')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Analytics Dialog */}
-      <Dialog open={analyticsDialog} onClose={() => setAnalyticsDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Campaign Analytics</DialogTitle>
+      <Dialog
+        open={analyticsDialog}
+        onClose={() => setAnalyticsDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '8px',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          {t('admin.campaignAnalytics')}
+        </DialogTitle>
         <DialogContent>
           {selectedCampaign && (
             <Box sx={{ mt: 2 }}>
@@ -550,40 +681,113 @@ const EmailMarketing: React.FC = () => {
                 {selectedCampaign.name}
               </Typography>
               
-              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mt: 3 }}>
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
-                  <Typography variant="h4" sx={{ color: '#00d4ff' }}>
+              <Box sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                gap: 2,
+                mt: 3
+              }}>
+                <Box sx={{
+                  textAlign: 'center',
+                  p: { xs: 1.5, sm: 2 },
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  borderRadius: '8px',
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: '#00d4ff',
+                      fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                    }}
+                  >
                     {selectedCampaign.sent_count}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Emails Sent
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                  >
+                    {t('admin.emailsSent')}
                   </Typography>
                 </Box>
                 
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
-                  <Typography variant="h4" sx={{ color: '#ff0080' }}>
+                <Box sx={{
+                  textAlign: 'center',
+                  p: { xs: 1.5, sm: 2 },
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  borderRadius: '8px',
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: '#ff0080',
+                      fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                    }}
+                  >
                     {selectedCampaign.analytics?.openRate || 0}%
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Open Rate
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                  >
+                    {t('admin.openRate')}
                   </Typography>
                 </Box>
                 
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
-                  <Typography variant="h4" sx={{ color: '#00ff88' }}>
+                <Box sx={{
+                  textAlign: 'center',
+                  p: { xs: 1.5, sm: 2 },
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  borderRadius: '8px',
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: '#00ff88',
+                      fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                    }}
+                  >
                     {selectedCampaign.analytics?.clickRate || 0}%
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Click Rate
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                  >
+                    {t('admin.clickRate')}
                   </Typography>
                 </Box>
                 
-                <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'background.paper', borderRadius: 0.5 }}>
-                  <Typography variant="h4" sx={{ color: '#ffaa00' }}>
+                <Box sx={{
+                  textAlign: 'center',
+                  p: { xs: 1.5, sm: 2 },
+                  bgcolor: 'oklch(98.5% 0.001 106.423)',
+                  borderRadius: '8px',
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: '#ffaa00',
+                      fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                    }}
+                  >
                     {selectedCampaign.click_count}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Clicks
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                  >
+                    {t('admin.totalClicks')}
                   </Typography>
                 </Box>
               </Box>
@@ -591,7 +795,7 @@ const EmailMarketing: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAnalyticsDialog(false)}>Close</Button>
+          <Button onClick={() => setAnalyticsDialog(false)}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
     </Container>

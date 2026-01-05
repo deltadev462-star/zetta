@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Paper,
@@ -33,7 +33,7 @@ import {
   Divider,
   InputAdornment,
   TablePagination,
-} from '@mui/material';
+} from "@mui/material";
 import {
   ExpandMore,
   ExpandLess,
@@ -48,31 +48,52 @@ import {
   Phone,
   LocationOn,
   ShoppingCart,
-} from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../services/supabase';
-import { Order, OrderItem } from '../../types';
+} from "@mui/icons-material";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../services/supabase";
+import { Order, OrderItem } from "../../types";
+import { useTranslation } from 'react-i18next';
 
 // Date formatting helper
 const formatDate = (dateString: string, format: string) => {
   const date = new Date(dateString);
-  if (format === 'MMM dd, yyyy') {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${months[date.getMonth()]} ${date.getDate().toString().padStart(2, '0')}, ${date.getFullYear()}`;
-  } else if (format === 'HH:mm') {
-    return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  if (format === "MMM dd, yyyy") {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return `${months[date.getMonth()]} ${date
+      .getDate()
+      .toString()
+      .padStart(2, "0")}, ${date.getFullYear()}`;
+  } else if (format === "HH:mm") {
+    return `${date.getHours().toString().padStart(2, "0")}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
   }
   return dateString;
 };
 
 const OrderManagement: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
@@ -85,25 +106,27 @@ const OrderManagement: React.FC = () => {
 
   const fetchOrders = async () => {
     setLoading(true);
-    setError('');
+    setError("");
     try {
       const { data, error } = await supabase
-        .from('orders')
-        .select(`
+        .from("orders")
+        .select(
+          `
           *,
           order_items (
             *,
             product:products (*)
           )
-        `)
-        .eq('seller_id', user?.id)
-        .order('created_at', { ascending: false });
+        `
+        )
+        .eq("seller_id", user?.id)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       setOrders(data || []);
     } catch (err: any) {
-      setError('Failed to fetch orders');
-      console.error('Error fetching orders:', err);
+      setError(t('common.error'));
+      console.error("Error fetching orders:", err);
     } finally {
       setLoading(false);
     }
@@ -124,21 +147,23 @@ const OrderManagement: React.FC = () => {
 
     try {
       const { error } = await supabase
-        .from('orders')
+        .from("orders")
         .update({ status: newStatus })
-        .eq('id', selectedOrder.id);
+        .eq("id", selectedOrder.id);
 
       if (error) throw error;
 
-      setOrders(orders.map(order =>
-        order.id === selectedOrder.id
-          ? { ...order, status: newStatus as Order['status'] }
-          : order
-      ));
-      setSuccess('Order status updated successfully');
-      setTimeout(() => setSuccess(''), 3000);
+      setOrders(
+        orders.map((order) =>
+          order.id === selectedOrder.id
+            ? { ...order, status: newStatus as Order["status"] }
+            : order
+        )
+      );
+      setSuccess(t('common.success'));
+      setTimeout(() => setSuccess(""), 3000);
     } catch (err: any) {
-      setError('Failed to update order status');
+      setError(t('common.error'));
     }
 
     setStatusDialogOpen(false);
@@ -147,32 +172,32 @@ const OrderManagement: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'warning';
-      case 'confirmed':
-        return 'info';
-      case 'shipped':
-        return 'primary';
-      case 'delivered':
-        return 'success';
-      case 'cancelled':
-        return 'error';
+      case "pending":
+        return "warning";
+      case "confirmed":
+        return "info";
+      case "shipped":
+        return "primary";
+      case "delivered":
+        return "success";
+      case "cancelled":
+        return "error";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return <AccessTime fontSize="small" />;
-      case 'confirmed':
+      case "confirmed":
         return <CheckCircle fontSize="small" />;
-      case 'shipped':
+      case "shipped":
         return <LocalShipping fontSize="small" />;
-      case 'delivered':
+      case "delivered":
         return <CheckCircle fontSize="small" />;
-      case 'cancelled':
+      case "cancelled":
         return <Cancel fontSize="small" />;
       default:
         return null;
@@ -181,22 +206,26 @@ const OrderManagement: React.FC = () => {
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
-      case 'paid':
-        return '#00ff88';
-      case 'pending':
-        return '#ffaa00';
-      case 'failed':
-        return '#ff3366';
+      case "paid":
+        return "#00ff88";
+      case "pending":
+        return "#ffaa00";
+      case "failed":
+        return "#ff3366";
       default:
-        return '#666';
+        return "#666";
     }
   };
 
-  const filteredOrders = orders.filter(order => {
-    const matchesSearch = 
+  const filteredOrders = orders.filter((order) => {
+    const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.shipping_address.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.shipping_address.phone?.toLowerCase().includes(searchQuery.toLowerCase());
+      order.shipping_address.full_name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      order.shipping_address.phone
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
     const matchesStatus = !filterStatus || order.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -210,7 +239,9 @@ const OrderManagement: React.FC = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -219,121 +250,168 @@ const OrderManagement: React.FC = () => {
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
-        <Typography 
-          variant="h3" 
+        <Typography
+          variant="h3"
           component="h1"
           gutterBottom
           sx={{
+            fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" },
             fontWeight: 800,
-            background: 'linear-gradient(135deg, #ff0080 0%, #00d4ff 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            background: "linear-gradient(135deg, #ff0080 0%, #00d4ff 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
           }}
         >
-          Order Management
+          {t('admin.orderManagement')}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Track and manage customer orders
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
+        >
+          {t('admin.trackAndManageOrders')}
         </Typography>
       </Box>
 
       {/* Alerts */}
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
           {error}
         </Alert>
       )}
       {success && (
-        <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>
+        <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess("")}>
           {success}
         </Alert>
       )}
 
       {/* Filters */}
-      <Paper 
-        sx={{ 
-          p: 3, 
+      <Paper
+        sx={{
+          p: 3,
           mb: 3,
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: "oklch(98.5% 0.001 106.423)",
+          borderRadius: "8px",
+          border: "1px solid",
+          borderColor: "divider",
         }}
       >
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            flexWrap: "wrap",
+            flexDirection: { xs: "column", sm: "row" },
+          }}
+        >
           <TextField
-            placeholder="Search by order ID, customer name, or phone..."
+            placeholder={t('admin.searchOrders')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ flex: 1, minWidth: 300 }}
+            sx={{
+              flex: { xs: "none", sm: 1 },
+              minWidth: { xs: "100%", sm: 300 },
+            }}
+            size="small"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search sx={{ color: 'text.secondary' }} />
+                  <Search sx={{ color: "text.secondary" }} />
                 </InputAdornment>
               ),
             }}
           />
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Status</InputLabel>
+          <FormControl sx={{ minWidth: { xs: "100%", sm: 200 } }} size="small">
+            <InputLabel>{t('common.status')}</InputLabel>
             <Select
               value={filterStatus}
-              label="Status"
+              label={t('common.status')}
               onChange={(e) => setFilterStatus(e.target.value as string)}
-              startAdornment={<FilterList sx={{ mr: 1, color: 'text.secondary' }} />}
+              startAdornment={
+                <FilterList sx={{ mr: 1, color: "text.secondary" }} />
+              }
             >
-              <MenuItem value="">All Orders</MenuItem>
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="confirmed">Confirmed</MenuItem>
-              <MenuItem value="shipped">Shipped</MenuItem>
-              <MenuItem value="delivered">Delivered</MenuItem>
-              <MenuItem value="cancelled">Cancelled</MenuItem>
+              <MenuItem value="">{t('admin.allOrders')}</MenuItem>
+              <MenuItem value="pending">{t('warranty.pending')}</MenuItem>
+              <MenuItem value="confirmed">{t('orders.confirmed')}</MenuItem>
+              <MenuItem value="shipped">{t('orders.shipped')}</MenuItem>
+              <MenuItem value="delivered">{t('orders.delivered')}</MenuItem>
+              <MenuItem value="cancelled">{t('orders.cancelled')}</MenuItem>
             </Select>
           </FormControl>
           <Button
             variant="outlined"
             startIcon={<Print />}
+            size="small"
             sx={{
-              borderColor: 'rgba(0,212,255,0.5)',
-              color: '#00d4ff',
-              '&:hover': {
-                borderColor: '#00d4ff',
-                bgcolor: 'rgba(0,212,255,0.1)',
+              minWidth: { xs: "100%", sm: "auto" },
+              borderColor: "rgba(0,212,255,0.5)",
+              color: "#00d4ff",
+              "&:hover": {
+                borderColor: "#00d4ff",
+                bgcolor: "rgba(0,212,255,0.1)",
               },
             }}
           >
-            Export
+            {t('common.export')}
           </Button>
         </Box>
       </Paper>
 
       {/* Orders Table */}
-      <Paper 
-        sx={{ 
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          overflow: 'hidden',
+      <Paper
+        sx={{
+          bgcolor: "oklch(98.5% 0.001 106.423)",
+          borderRadius: "8px",
+          border: "1px solid",
+          borderColor: "divider",
+          overflow: "hidden",
         }}
       >
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
             <CircularProgress />
           </Box>
         ) : (
           <>
-            <TableContainer>
-              <Table>
+            <TableContainer sx={{ overflowX: "auto" }}>
+              <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                   <TableRow>
                     <TableCell width={50} />
-                    <TableCell>Order ID</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>Items</TableCell>
-                    <TableCell align="right">Total</TableCell>
-                    <TableCell>Payment</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell align="center">Actions</TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>{t('admin.orderId')}</TableCell>
+                    <TableCell
+                      sx={{
+                        display: { xs: "none", sm: "table-cell" },
+                        minWidth: 100,
+                      }}
+                    >
+                      {t('admin.date')}
+                    </TableCell>
+                    <TableCell sx={{ minWidth: 150 }}>{t('admin.customer')}</TableCell>
+                    <TableCell
+                      sx={{
+                        display: { xs: "none", md: "table-cell" },
+                        minWidth: 80,
+                      }}
+                    >
+                      {t('admin.items')}
+                    </TableCell>
+                    <TableCell align="right" sx={{ minWidth: 100 }}>
+                      {t('admin.total')}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        display: { xs: "none", lg: "table-cell" },
+                        minWidth: 100,
+                      }}
+                    >
+                      {t('admin.payment')}
+                    </TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>{t('common.status')}</TableCell>
+                    <TableCell align="center" sx={{ minWidth: 80 }}>
+                      {t('common.actions')}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -345,7 +423,11 @@ const OrderManagement: React.FC = () => {
                             size="small"
                             onClick={() => handleExpandClick(order.id)}
                           >
-                            {expandedOrders.has(order.id) ? <ExpandLess /> : <ExpandMore />}
+                            {expandedOrders.has(order.id) ? (
+                              <ExpandLess />
+                            ) : (
+                              <ExpandMore />
+                            )}
                           </IconButton>
                         </TableCell>
                         <TableCell>
@@ -353,55 +435,79 @@ const OrderManagement: React.FC = () => {
                             #{order.id.slice(0, 8)}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{ display: { xs: "none", sm: "table-cell" } }}
+                        >
                           <Typography variant="body2">
-                            {formatDate(order.created_at, 'MMM dd, yyyy')}
+                            {formatDate(order.created_at, "MMM dd, yyyy")}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {formatDate(order.created_at, 'HH:mm')}
+                            {formatDate(order.created_at, "HH:mm")}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" fontWeight={500}>
                             {order.shipping_address.full_name}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {order.shipping_address.city}, {order.shipping_address.country}
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: { xs: "none", sm: "block" } }}
+                          >
+                            {order.shipping_address.city}
                           </Typography>
                         </TableCell>
-                        <TableCell>
-                          <Chip 
-                            label={`${order.items?.length || 0} items`}
+                        <TableCell
+                          sx={{ display: { xs: "none", md: "table-cell" } }}
+                        >
+                          <Chip
+                            label={`${order.items?.length || 0} ${t('admin.items').toLowerCase()}`}
                             size="small"
                             icon={<ShoppingCart fontSize="small" />}
                             sx={{
-                              bgcolor: 'rgba(0,212,255,0.1)',
-                              color: '#00d4ff',
+                              bgcolor: "rgba(0,212,255,0.1)",
+                              color: "#00d4ff",
                             }}
                           />
                         </TableCell>
                         <TableCell align="right">
-                          <Typography variant="body1" fontWeight={700}>
+                          <Typography
+                            variant="body1"
+                            fontWeight={700}
+                            sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
+                          >
                             €{order.total_amount.toFixed(2)}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Commission: €{order.commission_amount.toFixed(2)}
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: { xs: "none", sm: "block" } }}
+                          >
+                            Com: €{order.commission_amount.toFixed(2)}
                           </Typography>
                         </TableCell>
-                        <TableCell>
-                          <Chip 
+                        <TableCell
+                          sx={{ display: { xs: "none", lg: "table-cell" } }}
+                        >
+                          <Chip
                             label={order.payment_status}
                             size="small"
                             sx={{
-                              bgcolor: `${getPaymentStatusColor(order.payment_status)}20`,
-                              color: getPaymentStatusColor(order.payment_status),
-                              border: `1px solid ${getPaymentStatusColor(order.payment_status)}50`,
+                              bgcolor: `${getPaymentStatusColor(
+                                order.payment_status
+                              )}20`,
+                              color: getPaymentStatusColor(
+                                order.payment_status
+                              ),
+                              border: `1px solid ${getPaymentStatusColor(
+                                order.payment_status
+                              )}50`,
                               fontWeight: 600,
                             }}
                           />
                         </TableCell>
                         <TableCell>
-                          <Chip 
+                          <Chip
                             label={order.status}
                             size="small"
                             color={getStatusColor(order.status) as any}
@@ -417,27 +523,49 @@ const OrderManagement: React.FC = () => {
                               setStatusDialogOpen(true);
                             }}
                             sx={{
-                              borderColor: 'rgba(0,212,255,0.5)',
-                              color: '#00d4ff',
-                              '&:hover': {
-                                borderColor: '#00d4ff',
-                                bgcolor: 'rgba(0,212,255,0.1)',
+                              minWidth: { xs: 60, sm: "auto" },
+                              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                              px: { xs: 1, sm: 2 },
+                              borderColor: "rgba(0,212,255,0.5)",
+                              color: "#00d4ff",
+                              "&:hover": {
+                                borderColor: "#00d4ff",
+                                bgcolor: "rgba(0,212,255,0.1)",
                               },
                             }}
                           >
-                            Update
+                            {t('admin.update')}
                           </Button>
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell colSpan={9} sx={{ py: 0 }}>
-                          <Collapse in={expandedOrders.has(order.id)} timeout="auto" unmountOnExit>
+                          <Collapse
+                            in={expandedOrders.has(order.id)}
+                            timeout="auto"
+                            unmountOnExit
+                          >
                             <Box sx={{ p: 3 }}>
-                              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                              <Box
+                                sx={{
+                                  display: "grid",
+                                  gridTemplateColumns: {
+                                    xs: "1fr",
+                                    md: "1fr 1fr",
+                                  },
+                                  gap: { xs: 2, md: 3 },
+                                }}
+                              >
                                 {/* Order Items */}
                                 <Box>
-                                  <Typography variant="h6" gutterBottom>
-                                    Order Items
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    sx={{
+                                      fontSize: { xs: "1.1rem", sm: "1.25rem" },
+                                    }}
+                                  >
+                                    {t('admin.orderItems')}
                                   </Typography>
                                   <List>
                                     {order.items?.map((item: OrderItem) => (
@@ -446,14 +574,22 @@ const OrderManagement: React.FC = () => {
                                           <Avatar
                                             variant="rounded"
                                             src={item.product?.images?.[0]}
-                                            sx={{ bgcolor: 'rgba(0,212,255,0.1)' }}
+                                            sx={{
+                                              bgcolor: "rgba(0,212,255,0.05)",
+                                              borderRadius: "8px",
+                                            }}
                                           />
                                         </ListItemAvatar>
                                         <ListItemText
                                           primary={item.product?.title}
-                                          secondary={`Quantity: ${item.quantity} × €${item.unit_price.toFixed(2)}`}
+                                          secondary={`Quantity: ${
+                                            item.quantity
+                                          } × €${item.unit_price.toFixed(2)}`}
                                         />
-                                        <Typography variant="body1" fontWeight={600}>
+                                        <Typography
+                                          variant="body1"
+                                          fontWeight={600}
+                                        >
                                           €{item.total_price.toFixed(2)}
                                         </Typography>
                                       </ListItem>
@@ -463,36 +599,97 @@ const OrderManagement: React.FC = () => {
 
                                 {/* Shipping Details */}
                                 <Box>
-                                  <Typography variant="h6" gutterBottom>
-                                    Shipping Details
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    sx={{
+                                      fontSize: { xs: "1.1rem", sm: "1.25rem" },
+                                    }}
+                                  >
+                                    {t('admin.shippingDetails')}
                                   </Typography>
-                                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                      <LocationOn sx={{ fontSize: 20, color: 'text.secondary' }} />
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      gap: 1,
+                                    }}
+                                  >
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                      }}
+                                    >
+                                      <LocationOn
+                                        sx={{
+                                          fontSize: 20,
+                                          color: "text.secondary",
+                                        }}
+                                      />
                                       <Typography variant="body2">
                                         {order.shipping_address.address_line1}
-                                        {order.shipping_address.address_line2 && `, ${order.shipping_address.address_line2}`}
+                                        {order.shipping_address.address_line2 &&
+                                          `, ${order.shipping_address.address_line2}`}
                                       </Typography>
                                     </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 3.5 }}>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        ml: 3.5,
+                                      }}
+                                    >
                                       <Typography variant="body2">
-                                        {order.shipping_address.city}, {order.shipping_address.postal_code}
+                                        {order.shipping_address.city},{" "}
+                                        {order.shipping_address.postal_code}
                                       </Typography>
                                     </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 3.5 }}>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        ml: 3.5,
+                                      }}
+                                    >
                                       <Typography variant="body2">
                                         {order.shipping_address.country}
                                       </Typography>
                                     </Box>
                                     <Divider sx={{ my: 1 }} />
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                      <Phone sx={{ fontSize: 20, color: 'text.secondary' }} />
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                      }}
+                                    >
+                                      <Phone
+                                        sx={{
+                                          fontSize: 20,
+                                          color: "text.secondary",
+                                        }}
+                                      />
                                       <Typography variant="body2">
                                         {order.shipping_address.phone}
                                       </Typography>
                                     </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                      <Email sx={{ fontSize: 20, color: 'text.secondary' }} />
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                      }}
+                                    >
+                                      <Email
+                                        sx={{
+                                          fontSize: 20,
+                                          color: "text.secondary",
+                                        }}
+                                      />
                                       <Typography variant="body2">
                                         {order.buyer_id}
                                       </Typography>
@@ -518,7 +715,16 @@ const OrderManagement: React.FC = () => {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               sx={{
-                borderTop: '1px solid rgba(255,255,255,0.1)',
+                borderTop: "1px solid",
+                borderTopColor: "divider",
+                ".MuiTablePagination-toolbar": {
+                  flexWrap: { xs: "wrap", sm: "nowrap" },
+                  justifyContent: { xs: "center", sm: "flex-end" },
+                  gap: { xs: 1, sm: 0 },
+                },
+                ".MuiTablePagination-selectLabel": {
+                  display: { xs: "none", sm: "block" },
+                },
               }}
             />
           </>
@@ -531,42 +737,47 @@ const OrderManagement: React.FC = () => {
         onClose={() => setStatusDialogOpen(false)}
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(15,15,25,0.95)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(20px)',
+            borderRadius: "8px",
+            bgcolor: "oklch(98.5% 0.001 106.423)",
           },
         }}
       >
-        <DialogTitle>Update Order Status</DialogTitle>
+        <DialogTitle sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem" } }}>
+          {t('admin.updateOrderStatus')}
+        </DialogTitle>
         <DialogContent>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel>New Status</InputLabel>
+          <FormControl fullWidth sx={{ mt: 2 }} size="small">
+            <InputLabel>{t('admin.newStatus')}</InputLabel>
             <Select
-              value={selectedOrder?.status || ''}
-              label="New Status"
-              onChange={(e) => setSelectedOrder(prev => prev ? { ...prev, status: e.target.value } : null)}
+              value={selectedOrder?.status || ""}
+              label={t('admin.newStatus')}
+              onChange={(e) =>
+                setSelectedOrder((prev) =>
+                  prev ? { ...prev, status: e.target.value } : null
+                )
+              }
             >
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="confirmed">Confirmed</MenuItem>
-              <MenuItem value="shipped">Shipped</MenuItem>
-              <MenuItem value="delivered">Delivered</MenuItem>
-              <MenuItem value="cancelled">Cancelled</MenuItem>
+              <MenuItem value="pending">{t('warranty.pending')}</MenuItem>
+              <MenuItem value="confirmed">{t('orders.confirmed')}</MenuItem>
+              <MenuItem value="shipped">{t('orders.shipped')}</MenuItem>
+              <MenuItem value="delivered">{t('orders.delivered')}</MenuItem>
+              <MenuItem value="cancelled">{t('orders.cancelled')}</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setStatusDialogOpen(false)}>Cancel</Button>
-          <Button 
-            onClick={() => handleStatusUpdate(selectedOrder?.status || '')} 
+          <Button onClick={() => setStatusDialogOpen(false)}>{t('common.cancel')}</Button>
+          <Button
+            onClick={() => handleStatusUpdate(selectedOrder?.status || "")}
             variant="contained"
             sx={{
-              background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #00a1cc 0%, #007799 100%)',
+              background: "linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)",
+              "&:hover": {
+                background: "linear-gradient(135deg, #00a1cc 0%, #007799 100%)",
               },
             }}
           >
-            Update
+            {t('admin.update')}
           </Button>
         </DialogActions>
       </Dialog>

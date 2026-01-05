@@ -163,16 +163,14 @@ const SupplierPayments: React.FC = () => {
   };
 
   const handleBulkPayments = async () => {
-    if (window.confirm(t("admin.bulkPayment") + "?")) {
+    if (window.confirm(t("admin.confirmBulkPayment"))) {
       const result = await commissionService.bulkProcessPayments(
         selectedPeriod.start.toISOString(),
         selectedPeriod.end.toISOString()
       );
 
       alert(
-        `${t("admin.processed")}: ${result.processed}, ${t("admin.failed")}: ${
-          result.failed
-        }`
+        t("admin.paymentProcessedStatus", { processed: result.processed, failed: result.failed })
       );
       fetchData();
     }
@@ -243,10 +241,19 @@ const SupplierPayments: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}
+        >
           {t("admin.supplierPayments")}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
           {t("admin.manageCommissions")}
         </Typography>
       </Box>
@@ -255,16 +262,31 @@ const SupplierPayments: React.FC = () => {
       {summary && (
         <Box sx={{ display: "flex", gap: 3, mb: 4, flexWrap: "wrap" }}>
           <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 calc(25% - 24px)" } }}>
-            <Card>
+            <Card
+              sx={{
+                bgcolor: "oklch(98.5% 0.001 106.423)",
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "8px",
+              }}
+            >
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <AttachMoney sx={{ color: "#00d4ff", mr: 1 }} />
-                  <Typography variant="h6">{t("admin.totalSales")}</Typography>
+                  <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                    {t("admin.totalSales")}
+                  </Typography>
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                  }}
+                >
                   €{summary.totalSales.toFixed(2)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                   {summary.orderCount} {t("nav.orders").toLowerCase()}
                 </Typography>
               </CardContent>
@@ -272,18 +294,31 @@ const SupplierPayments: React.FC = () => {
           </Box>
 
           <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 calc(25% - 24px)" } }}>
-            <Card>
+            <Card
+              sx={{
+                bgcolor: "oklch(98.5% 0.001 106.423)",
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "8px",
+              }}
+            >
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <Calculate sx={{ color: "#ff0080", mr: 1 }} />
-                  <Typography variant="h6">
+                  <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                     {t("admin.totalCommission")}
                   </Typography>
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                  }}
+                >
                   €{summary.totalCommission.toFixed(2)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                   {(summary.averageCommissionRate * 100).toFixed(0)}%{" "}
                   {t("admin.rate")}
                 </Typography>
@@ -292,18 +327,31 @@ const SupplierPayments: React.FC = () => {
           </Box>
 
           <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 calc(25% - 24px)" } }}>
-            <Card>
+            <Card
+              sx={{
+                bgcolor: "oklch(98.5% 0.001 106.423)",
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "8px",
+              }}
+            >
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <Payment sx={{ color: "#00ff88", mr: 1 }} />
-                  <Typography variant="h6">
+                  <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                     {t("admin.pendingPayouts")}
                   </Typography>
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                  }}
+                >
                   €{summary.pendingPayouts.toFixed(2)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                   {t("admin.toSuppliers")}
                 </Typography>
               </CardContent>
@@ -311,16 +359,31 @@ const SupplierPayments: React.FC = () => {
           </Box>
 
           <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 calc(25% - 24px)" } }}>
-            <Card>
+            <Card
+              sx={{
+                bgcolor: "oklch(98.5% 0.001 106.423)",
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "8px",
+              }}
+            >
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <TrendingUp sx={{ color: "#ffaa00", mr: 1 }} />
-                  <Typography variant="h6">{t("admin.netRevenue")}</Typography>
+                  <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                    {t("admin.netRevenue")}
+                  </Typography>
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
+                  }}
+                >
                   €{(summary.totalSales - summary.pendingPayouts).toFixed(2)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                   {t("admin.afterPayouts")}
                 </Typography>
               </CardContent>
@@ -330,13 +393,23 @@ const SupplierPayments: React.FC = () => {
       )}
 
       {/* Period Selection */}
-      <Paper sx={{ p: 2, mb: 3 }}>
+      <Paper
+        sx={{
+          p: 2,
+          mb: 3,
+          bgcolor: "oklch(98.5% 0.001 106.423)",
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: "8px",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
-            gap: 2,
-            alignItems: "center",
+            gap: { xs: 1, sm: 2 },
+            alignItems: { xs: 'flex-start', sm: 'center' },
             flexWrap: "wrap",
+            flexDirection: { xs: 'column', sm: 'row' }
           }}
         >
           <TextField
@@ -350,6 +423,8 @@ const SupplierPayments: React.FC = () => {
               })
             }
             InputLabelProps={{ shrink: true }}
+            size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
           />
           <TextField
             type="date"
@@ -362,35 +437,53 @@ const SupplierPayments: React.FC = () => {
               })
             }
             InputLabelProps={{ shrink: true }}
+            size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
           />
-          <Button
-            variant="outlined"
-            onClick={() =>
-              setSelectedPeriod({
-                start: startOfMonth(new Date()),
-                end: endOfMonth(new Date()),
-              })
-            }
-          >
-            {t("admin.thisMonth")}
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() =>
-              setSelectedPeriod({
-                start: startOfMonth(subMonths(new Date(), 1)),
-                end: endOfMonth(subMonths(new Date(), 1)),
-              })
-            }
-          >
-            {t("admin.lastMonth")}
-          </Button>
+          <Box sx={{
+            display: 'flex',
+            gap: 1,
+            width: { xs: '100%', sm: 'auto' },
+            flexWrap: 'wrap'
+          }}>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                setSelectedPeriod({
+                  start: startOfMonth(new Date()),
+                  end: endOfMonth(new Date()),
+                })
+              }
+              size="small"
+              sx={{ flex: { xs: 1, sm: 'none' }, fontSize: { xs: '0.875rem', sm: '1rem' } }}
+            >
+              {t("admin.thisMonth")}
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                setSelectedPeriod({
+                  start: startOfMonth(subMonths(new Date(), 1)),
+                  end: endOfMonth(subMonths(new Date(), 1)),
+                })
+              }
+              size="small"
+              sx={{ flex: { xs: 1, sm: 'none' }, fontSize: { xs: '0.875rem', sm: '1rem' } }}
+            >
+              {t("admin.lastMonth")}
+            </Button>
+          </Box>
           {user?.role === "admin" && (
             <Button
               variant="contained"
               startIcon={<Payment />}
               onClick={handleBulkPayments}
-              sx={{ ml: "auto" }}
+              size="small"
+              sx={{
+                ml: { xs: 0, sm: "auto" },
+                width: { xs: '100%', sm: 'auto' },
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }}
             >
               {t("admin.bulkPayment")}
             </Button>
@@ -399,32 +492,43 @@ const SupplierPayments: React.FC = () => {
       </Paper>
 
       {/* Tabs */}
-      <Paper sx={{ width: "100%" }}>
+      <Paper
+        sx={{
+          width: "100%",
+          bgcolor: "oklch(98.5% 0.001 106.423)",
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: "8px",
+        }}
+      >
         <Tabs
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}
           sx={{ borderBottom: 1, borderColor: "divider" }}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
         >
-          <Tab label={t("admin.commissionDetails")} />
-          <Tab label={t("admin.paymentHistory")} />
-          <Tab label={t("admin.sellerOverview")} />
+          <Tab label={t("admin.commissionDetails")} sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, minWidth: { xs: 100, sm: 120 } }} />
+          <Tab label={t("admin.paymentHistory")} sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, minWidth: { xs: 100, sm: 120 } }} />
+          <Tab label={t("admin.sellerOverview")} sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, minWidth: { xs: 100, sm: 120 } }} />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>{t("warranty.orderNumber")}</TableCell>
-                  <TableCell>{t("logistics.preferredDate")}</TableCell>
-                  <TableCell>{t("admin.seller")}</TableCell>
-                  <TableCell align="right">{t("admin.orderAmount")}</TableCell>
-                  <TableCell align="right">
+                  <TableCell sx={{ minWidth: 100 }}>{t("warranty.orderNumber")}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 100 }}>{t("logistics.preferredDate")}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 100 }}>{t("admin.seller")}</TableCell>
+                  <TableCell align="right" sx={{ minWidth: 100 }}>{t("admin.orderAmount")}</TableCell>
+                  <TableCell align="right" sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>
                     {t("admin.commission")} (15%)
                   </TableCell>
-                  <TableCell align="right">{t("admin.sellerPayout")}</TableCell>
-                  <TableCell>{t("common.status")}</TableCell>
-                  <TableCell align="right">{t("common.actions")}</TableCell>
+                  <TableCell align="right" sx={{ minWidth: 100 }}>{t("admin.sellerPayout")}</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>{t("common.status")}</TableCell>
+                  <TableCell align="right" sx={{ minWidth: 80 }}>{t("common.actions")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -451,16 +555,16 @@ const SupplierPayments: React.FC = () => {
                           {commission.order_id.substring(0, 8)}...
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                         {format(new Date(commission.created_at), "dd/MM/yyyy")}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                         {commission.seller_id.substring(0, 8)}...
                       </TableCell>
                       <TableCell align="right">
                         €{commission.order_amount.toFixed(2)}
                       </TableCell>
-                      <TableCell align="right" sx={{ color: "#ff0080" }}>
+                      <TableCell align="right" sx={{ color: "#ff0080", display: { xs: 'none', lg: 'table-cell' } }}>
                         €{commission.commission_amount.toFixed(2)}
                       </TableCell>
                       <TableCell align="right" sx={{ color: "#00ff88" }}>
@@ -490,18 +594,18 @@ const SupplierPayments: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Payment ID</TableCell>
-                  <TableCell>Period</TableCell>
-                  <TableCell>{t("nav.orders")}</TableCell>
-                  <TableCell align="right">{t("admin.totalSales")}</TableCell>
-                  <TableCell align="right">{t("admin.commission")}</TableCell>
-                  <TableCell align="right">Payout</TableCell>
-                  <TableCell>{t("common.status")}</TableCell>
-                  <TableCell>Paid Date</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>{t('admin.paymentId')}</TableCell>
+                  <TableCell sx={{ minWidth: 150 }}>{t('admin.period')}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 80 }}>{t("nav.orders")}</TableCell>
+                  <TableCell align="right" sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 100 }}>{t("admin.totalSales")}</TableCell>
+                  <TableCell align="right" sx={{ display: { xs: 'none', lg: 'table-cell' }, minWidth: 100 }}>{t("admin.commission")}</TableCell>
+                  <TableCell align="right" sx={{ minWidth: 100 }}>{t('admin.payout')}</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>{t("common.status")}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 100 }}>{t('admin.paidDate')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -513,7 +617,7 @@ const SupplierPayments: React.FC = () => {
                         color="text.secondary"
                         sx={{ py: 3 }}
                       >
-                        No payment history found
+                        {t('admin.noPaymentHistory')}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -539,18 +643,18 @@ const SupplierPayments: React.FC = () => {
                           "dd/MM/yyyy"
                         )}
                       </TableCell>
-                      <TableCell>{payment.order_count}</TableCell>
-                      <TableCell align="right">
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{payment.order_count}</TableCell>
+                      <TableCell align="right" sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                         €{payment.total_sales.toFixed(2)}
                       </TableCell>
-                      <TableCell align="right" sx={{ color: "#ff0080" }}>
+                      <TableCell align="right" sx={{ color: "#ff0080", display: { xs: 'none', lg: 'table-cell' } }}>
                         €{payment.total_commission.toFixed(2)}
                       </TableCell>
                       <TableCell align="right" sx={{ color: "#00ff88" }}>
                         €{payment.payout_amount.toFixed(2)}
                       </TableCell>
                       <TableCell>{getStatusChip(payment.status)}</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                         {payment.paid_at
                           ? format(new Date(payment.paid_at), "dd/MM/yyyy")
                           : "-"}
@@ -564,7 +668,7 @@ const SupplierPayments: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={2}>
-          <Alert severity="info">{t("admin.sellerOverviewInfo")}</Alert>
+          <Alert severity="info">{t("admin.sellerOverviewComingSoon")}</Alert>
         </TabPanel>
       </Paper>
 
@@ -574,12 +678,22 @@ const SupplierPayments: React.FC = () => {
         onClose={() => setPaymentDialog(false)}
         maxWidth="sm"
         fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: "oklch(98.5% 0.001 106.423)",
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: "8px",
+          },
+        }}
       >
-        <DialogTitle>{t("admin.processSupplierPayment")}</DialogTitle>
+        <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          {t("admin.processSupplierPayment")}
+        </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Alert severity="info" sx={{ mb: 2 }}>
-              Processing payment for seller: {selectedSeller.substring(0, 8)}...
+              {t('admin.processingPaymentForSeller', { sellerId: selectedSeller.substring(0, 8) })}
             </Alert>
 
             <FormControl fullWidth sx={{ mb: 2 }}>
@@ -603,8 +717,8 @@ const SupplierPayments: React.FC = () => {
               label={t("admin.paymentReference")}
               value={paymentReference}
               onChange={(e) => setPaymentReference(e.target.value)}
-              placeholder={t("admin.transactionReference")}
-              helperText={t("admin.enterPaymentReference")}
+              placeholder={t("admin.transactionReferencePlaceholder")}
+              helperText={t("admin.paymentReferenceHelperText")}
             />
           </Box>
         </DialogContent>

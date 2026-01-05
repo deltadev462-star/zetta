@@ -165,7 +165,7 @@ const MainLayout: React.FC = () => {
         </IconButton>
       </Box>
       <Divider sx={{ borderColor: "rgba(0,0,0,0.1)" }} />
-      
+
       {/* User Section */}
       <Box sx={{ p: 2 }}>
         {user ? (
@@ -189,10 +189,16 @@ const MainLayout: React.FC = () => {
                 <AccountCircle sx={{ color: "#00d4ff", fontSize: 28 }} />
               </Avatar>
               <Box>
-                <Typography variant="subtitle2" sx={{ color: "rgba(0,0,0,0.6)" }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: "rgba(0,0,0,0.6)" }}
+                >
                   {t("common.welcome", { defaultValue: "Welcome" })}
                 </Typography>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "#333" }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: 600, color: "#333" }}
+                >
                   {user.email}
                 </Typography>
               </Box>
@@ -285,7 +291,7 @@ const MainLayout: React.FC = () => {
               onClick={handleDrawerToggle}
               variant="outlined"
               sx={{
-                borderRadius: '8px',
+                borderRadius: "8px",
                 borderColor: "rgba(0,212,255,0.5)",
                 color: "#00d4ff",
                 "&:hover": {
@@ -303,11 +309,12 @@ const MainLayout: React.FC = () => {
               onClick={handleDrawerToggle}
               variant="contained"
               sx={{
-                borderRadius: '8px',
+                borderRadius: "8px",
                 background: "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
                 boxShadow: "0 4px 20px rgba(0,212,255,0.4)",
                 "&:hover": {
-                  background: "linear-gradient(135deg, #00a1cc 0%, #cc0066 100%)",
+                  background:
+                    "linear-gradient(135deg, #00a1cc 0%, #cc0066 100%)",
                   transform: "translateY(-2px)",
                   boxShadow: "0 6px 30px rgba(0,212,255,0.5)",
                 },
@@ -318,9 +325,9 @@ const MainLayout: React.FC = () => {
           </Stack>
         )}
       </Box>
-      
+
       <Divider sx={{ borderColor: "rgba(0,0,0,0.1)" }} />
-      
+
       {/* Navigation Items */}
       <List sx={{ p: 2, flexGrow: 1 }}>
         {navItems.map((item) => {
@@ -334,7 +341,7 @@ const MainLayout: React.FC = () => {
                 to={item.path}
                 onClick={handleDrawerToggle}
                 sx={{
-                  borderRadius: '8px',
+                  borderRadius: "8px",
                   transition: "all 0.3s",
                   position: "relative",
                   overflow: "hidden",
@@ -382,7 +389,7 @@ const MainLayout: React.FC = () => {
               to="/admin/dashboard"
               onClick={handleDrawerToggle}
               sx={{
-                borderRadius: '8px',
+                borderRadius: "8px",
                 transition: "all 0.3s",
                 bgcolor: "rgba(255,0,128,0.1)",
                 [isRTL ? "borderRight" : "borderLeft"]: "4px solid #ff0080",
@@ -408,10 +415,16 @@ const MainLayout: React.FC = () => {
           </ListItem>
         )}
       </List>
-      
+
       {/* Language Switcher at bottom */}
       <Box sx={{ p: 2, borderTop: "1px solid rgba(0,0,0,0.1)" }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Typography variant="caption" sx={{ color: "rgba(0,0,0,0.6)" }}>
             {t("common.language", { defaultValue: "Language" })}
           </Typography>
@@ -426,234 +439,235 @@ const MainLayout: React.FC = () => {
       sx={{
         display: "flex",
         minHeight: "100vh",
-        // bgcolor: "oklch(98.7% 0.026 102.212)",
-      }}
+       }}
     >
       <AppBar
         position="fixed"
         elevation={0}
         sx={{
           zIndex: (theme) => theme.zIndex.drawer - 1,
-          // background: "oklch(96.2% 0.059 95.617)",
-          backgroundColor: "oklch(96.5% 0.026 102.212)",
+           backgroundColor: "oklch(96.5% 0.026 102.212)",
           borderBottom: "1px solid rgba(148, 145, 145, 0.47)",
-          // boxShadow: "0 2px 4px rgba(243, 26, 26, 0.05)",
-        }}
+         }}
       >
-        <Container maxWidth="xl">
-          {/* Top line: Logo + search/filters + user actions */}
-          <Toolbar
-            disableGutters
+        {/* Top line: Logo + search/filters + user actions */}
+        <Toolbar
+          disableGutters
+          sx={{
+            py: 1,
+            px: 2,
+            alignItems: "center",
+            gap: { xs: 1, sm: 2 },
+            flexDirection: "row",
+            minHeight: { xs: 56, sm: 64 },
+          }}
+        >
+          {/* Logo - Always on left */}
+          <Typography
+            variant="h6"
+            noWrap
+            component={RouterLink}
+            to="/"
             sx={{
-              py: 1,
+              flexGrow: { xs: 1, sm: 0 },
+              mr: { xs: "auto", sm: 2 },
+              display: "flex",
+              fontWeight: 800,
+              color: "inherit",
+              textDecoration: "none",
               alignItems: "center",
-              gap: { xs: 1, sm: 2 },
-              flexDirection: "row",
-              minHeight: { xs: 56, sm: 64 },
+              gap: 1,
+              transition: "all 0.3s",
+              fontSize: { xs: "1.2rem", sm: "1.2rem" },
+              "&:hover": {
+                textShadow: "0 0 20px rgba(0,212,255,0.8)",
+              },
             }}
           >
-            {/* Logo - Always on left */}
-            <Typography
-              variant="h6"
-              noWrap
-              component={RouterLink}
-              to="/"
-              sx={{
-                flexGrow: { xs: 1, sm: 0 },
-                mr: { xs: "auto", sm: 2 },
-                display: "flex",
-                fontWeight: 800,
-                color: "inherit",
-                textDecoration: "none",
-                alignItems: "center",
-                gap: 1,
-                transition: "all 0.3s",
-                fontSize: { xs: "1.2rem", sm: "1.2rem" },
-                "&:hover": {
-                  textShadow: "0 0 20px rgba(0,212,255,0.8)",
-                },
+            <AutoAwesome
+              sx={{ fontSize: { xs: 20, sm: 28 }, color: "#00d4ff" }}
+            />
+            <span
+              style={{
+                background: "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
               }}
             >
-              <AutoAwesome
-                sx={{ fontSize: { xs: 20, sm: 28 }, color: "#00d4ff" }}
-              />
-              <span
-                style={{
-                  background:
-                    "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Zetta Med
-              </span>
-            </Typography>
+              Zetta Med
+            </span>
+          </Typography>
 
-            {/* Search/Filters - Hidden on mobile */}
-            <Box
-              sx={{
-                flexGrow: 1,
-                minWidth: 0,
-                display: { xs: "none", md: "block" },
-              }}
-            >
-              <Box>
-                <Stack direction="row" spacing={1}>
-                  
-<TextField
-  fullWidth
-  size="small"
-  placeholder={t("common.searchPlaceholder")}
-  value={search}
-  onChange={handleSearchChange}
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position={isRTL ? "end" : "start"}>
-        <Search sx={{ color: "#00d4ff" }} />
-      </InputAdornment>
-    ),
-    sx: {
-      "& input": {
-        color: "#333",
-        py: 1,
-       
-        textAlign: isRTL ? "right" : "left",
-      },
-    },
-  }}
- 
-  sx={{
-    flex: 2,
-    
-     '& .MuiOutlinedInput-root': {
-      borderRadius: 10, 
-    },
-  }}
-/>
-                  <FormControl
-                    size="small"
-                    margin="dense"
-                    sx={{ minWidth: { xs: 150, md: 140, lg: 180 } }}
-                  >
-                    <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
-                      {t("products.categories")}
-                    </InputLabel>
-                    <Select
-                      value={category}
-                      label={t("products.categories")}
-                      onChange={(e) =>
-                        handleFilterChange("category", e.target.value as string)
-                      }
-                      sx={{
-                        borderRadius: 10,
-                        marginRight: isRTL ?1 : 0,
+          {/* Search/Filters - Hidden on mobile */}
+          <Box
+            sx={{
+              flexGrow: 4,
+              minWidth: 0,
+              display: { xs: "none", md: "block" },
+            }}
+          >
+            <Box>
+              <Stack direction="row" spacing={1}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder={t("common.searchPlaceholder")}
+                  value={search}
+                  onChange={handleSearchChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position={isRTL ? "end" : "start"}>
+                        <Search sx={{ color: "#00d4ff" }} />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      "& input": {
                         color: "#333",
-                        
-                      }}
-                    >
-                      <MenuItem value="">
-                        <em>{t("products.allCategories")}</em>
-                      </MenuItem>
-                      {categories.map((cat) => (
-                        <MenuItem key={cat.key} value={cat.key}>
-                          {cat.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                        py: 1,
 
-                  <FormControl
-                    size="small"
-                    margin="dense"
-                    sx={{ minWidth: { xs: 120, md: 120, lg: 150 } }}
+                        textAlign: isRTL ? "right" : "left",
+                      },
+                    },
+                  }}
+                  sx={{
+                    flex: 4,
+                    maxWidth: 1400,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 10,
+                    },
+                  }}
+                />
+                <FormControl
+                  size="small"
+                  margin="dense"
+                  sx={{ minWidth: { xs: 150, md: 140, lg: 180 } }}
+                >
+                  <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
+                    {t("products.categories")}
+                  </InputLabel>
+                  <Select
+                    value={category}
+                    label={t("products.categories")}
+                    onChange={(e) =>
+                      handleFilterChange("category", e.target.value as string)
+                    }
+                    sx={{
+                      borderRadius: 10,
+                      marginRight: isRTL ? 1 : 0,
+                      color: "#333",
+                    }}
                   >
-                    <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
-                      {t("products.condition", { defaultValue: "Condition" })}
-                    </InputLabel>
-                    <Select
-                      value={condition}
-                      label={t("products.condition", {
-                        defaultValue: "Condition",
-                      })}
-                      onChange={(e) =>
-                        handleFilterChange(
-                          "condition",
-                          e.target.value as string
-                        )
-                      }
-                      sx={{
-                        borderRadius: 10,
-                        color: "#333",
-                        "& .MuiSelect-select": {
-                          textAlign: isRTL ? "right" : "left",
-                        },
-                      }}
-                    >
-                      <MenuItem value="">
-                        <em>
-                          {t("products.allConditions", {
-                            defaultValue: "All Conditions",
-                          })}
-                        </em>
+                    <MenuItem value="">
+                      <em>{t("products.allCategories")}</em>
+                    </MenuItem>
+                    {categories.map((cat) => (
+                      <MenuItem key={cat.key} value={cat.key}>
+                        {cat.label}
                       </MenuItem>
-                      <MenuItem value="excellent">{t("products.excellent")}</MenuItem>
-                      <MenuItem value="good">{t("products.good")}</MenuItem>
-                      <MenuItem value="fair">{t("products.fair")}</MenuItem>
-                    </Select>
-                  </FormControl>
+                    ))}
+                  </Select>
+                </FormControl>
 
-                  <FormControl
-                    size="small"
-                    margin="dense"
-                    sx={{ minWidth: { xs: 150, md: 140, lg: 180 } }}
+                <FormControl
+                  size="small"
+                  margin="dense"
+                  sx={{ minWidth: { xs: 120, md: 120, lg: 180 } }}
+                >
+                  <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
+                    {t("products.condition", { defaultValue: "Condition" })}
+                  </InputLabel>
+                  <Select
+                    value={condition}
+                    label={t("products.condition", {
+                      defaultValue: "Condition",
+                    })}
+                    onChange={(e) =>
+                      handleFilterChange("condition", e.target.value as string)
+                    }
+                    sx={{
+                      borderRadius: 10,
+                      color: "#333",
+                      "& .MuiSelect-select": {
+                        textAlign: isRTL ? "right" : "left",
+                      },
+                    }}
                   >
-                    <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
-                      {t("products.priceRange")}
-                    </InputLabel>
-                    <Select
-                      value={priceRange}
-                      label={t("products.priceRange")}
-                      onChange={(e) =>
-                        handleFilterChange(
-                          "priceRange",
-                          e.target.value as string
-                        )
-                      }
-                      sx={{
-                        borderRadius: 10,
-                        color: "#333",
-                        "& .MuiSelect-select": {
-                          textAlign: isRTL ? "right" : "left",
-                        },
-                      }}
-                    >
-                      <MenuItem value="">
-                        <em>
-                          {t("products.allPrices", {
-                            defaultValue: "All Prices",
-                          })}
-                        </em>
-                      </MenuItem>
-                      <MenuItem value="0-5000">{t("products.under5000")}</MenuItem>
-                      <MenuItem value="5000-20000">{t("products.5000to20000")}</MenuItem>
-                      <MenuItem value="20000-50000">{t("products.20000to50000")}</MenuItem>
-                      <MenuItem value="50000-100000">{t("products.50000to100000")}</MenuItem>
-                      <MenuItem value="100000-">{t("products.over100000")}</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Stack>
-              </Box>
+                    <MenuItem value="">
+                      <em>
+                        {t("products.allConditions", {
+                          defaultValue: "All Conditions",
+                        })}
+                      </em>
+                    </MenuItem>
+                    <MenuItem value="excellent">
+                      {t("products.excellent")}
+                    </MenuItem>
+                    <MenuItem value="good">{t("products.good")}</MenuItem>
+                    <MenuItem value="fair">{t("products.fair")}</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl
+                  size="small"
+                  margin="dense"
+                  sx={{ minWidth: { xs: 150, md: 140, lg: 180 } }}
+                >
+                  <InputLabel sx={{ color: "rgba(0,0,0,0.7)" }}>
+                    {t("products.priceRange")}
+                  </InputLabel>
+                  <Select
+                    value={priceRange}
+                    label={t("products.priceRange")}
+                    onChange={(e) =>
+                      handleFilterChange("priceRange", e.target.value as string)
+                    }
+                    sx={{
+                      borderRadius: 10,
+                      color: "#333",
+                      "& .MuiSelect-select": {
+                        textAlign: isRTL ? "right" : "left",
+                      },
+                    }}
+                  >
+                    <MenuItem value="">
+                      <em>
+                        {t("products.allPrices", {
+                          defaultValue: "All Prices",
+                        })}
+                      </em>
+                    </MenuItem>
+                    <MenuItem value="0-5000">
+                      {t("products.under5000")}
+                    </MenuItem>
+                    <MenuItem value="5000-20000">
+                      {t("products.5000to20000")}
+                    </MenuItem>
+                    <MenuItem value="20000-50000">
+                      {t("products.20000to50000")}
+                    </MenuItem>
+                    <MenuItem value="50000-100000">
+                      {t("products.50000to100000")}
+                    </MenuItem>
+                    <MenuItem value="100000-">
+                      {t("products.over100000")}
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Stack>
             </Box>
+          </Box>
 
-            {/* User Actions - Right side on all screens */}
-            <Box
-              sx={{
-                flexGrow: 0,
-                display: "flex",
-                gap: { xs: 0.5, sm: 2 },
-                alignItems: "center",
-              }}
-            >
+          {/* User Actions - Centered login/register buttons */}
+          <Box
+            sx={{
+              flexGrow: { xs: 0, md: user ? 0 : 1 },
+              display: "flex",
+              gap: { xs: 0.5, sm: 2 },
+              alignItems: "center",
+              justifyContent: { xs: "flex-end", md: user ? "flex-end" : "center" },
+              textAlign: "center",
+            }}
+          >
             {user ? (
               <>
                 <Tooltip title={t("nav.profile")} arrow>
@@ -782,13 +796,14 @@ const MainLayout: React.FC = () => {
                   sx={{
                     display: { xs: "none", md: "inline-flex" }, // Hide on mobile
                     borderRadius: 10,
-                    borderColor: "rgba(0,212,255,0.5)",
-                    color: "#00d4ff",
+                    borderColor: "rgba(255,0,128,0.5)",
+                    color: "#ff0080",
                     fontSize: { xs: "0.55rem", sm: "0.675rem" },
-                    px: { xs: 1, sm: 1.5 },
+                    px: { xs: 2, sm: 3 },
+                    minWidth: { xs: 80, sm: 100 },
                     "&:hover": {
-                      borderColor: "#00d4ff",
-                      bgcolor: "rgba(0,212,255,0.1)",
+                      borderColor: "#ff0080",
+                      bgcolor: "rgba(255,0,128,0.1)",
                     },
                   }}
                 >
@@ -803,15 +818,17 @@ const MainLayout: React.FC = () => {
                     display: { xs: "none", md: "inline-flex" }, // Hide on mobile
                     borderRadius: 10,
                     background:
-                      "linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)",
-                    boxShadow: "0 4px 20px rgba(0,212,255,0.4)",
+                      "  #ff0080  ",
+                    boxShadow: "0 0 0 rgba(0,212,255,0.1)",
                     fontSize: { xs: "0.55rem", sm: "0.675rem" },
-                    px: { xs: 1, sm: 1.5 },
+                    px: { xs: 2, sm: 3 },
+                    minWidth: { xs: 80, sm: 100 },
+                    color: "oklch(96.5% 0.026 102.212)",
                     "&:hover": {
                       background:
-                        "linear-gradient(135deg, #00a1cc 0%, #cc0066 100%)",
+                        "  #cc0066  ",
                       transform: "translateY(-2px)",
-                      boxShadow: "0 6px 30px rgba(0,212,255,0.5)",
+                      
                     },
                   }}
                 >
@@ -819,292 +836,344 @@ const MainLayout: React.FC = () => {
                 </Button>
               </>
             )}
+          </Box>
 
-              {/* Language Switcher - Hidden on mobile since it's in drawer */}
-              <Box sx={{ display: { xs: "none", md: "block" } }}>
-                <LanguageSwitcher />
-              </Box>
+          {/* Language Switcher - Separate from login/register buttons */}
+          <Box sx={{ display: { xs: "none", md: "block" }, ml: 2 }}>
+            <LanguageSwitcher />
+          </Box>
 
-              {/* Mobile Menu Button - Only on mobile */}
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="end"
-                onClick={handleDrawerToggle}
-                sx={{
-                  display: { xs: "flex", md: "none" },
-                  ml: 0.5,
-                  "&:hover": {
-                    bgcolor: "rgba(0,212,255,0.1)",
-                  },
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-
-          {/* Middle line: Navigation */}
-          <Toolbar
-            disableGutters
+          {/* Mobile Menu Button - Only on mobile */}
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="end"
+            onClick={handleDrawerToggle}
             sx={{
-              display: { xs: "none", md: "flex" },
-              minHeight: 56,
-              gap: 1,
-              justifyContent: "center",
-              // borderTop: "1px solid rgba(129, 128, 128, 0.1)",
-              // borderBottom: "1px solid rgba(156, 151, 151, 0.1)",
+              display: { xs: "flex", md: "none" },
+              ml: 0.5,
+              "&:hover": {
+                bgcolor: "rgba(0,212,255,0.1)",
+              },
             }}
           >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                gap: 1,
-                mx: "auto",
-                textAlign: "center",
-              }}
-            >
-              {navItems.map((item) => {
-                if (!item.public && !user) return null;
-                const isActive = location.pathname === item.path;
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
 
-                return (
-                  <Button
-                    key={item.path}
-                    component={RouterLink}
-                    to={item.path}
-                    startIcon={item.icon}
-                    sx={{
-                      color: isActive ? "#00d4ff" : "rgba(0,0,0,0.8)",
-                      position: "relative",
-                      px: 3,
-                      py: 1,
-                      borderRadius: '8px',
-                      transition: "all 0.3s",
-                      fontWeight: isActive ? 600 : 400,
-                      "& .MuiButton-startIcon": {
-                        [isRTL ? "ml" : "mr"]: 1,
-                        [isRTL ? "mr" : "ml"]: 0,
-                      },
-                      "&:after": {
-                        content: '""',
-                        position: "absolute",
-                        bottom: 0,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        width: isActive ? "80%" : "0%",
-                        height: "3px",
-                        bgcolor: "#00d4ff",
-                        transition: "width 0.3s",
-                        borderRadius: "4px 4px 0 0",
-                        boxShadow: isActive
-                          ? "0 0 10px rgba(0,212,255,0.8)"
-                          : "none",
-                      },
-                      "&:hover": {
-                        bgcolor: "rgba(0,212,255,0.1)",
-                        color: "#00d4ff",
-                        "&:after": {
-                          width: "80%",
-                        },
-                      },
-                    }}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-              {user?.role === "admin" && (
+        {/* Middle line: Navigation */}
+        <Toolbar
+          disableGutters
+          sx={{
+            display: { xs: "none", md: "flex" },
+            minHeight: 56,
+            gap: 1,
+            justifyContent: "center",
+            px: 2,
+            // borderTop: "1px solid rgba(129, 128, 128, 0.1)",
+            // borderBottom: "1px solid rgba(156, 151, 151, 0.1)",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              gap: 1,
+              mx: "auto",
+              textAlign: "center",
+            }}
+          >
+            {navItems.map((item) => {
+              if (!item.public && !user) return null;
+              const isActive = location.pathname === item.path;
+
+              return (
                 <Button
+                  key={item.path}
                   component={RouterLink}
-                  to="/admin/dashboard"
-                  startIcon={<Dashboard />}
+                  to={item.path}
+                  startIcon={item.icon}
                   sx={{
-                    color: "#ff0080",
+                    color: isActive ? "#00d4ff" : "rgba(0,0,0,0.8)",
+                    position: "relative",
                     px: 3,
                     py: 1,
-                    borderRadius: '8px',
-                    border: "1px solid rgba(255,0,128,0.3)",
-                    bgcolor: "rgba(255,0,128,0.1)",
+                    borderRadius: "8px",
                     transition: "all 0.3s",
-                    fontWeight: 600,
+                    fontWeight: isActive ? 600 : 400,
+                    "& .MuiButton-startIcon": {
+                      [isRTL ? "ml" : "mr"]: 1,
+                      [isRTL ? "mr" : "ml"]: 0,
+                    },
+                    "&:after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: 0,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: isActive ? "80%" : "0%",
+                      height: "3px",
+                      bgcolor: "#00d4ff",
+                      transition: "width 0.3s",
+                      borderRadius: "4px 4px 0 0",
+                      boxShadow: isActive
+                        ? "0 0 10px rgba(0,212,255,0.8)"
+                        : "none",
+                    },
                     "&:hover": {
-                      bgcolor: "rgba(255,0,128,0.2)",
-                      borderColor: "#ff0080",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 20px rgba(255,0,128,0.4)",
+                      bgcolor: "rgba(0,212,255,0.1)",
+                      color: "#00d4ff",
+                      "&:after": {
+                        width: "80%",
+                      },
                     },
                   }}
                 >
-                  {t("nav.admin", { defaultValue: "Admin" })}
+                  {item.label}
                 </Button>
-              )}
-            </Box>
-          </Toolbar>
-
-          {/* Mobile Search Bar */}
-          <Box
-            sx={{
-              display: { xs: "block", md: "none" },
-              px: 2,
-              py: 1,
-              borderBottom: "1px solid rgba(0,0,0,0.1)",
-            }}
-          >
-            <Stack spacing={1}>
-              <TextField
-                fullWidth
-                size="small"
-                placeholder={t("common.searchPlaceholder")}
-                value={search}
-                onChange={handleSearchChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position={isRTL ? "end" : "start"}>
-                      <Search sx={{ color: "#00d4ff" }} />
-                    </InputAdornment>
-                  ),
-                  sx: {
-                    borderRadius: '8px',
-                    "& input": {
-                      color: "#333",
-                      py: 0.5,
-                      fontSize: "0.875rem",
-                      textAlign: isRTL ? "right" : "left",
-                    },
+              );
+            })}
+            {user?.role === "admin" && (
+              <Button
+                component={RouterLink}
+                to="/admin/dashboard"
+                startIcon={<Dashboard />}
+                sx={{
+                  color: "#ff0080",
+                  px: 3,
+                  py: 1,
+                  borderRadius: "8px",
+                  border: "1px solid rgba(255,0,128,0.3)",
+                  bgcolor: "rgba(255,0,128,0.1)",
+                  transition: "all 0.3s",
+                  fontWeight: 600,
+                  "&:hover": {
+                    bgcolor: "rgba(255,0,128,0.2)",
+                    borderColor: "#ff0080",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 4px 20px rgba(255,0,128,0.4)",
                   },
                 }}
-                 sx={{
-    flex: 2,
-     '& .MuiOutlinedInput-root': {
-      borderRadius: 10, 
-    },
-  }}
-              />
-              <Stack direction="row" spacing={1}>
-                <FormControl size="small" sx={{ flex: 1 }}>
-                  <Select
-                    value={category}
-                    displayEmpty
-                    onChange={(e) =>
-                      handleFilterChange("category", e.target.value as string)
-                    }
-                    sx={{
-                      borderRadius: 10,
-                      color: "#333",
-                      fontSize: "0.75rem",
-                      "& .MuiSelect-select": { py: 0.5 },
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>{t("products.categories")}</em>
-                    </MenuItem>
-                    {categories.map((cat) => (
-                      <MenuItem key={cat.key} value={cat.key}>
-                        {cat.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControl size="small" sx={{ flex: 1 }}>
-                  <Select
-                    value={condition}
-                    displayEmpty
-                    onChange={(e) =>
-                      handleFilterChange("condition", e.target.value as string)
-                    }
-                    sx={{
-                      borderRadius: 10,
-                      color: "#333",
-                      fontSize: "0.75rem",
-                      "& .MuiSelect-select": { py: 0.5 },
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>
-                        {t("products.condition", { defaultValue: "Condition" })}
-                      </em>
-                    </MenuItem>
-                    <MenuItem value="excellent">{t("products.excellent")}</MenuItem>
-                    <MenuItem value="good">{t("products.good")}</MenuItem>
-                    <MenuItem value="fair">{t("products.fair")}</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl size="small" sx={{ flex: 1 }}>
-                  <Select
-                    value={priceRange}
-                    displayEmpty
-                    onChange={(e) =>
-                      handleFilterChange("priceRange", e.target.value as string)
-                    }
-                    sx={{
-                      borderRadius: 10,
-                      color: "#333",
-                      fontSize: "0.75rem",
-                      "& .MuiSelect-select": { py: 0.5 },
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>{t("products.price")}</em>
-                    </MenuItem>
-                    <MenuItem value="0-5000">{t('products.under5000')}</MenuItem>
-                    <MenuItem value="5000-20000">{t('products.5000to20000')}</MenuItem>
-                    <MenuItem value="20000-50000">{t('products.20000to50000')}</MenuItem>
-                    <MenuItem value="50000-100000">{t('products.50000to100000')}</MenuItem>
-                    <MenuItem value="100000-">{t('products.over100000')}</MenuItem>
-                  </Select>
-                </FormControl>
-              </Stack>
-            </Stack>
+              >
+                {t("nav.admin", { defaultValue: "Admin" })}
+              </Button>
+            )}
           </Box>
+        </Toolbar>
 
-          {/* Bottom line: Categories */}
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.5,
-                py: 1,
-                px: { xs: 1.5, sm: 2 },
-                overflowX: "auto",
-                justifyContent: { xs: "flex-start", md: "center" },
-                "&::-webkit-scrollbar": {
-                  height: 3,
-                  display: { xs: "block", md: "none" },
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  bgcolor: "rgba(255,255,255,0.2)",
-                  borderRadius: 8,
-                },
-                "&::-webkit-scrollbar-track": {
-                  bgcolor: "rgba(255,255,255,0.05)",
+        {/* Mobile Search Bar */}
+        <Box
+          sx={{
+            display: { xs: "block", md: "none" },
+            px: 2,
+            py: 1,
+            borderBottom: "1px solid rgba(0,0,0,0.1)",
+          }}
+        >
+          <Stack spacing={1}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder={t("common.searchPlaceholder")}
+              value={search}
+              onChange={handleSearchChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position={isRTL ? "end" : "start"}>
+                    <Search sx={{ color: "#00d4ff" }} />
+                  </InputAdornment>
+                ),
+                sx: {
+                  borderRadius: "8px",
+                  "& input": {
+                    color: "#333",
+                    py: 0.5,
+                    fontSize: "0.875rem",
+                    textAlign: isRTL ? "right" : "left",
+                  },
                 },
               }}
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 10,
+                },
+              }}
+            />
+            <Stack direction="row" spacing={1}>
+              <FormControl size="small" sx={{ flex: 1 }}>
+                <Select
+                  value={category}
+                  displayEmpty
+                  onChange={(e) =>
+                    handleFilterChange("category", e.target.value as string)
+                  }
+                  sx={{
+                    borderRadius: 10,
+                    color: "#333",
+                    fontSize: "0.75rem",
+                    "& .MuiSelect-select": { py: 0.5 },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>{t("products.categories")}</em>
+                  </MenuItem>
+                  {categories.map((cat) => (
+                    <MenuItem key={cat.key} value={cat.key}>
+                      {cat.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ flex: 1 }}>
+                <Select
+                  value={condition}
+                  displayEmpty
+                  onChange={(e) =>
+                    handleFilterChange("condition", e.target.value as string)
+                  }
+                  sx={{
+                    borderRadius: 10,
+                    color: "#333",
+                    fontSize: "0.75rem",
+                    "& .MuiSelect-select": { py: 0.5 },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>
+                      {t("products.condition", { defaultValue: "Condition" })}
+                    </em>
+                  </MenuItem>
+                  <MenuItem value="excellent">
+                    {t("products.excellent")}
+                  </MenuItem>
+                  <MenuItem value="good">{t("products.good")}</MenuItem>
+                  <MenuItem value="fair">{t("products.fair")}</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ flex: 1 }}>
+                <Select
+                  value={priceRange}
+                  displayEmpty
+                  onChange={(e) =>
+                    handleFilterChange("priceRange", e.target.value as string)
+                  }
+                  sx={{
+                    borderRadius: 10,
+                    color: "#333",
+                    fontSize: "0.75rem",
+                    "& .MuiSelect-select": { py: 0.5 },
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>{t("products.price")}</em>
+                  </MenuItem>
+                  <MenuItem value="0-5000">{t("products.under5000")}</MenuItem>
+                  <MenuItem value="5000-20000">
+                    {t("products.5000to20000")}
+                  </MenuItem>
+                  <MenuItem value="20000-50000">
+                    {t("products.20000to50000")}
+                  </MenuItem>
+                  <MenuItem value="50000-100000">
+                    {t("products.50000to100000")}
+                  </MenuItem>
+                  <MenuItem value="100000-">
+                    {t("products.over100000")}
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+          </Stack>
+        </Box>
+
+        {/* Bottom line: Categories */}
+        <Box
+          sx={{
+            backgroundColor: "rgba(32, 32, 32, 0.216)",
+            width: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              py: 1,
+              px: { xs: 1.5, sm: 2 },
+              overflowX: "auto",
+              justifyContent: { xs: "flex-start", md: "center" },
+              "&::-webkit-scrollbar": {
+                height: 3,
+                display: { xs: "block", md: "none" },
+              },
+              "&::-webkit-scrollbar-thumb": {
+                bgcolor: "rgba(255,255,255,0.2)",
+                borderRadius: 8,
+              },
+              "&::-webkit-scrollbar-track": {
+                bgcolor: "rgba(255,255,255,0.05)",
+              },
+            }}
+          >
+            <Button
+              size="small"
+              onClick={() => {
+                handleFilterChange("category", "");
+                if (location.pathname !== "/") navigate("/");
+              }}
+              sx={{
+                color: category === "" ? "#00d4ff" : "rgba(0,0,0,0.8)",
+                px: { xs: 1.5, sm: 2 },
+                py: { xs: 0.25, sm: 0.5 },
+                minHeight: { xs: 28, sm: 32 },
+                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                borderRadius: "24px",
+                border:
+                  category === ""
+                    ? "1px solid rgba(0,212,255,0.5)"
+                    : "1px solid transparent",
+                bgcolor:
+                  category === "" ? "rgba(0,212,255,0.12)" : "transparent",
+                "&:hover": {
+                  bgcolor: "rgba(0,212,255,0.15)",
+                  color: "#00d4ff",
+                },
+                whiteSpace: "nowrap",
+              }}
             >
+              {
+                t("products.allCategories", { defaultValue: "All" }).split(
+                  " "
+                )[0]
+              }
+            </Button>
+            {categories.map((cat) => (
               <Button
+                key={cat.key}
                 size="small"
                 onClick={() => {
-                  handleFilterChange("category", "");
+                  handleFilterChange("category", cat.key);
                   if (location.pathname !== "/") navigate("/");
                 }}
                 sx={{
-                  color: category === "" ? "#00d4ff" : "rgba(0,0,0,0.8)",
+                  color: category === cat.key ? "#00d4ff" : "rgba(0,0,0,0.8)",
                   px: { xs: 1.5, sm: 2 },
                   py: { xs: 0.25, sm: 0.5 },
                   minHeight: { xs: 28, sm: 32 },
                   fontSize: { xs: "0.75rem", sm: "0.875rem" },
                   borderRadius: "24px",
                   border:
-                    category === ""
+                    category === cat.key
                       ? "1px solid rgba(0,212,255,0.5)"
                       : "1px solid transparent",
                   bgcolor:
-                    category === "" ? "rgba(0,212,255,0.12)" : "transparent",
+                    category === cat.key
+                      ? "rgba(0,212,255,0.12)"
+                      : "transparent",
                   "&:hover": {
                     bgcolor: "rgba(0,212,255,0.15)",
                     color: "#00d4ff",
@@ -1112,46 +1181,11 @@ const MainLayout: React.FC = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                {
-                  t("products.allCategories", { defaultValue: "All" }).split(
-                    " "
-                  )[0]
-                }
+                {cat.label}
               </Button>
-              {categories.map((cat) => (
-                <Button
-                  key={cat.key}
-                  size="small"
-                  onClick={() => {
-                    handleFilterChange("category", cat.key);
-                    if (location.pathname !== "/") navigate("/");
-                  }}
-                  sx={{
-                    color: category === cat.key ? "#00d4ff" : "rgba(0,0,0,0.8)",
-                    px: { xs: 1.5, sm: 2 },
-                    py: { xs: 0.25, sm: 0.5 },
-                    minHeight: { xs: 28, sm: 32 },
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    borderRadius: "24px",
-                    border:
-                      category === cat.key
-                        ? "1px solid rgba(0,212,255,0.5)"
-                        : "1px solid transparent",
-                    bgcolor:
-                      category === cat.key ? "rgba(0,212,255,0.12)" : "transparent",
-                    "&:hover": {
-                      bgcolor: "rgba(0,212,255,0.15)",
-                      color: "#00d4ff",
-                    },
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {cat.label}
-                </Button>
-              ))}
-            </Box>
+            ))}
           </Box>
-        </Container>
+        </Box>
       </AppBar>
 
       {/* Mobile Navigation Drawer */}
@@ -1195,8 +1229,9 @@ const MainLayout: React.FC = () => {
           sx={{
             flexGrow: 1,
             pt: { xs: 20, sm: 22, md: 24 },
-            px: { xs: 2, sm: 3, md: 4 },
-            pb: 4,
+            px: 0,
+            pb: 0,
+            width: "100%",
           }}
         >
           <Fade in timeout={600}>

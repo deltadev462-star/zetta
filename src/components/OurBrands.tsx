@@ -91,20 +91,18 @@ const OurBrands: React.FC = () => {
           className="brands-track"
           sx={{
             display: 'flex',
+            width: 'max-content',
             animation: {
-              xs: 'scroll 20s linear infinite',
-              sm: 'scroll 25s linear infinite',
-              md: 'scroll 30s linear infinite'
+              xs: 'brandsSlideLoop 25s linear infinite',
+              sm: 'brandsSlideLoop 35s linear infinite',
+              md: 'brandsSlideLoop 45s linear infinite'
             },
-            '&:hover': {
-              animationPlayState: 'paused',
-            },
-            '@keyframes scroll': {
+            '@keyframes brandsSlideLoop': {
               '0%': {
                 transform: 'translateX(0)',
               },
               '100%': {
-                transform: 'translateX(-50%)',
+                transform: 'translateX(calc(-100% / 2))',
               },
             },
           }}

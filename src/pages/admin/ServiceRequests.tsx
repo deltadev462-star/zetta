@@ -232,11 +232,20 @@ const ServiceRequests: React.FC = () => {
     if (request.type === 'logistics') {
       return (
         <Box>
-          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
+          >
             <LocalShipping /> {t('logistics.title')}
           </Typography>
           
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 1fr' }, gap: { xs: 2, md: 3 } }}>
             <Box>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                 {t('logistics.serviceType')}
@@ -268,7 +277,7 @@ const ServiceRequests: React.FC = () => {
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                 {t('admin.addresses')}
               </Typography>
-              <Card sx={{ mb: 2, bgcolor: 'rgba(0,212,255,0.05)' }}>
+              <Card sx={{ mb: 2, bgcolor: 'oklch(98.5% 0.001 106.423)', border: '1px solid', borderColor: 'divider', borderRadius: '8px' }}>
                 <CardContent>
                   <Typography variant="caption" color="text.secondary">{t('admin.pickup')}</Typography>
                   <Typography variant="body2">
@@ -276,7 +285,7 @@ const ServiceRequests: React.FC = () => {
                   </Typography>
                 </CardContent>
               </Card>
-              <Card sx={{ bgcolor: 'rgba(255,0,128,0.05)' }}>
+              <Card sx={{ bgcolor: 'oklch(98.5% 0.001 106.423)', border: '1px solid', borderColor: 'divider', borderRadius: '8px' }}>
                 <CardContent>
                   <Typography variant="caption" color="text.secondary">{t('admin.delivery')}</Typography>
                   <Typography variant="body2">
@@ -291,7 +300,16 @@ const ServiceRequests: React.FC = () => {
     } else {
       return (
         <Box>
-          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
+          >
             <Build /> {t('maintenance.title')}
           </Typography>
           
@@ -339,11 +357,12 @@ const ServiceRequests: React.FC = () => {
     <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
-        <Typography 
-          variant="h3" 
+        <Typography
+          variant="h3"
           component="h1"
           gutterBottom
           sx={{
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' },
             fontWeight: 800,
             background: 'linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)',
             WebkitBackgroundClip: 'text',
@@ -352,7 +371,11 @@ const ServiceRequests: React.FC = () => {
         >
           {t('admin.serviceRequests')}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
           {t('admin.manageServiceRequests')}
         </Typography>
       </Box>
@@ -370,21 +393,31 @@ const ServiceRequests: React.FC = () => {
       )}
 
       {/* Filters */}
-      <Paper 
-        sx={{ 
-          p: 3, 
+      <Paper
+        sx={{
+          p: 3,
           mb: 3,
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: '8px',
         }}
       >
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{
+          display: 'flex',
+          gap: 2,
+          flexWrap: 'wrap',
+          flexDirection: { xs: 'column', sm: 'row' }
+        }}>
           <TextField
             placeholder={t('common.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ flex: 1, minWidth: 300 }}
+            size="small"
+            sx={{
+              flex: { xs: 'none', sm: 1 },
+              minWidth: { xs: '100%', sm: 300 }
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -393,7 +426,7 @@ const ServiceRequests: React.FC = () => {
               ),
             }}
           />
-          <FormControl sx={{ minWidth: 200 }}>
+          <FormControl sx={{ minWidth: { xs: '100%', sm: 200 } }} size="small">
             <InputLabel>{t('common.status')}</InputLabel>
             <Select
               value={filterStatus}
@@ -412,21 +445,27 @@ const ServiceRequests: React.FC = () => {
       </Paper>
 
       {/* Tabs */}
-      <Paper 
-        sx={{ 
-          bgcolor: 'rgba(15,15,25,0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+      <Paper
+        sx={{
+          bgcolor: 'oklch(98.5% 0.001 106.423)',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: '8px',
           overflow: 'hidden',
         }}
       >
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
             borderBottom: '1px solid rgba(255,255,255,0.1)',
             '& .MuiTab-root': {
               fontWeight: 600,
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              minWidth: { xs: 100, sm: 120 },
               '&.Mui-selected': {
                 color: '#00d4ff',
               },
@@ -448,17 +487,17 @@ const ServiceRequests: React.FC = () => {
           </Box>
         ) : (
           <>
-            <TableContainer>
-              <Table>
+            <TableContainer sx={{ overflowX: 'auto' }}>
+              <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>{t('admin.requestId')}</TableCell>
-                    <TableCell>{t('admin.type')}</TableCell>
-                    <TableCell>{t('admin.customer')}</TableCell>
-                    <TableCell>{t('admin.contact')}</TableCell>
-                    <TableCell>{t('admin.created')}</TableCell>
-                    <TableCell>{t('common.status')}</TableCell>
-                    <TableCell align="center">{t('common.actions')}</TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>{t('admin.requestId')}</TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>{t('admin.type')}</TableCell>
+                    <TableCell sx={{ minWidth: 150 }}>{t('admin.customer')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, minWidth: 150 }}>{t('admin.contact')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' }, minWidth: 120 }}>{t('admin.created')}</TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>{t('common.status')}</TableCell>
+                    <TableCell align="center" sx={{ minWidth: 200 }}>{t('common.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -492,7 +531,7 @@ const ServiceRequests: React.FC = () => {
                           {request.user_profile?.company_name || t('admin.individual')}
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                             <Phone sx={{ fontSize: 14, color: 'text.secondary' }} />
@@ -508,7 +547,7 @@ const ServiceRequests: React.FC = () => {
                           </Box>
                         </Box>
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                         <Typography variant="body2">
                           {formatDate(request.created_at)}
                         </Typography>
@@ -522,7 +561,12 @@ const ServiceRequests: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell align="center">
-                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                        <Box sx={{
+                          display: 'flex',
+                          gap: { xs: 0.5, sm: 1 },
+                          justifyContent: 'center',
+                          flexWrap: 'wrap'
+                        }}>
                           <Button
                             size="small"
                             variant="outlined"
@@ -531,6 +575,8 @@ const ServiceRequests: React.FC = () => {
                               setDetailsDialogOpen(true);
                             }}
                             sx={{
+                              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                              px: { xs: 1, sm: 2 },
                               borderColor: 'rgba(0,212,255,0.5)',
                               color: '#00d4ff',
                               '&:hover': {
@@ -541,11 +587,14 @@ const ServiceRequests: React.FC = () => {
                           >
                             {t('common.details')}
                           </Button>
-                          <FormControl size="small" sx={{ minWidth: 120 }}>
+                          <FormControl size="small" sx={{ minWidth: { xs: 100, sm: 120 } }}>
                             <Select
                               value={request.status}
                               onChange={(e) => handleStatusUpdate(request.id, e.target.value)}
-                              sx={{ height: 32 }}
+                              sx={{
+                                height: 32,
+                                fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                              }}
                             >
                               <MenuItem value="pending">{t('warranty.pending')}</MenuItem>
                               <MenuItem value="in_progress">{t('admin.inProgress')}</MenuItem>
@@ -570,6 +619,14 @@ const ServiceRequests: React.FC = () => {
               onRowsPerPageChange={handleChangeRowsPerPage}
               sx={{
                 borderTop: '1px solid rgba(255,255,255,0.1)',
+                '.MuiTablePagination-toolbar': {
+                  flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                  justifyContent: { xs: 'center', sm: 'flex-end' },
+                  gap: { xs: 1, sm: 0 },
+                },
+                '.MuiTablePagination-selectLabel': {
+                  display: { xs: 'none', sm: 'block' },
+                },
               }}
             />
           </>
@@ -584,21 +641,32 @@ const ServiceRequests: React.FC = () => {
         fullWidth
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(15,15,25,0.95)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(20px)',
+            bgcolor: 'oklch(98.5% 0.001 106.423)',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: '8px',
           },
         }}
       >
         <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="h6">
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 1
+          }}>
+            <Typography
+              variant="h6"
+              sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+            >
               {t('admin.serviceRequestDetails')}
             </Typography>
             <Chip
               label={t(`admin.${selectedRequest?.status || ''}`)}
               color={getStatusColor(selectedRequest?.status || '') as any}
               icon={getStatusIcon(selectedRequest?.status || '') || undefined}
+              size="small"
             />
           </Box>
         </DialogTitle>
@@ -609,7 +677,7 @@ const ServiceRequests: React.FC = () => {
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                   {t('admin.requestInformation')}
                 </Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
                   <Box>
                     <Typography variant="caption" color="text.secondary">{t('admin.requestId')}</Typography>
                     <Typography variant="body2">#{selectedRequest.id.slice(0, 8)}</Typography>
@@ -630,7 +698,7 @@ const ServiceRequests: React.FC = () => {
                 <List dense>
                   <ListItem sx={{ px: 0 }}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: 'rgba(0,212,255,0.2)' }}>
+                      <Avatar sx={{ bgcolor: 'action.selected', borderRadius: '8px' }}>
                         <Person />
                       </Avatar>
                     </ListItemAvatar>
@@ -641,7 +709,7 @@ const ServiceRequests: React.FC = () => {
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: 'rgba(0,212,255,0.2)' }}>
+                      <Avatar sx={{ bgcolor: 'action.selected', borderRadius: '8px' }}>
                         <Phone />
                       </Avatar>
                     </ListItemAvatar>
@@ -652,7 +720,7 @@ const ServiceRequests: React.FC = () => {
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: 'rgba(0,212,255,0.2)' }}>
+                      <Avatar sx={{ bgcolor: 'action.selected', borderRadius: '8px' }}>
                         <Email />
                       </Avatar>
                     </ListItemAvatar>
