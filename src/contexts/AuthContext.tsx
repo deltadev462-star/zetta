@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
+import { User as SupabaseUser, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../services/supabase';
 import { User, UserProfile } from '../types';
 
@@ -7,10 +7,12 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  connectionStatus: 'connected' | 'disconnected' | 'connecting';
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (profile: Partial<UserProfile>) => Promise<{ error: any }>;
+  retryConnection: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,10 +25,94 @@ export const useAuth = () => {
   return context;
 };
 
+// Utility function to handle network errors
+const handleNetworkError = (error: any): string => {
+  if (error instanceof TypeError && error.message === 'Failed to fetch') {
+    return 'Network connection error. Please check your internet connection and try again.';
+  }
+  if (error instanceof AuthError) {
+    return error.message;
+  }
+  if (error?.message) {
+    return error.message;
+  }
+  return 'An unexpected error occurred. Please try again.';
+};
+
+// Retry utility with exponential backoff
+const retryWithBackoff = async <T,>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  initialDelay: number = 1000
+): Promise<T> => {
+  let lastError: any;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      console.log(`Retry attempt ${i + 1}/${maxRetries} failed:`, error);
+      
+      if (i < maxRetries - 1) {
+        const delay = initialDelay * Math.pow(2, i);
+        console.log(`Waiting ${delay}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw lastError;
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
+
+  // Monitor online/offline status
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log('🌐 Network: Online');
+      setConnectionStatus('connecting');
+      retryConnection();
+    };
+
+    const handleOffline = () => {
+      console.log('📵 Network: Offline');
+      setConnectionStatus('disconnected');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Check initial status
+    if (!navigator.onLine) {
+      setConnectionStatus('disconnected');
+    }
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const retryConnection = async () => {
+    try {
+      setConnectionStatus('connecting');
+      const { data: { session } } = await supabase.auth.getSession();
+      setConnectionStatus('connected');
+      console.log('✅ Successfully reconnected to Supabase');
+      
+      if (session?.user) {
+        await fetchUserProfile(session.user.id);
+      }
+    } catch (error) {
+      console.error('❌ Failed to reconnect:', error);
+      setConnectionStatus('disconnected');
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -34,10 +120,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check active session
     const initializeAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        setConnectionStatus('connecting');
+        
+        const { data: { session }, error } = await retryWithBackoff(
+          () => supabase.auth.getSession(),
+          3,
+          1000
+        );
+        
+        if (error) throw error;
         
         if (mounted) {
           setSession(session);
+          setConnectionStatus('connected');
+          
           if (session?.user) {
             await fetchUserProfile(session.user.id);
           }
@@ -46,6 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error) {
         console.error('Error initializing auth:', error);
         if (mounted) {
+          setConnectionStatus('disconnected');
           setLoading(false);
         }
       }
@@ -91,9 +188,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Don't use .eq('user_id', userId) because RLS policies already filter by auth.uid()
       // The policy "Users can view their own profile" uses auth.uid() = user_id
-      const { data: profiles, error } = await supabase
-        .from('user_profiles')
-        .select('*');
+      const result = await retryWithBackoff(
+        async () => await supabase
+          .from('user_profiles')
+          .select('*'),
+        2,
+        500
+      );
+      
+      const { data: profiles, error } = result;
       
       const profile = profiles?.[0] || null;
 
@@ -142,66 +245,111 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      setConnectionStatus('connecting');
+      
+      const { data, error } = await retryWithBackoff(
+        () => supabase.auth.signUp({
+          email,
+          password,
+        }),
+        2,
+        1000
+      );
+      
+      if (error) throw error;
+      
+      setConnectionStatus('connected');
 
-    if (!error && data.user) {
-      // Create user profile
-      const { error: profileError } = await supabase
-        .from('user_profiles')
-        .insert({
-          user_id: data.user.id,
-          role: 'buyer', // Default role
-        });
+      if (!error && data.user) {
+        // Create user profile
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            user_id: data.user.id,
+            role: 'buyer', // Default role
+          });
 
-      if (!profileError) {
-        await fetchUserProfile(data.user.id);
+        if (!profileError) {
+          await fetchUserProfile(data.user.id);
+        }
       }
-    }
 
-    return { error };
+      return { error: null };
+    } catch (error) {
+      setConnectionStatus('disconnected');
+      return { error: { message: handleNetworkError(error) } };
+    }
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    return { error };
+    try {
+      setConnectionStatus('connecting');
+      
+      const { error } = await retryWithBackoff(
+        () => supabase.auth.signInWithPassword({
+          email,
+          password,
+        }),
+        2,
+        1000
+      );
+      
+      if (error) throw error;
+      
+      setConnectionStatus('connected');
+      return { error: null };
+    } catch (error) {
+      setConnectionStatus('disconnected');
+      return { error: { message: handleNetworkError(error) } };
+    }
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const updateProfile = async (profile: Partial<UserProfile>) => {
     if (!user) return { error: 'No user logged in' };
 
-    const { error } = await supabase
-      .from('user_profiles')
-      .update(profile)
-      .eq('user_id', user.id);
+    try {
+      const result = await retryWithBackoff(
+        async () => await supabase
+          .from('user_profiles')
+          .update(profile)
+          .eq('user_id', user.id),
+        2,
+        1000
+      );
+      
+      const { error } = result;
 
-    if (!error) {
-      await fetchUserProfile(user.id);
+      if (!error) {
+        await fetchUserProfile(user.id);
+      }
+
+      return { error };
+    } catch (error) {
+      return { error: { message: handleNetworkError(error) } };
     }
-
-    return { error };
   };
 
   const value = {
     user,
     session,
     loading,
+    connectionStatus,
     signUp,
     signIn,
     signOut,
     updateProfile,
+    retryConnection,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

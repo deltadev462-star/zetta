@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Box,
@@ -10,8 +10,6 @@ import {
   CircularProgress,
   Alert,
   Divider,
-  ImageList,
-  ImageListItem,
   Card,
   CardContent,
   Stack,
@@ -22,7 +20,14 @@ import {
   useTheme,
   Tooltip,
   Rating,
-} from '@mui/material';
+  useMediaQuery,
+  FormControl,
+  Select,
+  MenuItem,
+  TextField,
+  Link,
+  Breadcrumbs,
+} from "@mui/material";
 import {
   ShoppingCart,
   ArrowBack,
@@ -40,12 +45,22 @@ import {
   Share,
   Favorite,
   FavoriteBorder,
-} from '@mui/icons-material';
-import { productService } from '../services/products';
-import { Product } from '../types';
-import { useAuth } from '../contexts/AuthContext';
-import { useCart } from '../contexts/CartContext';
-import { useTranslation } from 'react-i18next';
+  ExpandMore,
+  BusinessCenter,
+  LocationOn,
+  CalendarMonth,
+  Verified,
+  Info,
+  Home,
+  NavigateNext,
+  HelpOutline,
+  ArrowDropDown,
+} from "@mui/icons-material";
+import { productService } from "../services/products";
+import { Product } from "../types";
+import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
+import { useTranslation } from "react-i18next";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,11 +71,15 @@ const ProductDetail: React.FC = () => {
   const { t } = useTranslation();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [justAdded, setJustAdded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [imageZoom, setImageZoom] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (id) {
@@ -70,19 +89,19 @@ const ProductDetail: React.FC = () => {
 
   const fetchProduct = async () => {
     if (!id) return;
-    
+
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const { data, error } = await productService.getProductById(id);
       if (error) {
-        setError(t('products.failedToLoad'));
+        setError(t("products.failedToLoad"));
       } else if (data) {
         setProduct(data);
       }
     } catch (err) {
-      setError(t('products.unexpectedError'));
+      setError(t("products.unexpectedError"));
     } finally {
       setLoading(false);
     }
@@ -90,56 +109,52 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = () => {
     if (!user) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     if (product) {
-      addToCart(product);
+      for (let i = 0; i < quantity; i++) {
+        addToCart(product);
+      }
       setJustAdded(true);
       setTimeout(() => setJustAdded(false), 2000);
     }
   };
 
   const isInCart = () => {
-    return items.some(item => item.product.id === product?.id);
+    return items.some((item) => item.product.id === product?.id);
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'EUR',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "EUR",
     }).format(price);
   };
 
   const getConditionColor = (condition: string) => {
     switch (condition) {
-      case 'excellent':
-        return '#00ff88';
-      case 'good':
-        return '#00d4ff';
-      case 'fair':
-        return '#ffaa00';
+      case "excellent":
+        return "#4caf50";
+      case "good":
+        return "#2196f3";
+      case "fair":
+        return "#ff9800";
       default:
-        return '#ffaa00';
+        return "#757575";
     }
   };
 
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Box 
-          display="flex" 
-          justifyContent="center" 
+        <Box
+          display="flex"
+          justifyContent="center"
           alignItems="center"
           minHeight="60vh"
         >
-          <CircularProgress 
-            size={60} 
-            sx={{ 
-              color: '#00d4ff',
-              filter: 'drop-shadow(0 0 20px rgba(0,212,255,0.5))',
-            }} 
-          />
+          <CircularProgress size={60} />
         </Box>
       </Container>
     );
@@ -148,657 +163,744 @@ const ProductDetail: React.FC = () => {
   if (error || !product) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert 
-          severity="error" 
-          sx={{ 
-            mb: 3,
-            bgcolor: 'rgba(255,51,102,0.1)',
-            color: '#ff3366',
-            border: '1px solid rgba(255,51,102,0.3)',
-          }}
-        >
-          {error || t('products.productNotFound')}
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error || t("products.productNotFound")}
         </Alert>
         <Button
           startIcon={<ArrowBack />}
-          onClick={() => navigate('/products')}
+          onClick={() => navigate("/products")}
           variant="outlined"
-          sx={{
-            borderColor: 'rgba(0,212,255,0.5)',
-            color: '#00d4ff',
-            '&:hover': {
-              borderColor: '#00d4ff',
-              bgcolor: 'rgba(0,212,255,0.1)',
-            },
-          }}
         >
-          {t('products.backToProducts')}
+          {t("products.backToProducts")}
         </Button>
       </Container>
     );
   }
 
-  const discountPercentage = product.zetta_price && product.price !== product.zetta_price
-    ? Math.round(((product.price - product.zetta_price) / product.price) * 100)
-    : 0;
+  const discountPercentage =
+    product.zetta_price && product.price !== product.zetta_price
+      ? Math.round(
+          ((product.price - product.zetta_price) / product.price) * 100
+        )
+      : 0;
+
+  // Mock data for specialties and categories based on the image
+  const medicalSpecialties = [
+    t("products.specialties.intensiveCriticalCare"),
+    t("products.specialties.cardiology"),
+    t("products.specialties.emergencyMedicine"),
+    t("products.specialties.anesthesiaPerioperative"),
+    t("products.specialties.laboratoryMedicalBiology"),
+    t("products.specialties.gynecologyObstetrics"),
+    t("products.specialties.pediatricsNeonatology"),
+    t("products.specialties.radiology"),
+  ];
+
+  const productCategories = [
+    t("products.productCategoriesList.medicalDiagnosticEquipment"),
+    t("products.productCategoriesList.medicalMonitoringEquipment"),
+    t("products.productCategoriesList.vitalSignsMonitor"),
+  ];
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
-      <Fade in timeout={600}>
-        <Box>
-          {/* Back Button */}
-          <Button
-            startIcon={<ArrowBack />}
-            onClick={() => navigate('/products')}
-            sx={{ 
-              mb: 3,
-              color: 'rgba(255,255,255,0.7)',
-              '&:hover': {
-                color: '#00d4ff',
-                bgcolor: 'rgba(0,212,255,0.1)',
-              },
+    <Container maxWidth="xl" sx={{ mt: 4 }}>
+       <Box sx={{ minHeight: "100vh"  }}>
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        separator={<NavigateNext fontSize="small" sx={{ color: "#999" }} />}
+        sx={{ mb: 2, fontSize: "0.875rem" }}
+      >
+        <Link
+          underline="hover"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            color: "#666",
+            cursor: "pointer",
+            fontSize: "0.875rem",
+            "&:hover": { color: "#0066cc" },
+          }}
+          onClick={() => navigate("/")}
+        >
+          <Home sx={{ mr: 0.5, fontSize: 16 }} />
+          {t("nav.home")}
+        </Link>
+        {product.category && (
+          <Link
+            underline="hover"
+            color="#666"
+            sx={{
+              cursor: "pointer",
+              fontSize: "0.875rem",
+              "&:hover": { color: "#0066cc" },
             }}
+            onClick={() => navigate(`/products?category=${product.category}`)}
           >
-            {t('products.backToProducts')}
-          </Button>
+            {product.category}
+          </Link>
+        )}
+        <Typography color="text.primary" sx={{ fontSize: "0.875rem" }}>
+          {product.title}
+        </Typography>
+      </Breadcrumbs>
 
-          <Box sx={{ display: 'flex', gap: 4, flexDirection: { xs: 'column', md: 'row' } }}>
-            {/* Image Gallery */}
-            <Box sx={{ flex: { xs: '1', md: '0 0 50%' } }}>
-              <Zoom in timeout={800}>
-                <Box>
-                  {/* Main Image */}
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      position: 'relative',
-                      mb: 2,
-                      borderRadius: 1,
-                      overflow: 'hidden',
-                      bgcolor: 'rgba(15,15,25,0.6)',
-                      backdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      cursor: 'zoom-in',
-                      transition: 'all 0.3s',
-                      '&:hover': {
-                        border: '1px solid rgba(0,212,255,0.3)',
-                        transform: 'scale(1.02)',
-                      },
-                    }}
-                    onClick={() => setImageZoom(true)}
-                  >
-                    <Box
-                      component="img"
-                      src={product.images[selectedImage] || '/placeholder-product.png'}
-                      alt={product.title}
-                      sx={{
-                        width: '100%',
-                        height: 500,
-                        objectFit: 'contain',
-                        p: 3,
-                      }}
-                    />
-                    <IconButton
-                      sx={{
-                        position: 'absolute',
-                        bottom: 16,
-                        right: 16,
-                        bgcolor: 'rgba(0,0,0,0.6)',
-                        backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        color: 'white',
-                        '&:hover': {
-                          bgcolor: 'rgba(0,212,255,0.2)',
-                          border: '1px solid #00d4ff',
-                        },
-                      }}
-                    >
-                      <ZoomIn />
-                    </IconButton>
-                  </Paper>
+      <Paper sx={{ p: 0, border: "none", boxShadow: 0 , "&:hover": {
+                         border: "none",
+                        boxShadow: 0 ,
+                      }, }}>
+    
 
-                  {/* Thumbnail Gallery */}
-                  {product.images.length > 1 && (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 1,
-                        overflowX: 'auto',
-                        pb: 1,
-                        '&::-webkit-scrollbar': {
-                          height: '6px',
-                        },
-                        '&::-webkit-scrollbar-track': {
-                          background: 'rgba(255,255,255,0.05)',
-                          borderRadius: '4px',
-                        },
-                        '&::-webkit-scrollbar-thumb': {
-                          background: 'rgba(0,212,255,0.5)',
-                          borderRadius: '4px',
-                          '&:hover': {
-                            background: 'rgba(0,212,255,0.7)',
-                          },
-                        },
-                      }}
-                    >
-                      {product.images.map((image, index) => (
-                        <Box
-                          key={index}
-                          component="img"
-                          src={image}
-                          alt={`${product.title} ${index + 1}`}
-                          onClick={() => setSelectedImage(index)}
-                          sx={{
-                            width: 100,
-                            height: 100,
-                            objectFit: 'cover',
-                            borderRadius: 1,
-                            cursor: 'pointer',
-                            border: selectedImage === index 
-                              ? '2px solid #00d4ff' 
-                              : '2px solid transparent',
-                            opacity: selectedImage === index ? 1 : 0.6,
-                            transition: 'all 0.3s',
-                            '&:hover': {
-                              opacity: 1,
-                              transform: 'scale(1.05)',
-                              border: '2px solid rgba(0,212,255,0.5)',
-                            },
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-              </Zoom>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: 4,
+          }}
+        >
+          {/* Left Side - Product Image */}
+          <Box sx={{ flex: { xs: "1 1 100%", md: "0 0 40%" }, pl: 3, pr: 2 }}>
+            <Box
+              sx={{
+                position: "sticky",
+                top: 20,
+                // bgcolor: "white",
+                // border: "1px solid #e0e0e0",
+                borderRadius: 2,
+                overflow: "hidden",
+                // cursor: "zoom-in",
+                mb: { xs: 3, md: 0 },
+              }}
+              onClick={() => setImageZoom(true)}
+            >
+              <Box
+                component="img"
+                src={
+                  product.images[selectedImage] || "/placeholder-product.png"
+                }
+                alt={product.title}
+                sx={{
+                  width: "100%",
+                  height: { xs: 250, sm: 350, md: 400 },
+                  objectFit: "contain",
+                }}
+              />
             </Box>
 
-            {/* Product Info */}
-            <Box sx={{ flex: { xs: '1', md: '0 0 50%' } }}>
-              <Box>
-                {/* Title and Actions */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                  <Typography 
-                    variant="h3" 
-                    component="h1"
+            {/* Thumbnail Gallery */}
+            {product.images.length > 1 && (
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  mt: 2,
+                  overflowX: "auto",
+                  pb: 1,
+                  "&::-webkit-scrollbar": {
+                    height: "4px",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    // background: '#ccc',
+                    borderRadius: "4px",
+                  },
+                }}
+              >
+                {product.images.map((image, index) => (
+                  <Box
+                    key={index}
+                    component="img"
+                    src={image}
+                    alt={`${product.title} ${index + 1}`}
+                    onClick={() => setSelectedImage(index)}
                     sx={{
-                      fontWeight: 700,
-                      color: 'white',
-                      flex: 1,
-                    }}
-                  >
-                    {product.title}
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
-                    <IconButton
-                      onClick={() => setIsFavorite(!isFavorite)}
-                      sx={{
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        color: isFavorite ? '#ff0080' : 'rgba(255,255,255,0.5)',
-                        '&:hover': {
-                          border: '1px solid #ff0080',
-                          bgcolor: 'rgba(255,0,128,0.1)',
-                        },
-                      }}
-                    >
-                      {isFavorite ? <Favorite /> : <FavoriteBorder />}
-                    </IconButton>
-                    <IconButton
-                      sx={{
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        color: 'rgba(255,255,255,0.5)',
-                        '&:hover': {
-                          border: '1px solid #00d4ff',
-                          bgcolor: 'rgba(0,212,255,0.1)',
-                        },
-                      }}
-                    >
-                      <Share />
-                    </IconButton>
-                  </Stack>
-                </Box>
-
-                {/* Rating and Reviews */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                  <Rating 
-                    value={4.5} 
-                    precision={0.5} 
-                    readOnly 
-                    sx={{
-                      '& .MuiRating-iconFilled': {
-                        color: '#ffaa00',
+                      width: 80,
+                      height: 80,
+                      objectFit: "cover",
+                      borderRadius: 1,
+                      border:
+                        selectedImage === index
+                          ? "2px solid #0066cc"
+                          : "2px solid #e0e0e0",
+                      cursor: "pointer",
+                      transition: "all 0.3s",
+                      "&:hover": {
+                        borderColor: "#0066cc",
+                        transform: "scale(1.05)",
                       },
                     }}
                   />
-                  <Typography variant="body2" color="text.secondary">
-                    (127 {t('products.reviews')})
-                  </Typography>
-                </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
 
-                {/* Tags */}
-                <Stack direction="row" spacing={1.5} sx={{ mb: 3, flexWrap: 'wrap', gap: 1 }}>
-                  <Chip 
-                    icon={<Category />}
-                    label={product.category} 
-                    sx={{
-                      bgcolor: 'rgba(0,212,255,0.1)',
-                      border: '1px solid rgba(0,212,255,0.3)',
-                      color: '#00d4ff',
-                      fontWeight: 600,
-                    }}
-                  />
-                  <Chip
-                    label={t(`products.${product.condition}`)}
-                    sx={{
-                      bgcolor: alpha(getConditionColor(product.condition), 0.1),
-                      border: `1px solid ${alpha(getConditionColor(product.condition), 0.3)}`,
-                      color: getConditionColor(product.condition),
-                      fontWeight: 600,
-                    }}
-                  />
-                  {product.warranty_duration && (
-                    <Chip
-                      icon={<Shield />}
-                      label={`${product.warranty_duration} ${t('products.monthsWarranty')}`}
-                      sx={{
-                        bgcolor: 'rgba(255,0,128,0.1)',
-                        border: '1px solid rgba(255,0,128,0.3)',
-                        color: '#ff0080',
-                        fontWeight: 600,
-                      }}
-                    />
-                  )}
-                  {product.status === 'available' && (
-                    <Chip
-                      icon={<Inventory />}
-                      label={t('products.inStock')}
-                      sx={{
-                        bgcolor: 'rgba(0,255,136,0.1)',
-                        border: '1px solid rgba(0,255,136,0.3)',
-                        color: '#00ff88',
-                        fontWeight: 600,
-                      }}
-                    />
-                  )}
-                </Stack>
+          {/* Right Side - Product Details */}
+          <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 60%" }, pl: 2, pr: 3 }}>
+            {/* Product Reference */}
+                {/* Product Title */}
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
+            fontWeight: 500,
+            mb: 1,
+            fontSize: "1.75rem",
+            color: "#333",
+            // px: 3,
+            // pt: 3,
+          }}
+        >
+          {product.title}
+        </Typography>
 
-                {/* Price Section */}
-                <Card
-                  sx={{
-                    mb: 4,
-                    bgcolor: 'rgba(0,212,255,0.05)',
-                    border: '1px solid rgba(0,212,255,0.2)',
-                    backdropFilter: 'blur(10px)',
-                  }}
-                >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-                      <Typography 
-                        variant="h2" 
-                        sx={{
-                          fontWeight: 800,
-                          background: 'linear-gradient(135deg, #00d4ff 0%, #00ff88 100%)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                        }}
-                      >
-                        {formatPrice(product.zetta_price || product.price)}
-                      </Typography>
-                      {discountPercentage > 0 && (
-                        <>
-                          <Typography 
-                            variant="h5" 
-                            sx={{ 
-                              textDecoration: 'line-through',
-                              color: 'text.secondary',
-                              opacity: 0.6,
-                            }}
-                          >
-                            {formatPrice(product.price)}
-                          </Typography>
-                          <Chip
-                            label={`-${discountPercentage}%`}
-                            sx={{
-                              bgcolor: '#ff0080',
-                              color: 'white',
-                              fontWeight: 700,
-                              fontSize: '0.9rem',
-                            }}
-                          />
-                        </>
-                      )}
-                    </Box>
-                  </CardContent>
-                </Card>
+        {/* Brand/Manufacturer Link */}
+        <Link
+          href="#"
+          underline="always"
+          sx={{
+            color: "#0066cc",
+            fontSize: "0.875rem",
+            display: "inline-block",
+            mb: 3,
+            // px: 3,
+            "&:hover": { color: "#004499" },
+          }}
+        >
+          {t("products.manufacturers.generalElectricHealthcare")}
+        </Link>
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "#666", fontSize: "0.813rem" }}
+              >
+                {t("products.reference")}: {t("products.productReference.geB8502014")}
+              </Typography>
+            </Box>
 
-                {/* Description */}
-                <Box sx={{ mb: 4 }}>
-                  <Typography variant="h5" gutterBottom sx={{ color: '#00d4ff', mb: 2 }}>
-                    {t('products.description')}
-                  </Typography>
-                  <Typography
-                    variant="body1"
+            {/* Categories */}
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 600,
+                  mb: 1,
+                  color: "#333",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {t("products.categories")}:
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {productCategories.map((category, index) => (
+                  <Button
+                    key={index}
+                    variant="outlined"
+                    size="small"
                     sx={{
-                      color: 'text.secondary',
-                      lineHeight: 1.8,
+                      borderColor: "#ccc",
+                      color: "#333",
+                      textTransform: "none",
+                      fontSize: "0.75rem",
+                      py: 0.3,
+                      px: 1.2,
+                      mb: 0.5,
+                      borderRadius: 0.5,
+                      minHeight: 28,
+                      "&:hover": {
+                        borderColor: "#999",
+                        bgcolor: "#f5f5f5",
+                      },
                     }}
                   >
-                    {product.description}
+                    {category}
+                  </Button>
+                ))}
+              </Stack>
+            </Box>
+
+            {/* Medical Specialties */}
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 600,
+                  mb: 1,
+                  color: "#333",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {t("products.medicalSpecialties")}:
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {medicalSpecialties.map((specialty, index) => (
+                  <Button
+                    key={index}
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      borderColor: "#ccc",
+                      color: "#333",
+                      textTransform: "none",
+                      fontSize: "0.75rem",
+                      py: 0.3,
+                      px: 1.2,
+                      mb: 0.5,
+                      borderRadius: 0.5,
+                      minHeight: 28,
+                      "&:hover": {
+                        borderColor: "#999",
+                        bgcolor: "#f5f5f5",
+                      },
+                    }}
+                  >
+                    {specialty}
+                  </Button>
+                ))}
+              </Stack>
+            </Box>
+
+            {/* Description */}
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                variant="body2"
+                sx={{ lineHeight: 1.6, color: "#666" }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: t("products.productDescriptions.carescapeB850")
+                  }}
+                />
+              </Typography>
+            </Box>
+
+         
+          </Box>
+             {/* Product Info Grid */}
+            <Box
+              sx={{
+                bgcolor: '#f2f2f2',
+                p: 3,
+                borderRadius: 0,
+                border: "none",
+              }}
+            >
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 3 }}>
+                {/* Price Section */}
+                <Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 1,
+                    }}
+                  >
+                    <Chip
+                      label={t("products.ourBestPrice")}
+                      size="small"
+                      sx={{
+                        bgcolor: "#4a5568",
+                        color: "white",
+                        fontWeight: 500,
+                        height: 28,
+                      }}
+                    />
+                  </Box>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: 700,
+                      color: "#0066cc",
+                      mt: 1,
+                      fontSize: { xs: "2rem", md: "2.5rem" },
+                    }}
+                  >
+                    €
+                    {new Intl.NumberFormat("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(product.zetta_price || product.price)}{" "}
+                    {t("products.exclVAT")}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      mt: 0.5,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 0.5,
+                    }}
+                  >
+                    <LocalShipping fontSize="small" />
+                    {t("products.shippingIncluded")} ({t("regions.europe")})
                   </Typography>
                 </Box>
 
-                {/* Features */}
-                <Box sx={{ mb: 4 }}>
-                  <Typography variant="h5" gutterBottom sx={{ color: '#00d4ff', mb: 2 }}>
-                    {t('products.keyFeatures')}
-                  </Typography>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-                    <Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Speed sx={{ color: '#00ff88', fontSize: 30 }} />
-                        <Box>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            {t('products.condition')}
-                          </Typography>
-                          <Typography variant="body1" fontWeight={600}>
-                            {t(`products.${product.condition}`)}
+                {/* Product Details */}
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+                    gap: 3,
+                    gridColumn: "1 / -1",
+                  }}
+                >
+                  <Box>
+                    <Stack spacing={2}>
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                          }}
+                        >
+                          {t("products.condition")}
+                          <Tooltip title={t("products.conditionTooltip")}>
+                            <HelpOutline
+                              sx={{ fontSize: 16, cursor: "pointer" }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: 500,
+                            color: getConditionColor(
+                              product.condition || "good"
+                            ),
+                          }}
+                        >
+                          {t(`products.${product.condition || "good"}`)}
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("products.year")}
+                        </Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {"2014"}
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("products.stock")}
+                        </Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {1}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </Box>
+
+                  <Box>
+                    <Stack spacing={2}>
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                          }}
+                        >
+                          {t("products.typeOfSeller")}
+                          <Tooltip title={t("products.certifiedSellerTooltip")}>
+                            <HelpOutline
+                              sx={{ fontSize: 16, cursor: "pointer" }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                          }}
+                        >
+                          <Verified sx={{ color: "#ff9800", fontSize: 20 }} />
+                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                            {t("products.certifiedProfessionalSeller")}
                           </Typography>
                         </Box>
                       </Box>
-                    </Box>
-                    <Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <VerifiedUser sx={{ color: '#00ff88', fontSize: 30 }} />
-                        <Box>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            {t('products.verified')}
-                          </Typography>
-                          <Typography variant="body1" fontWeight={600}>
-                            {t('products.qualityAssured')}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <LocalShipping sx={{ color: '#00ff88', fontSize: 30 }} />
-                        <Box>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            {t('products.shipping')}
-                          </Typography>
-                          <Typography variant="body1" fontWeight={600}>
-                            {t('products.freeShippingOver')}
+
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("products.originOfSeller")}
+                        </Typography>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <Box component="span" sx={{ fontSize: "1.2rem" }}>
+                            🇫🇷
+                          </Box>
+                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                            {t("countries.france")}
                           </Typography>
                         </Box>
                       </Box>
-                    </Box>
-                    <Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <WorkspacePremium sx={{ color: '#00ff88', fontSize: 30 }} />
-                        <Box>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            {t('products.warranty')}
-                          </Typography>
-                          <Typography variant="body1" fontWeight={600}>
-                            {product.warranty_duration || t('products.standard')} {t('warranty.months')}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
+                    </Stack>
                   </Box>
                 </Box>
+              </Box>
 
-                {/* Action Buttons */}
-                <Stack spacing={2}>
+              {/* Offer Details Section */}
+              <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 2, mt: 3 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 600,
+                    mb: 2,
+                    color: "#333",
+                    fontSize: "1rem",
+                  }}
+                >
+                  {t("products.offerDetails")}
+                </Typography>
+
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{ color: "#333", fontSize: "0.875rem" }}
+                  >
+                    {t("products.quantity")}:
+                  </Typography>
+                  <Select
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    size="small"
+                    IconComponent={ArrowDropDown}
+                    sx={{
+                      minWidth: 60,
+                      height: 32,
+                      "& .MuiSelect-select": {
+                        py: 0.5,
+                        fontSize: "0.875rem",
+                      },
+                    }}
+                  >
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <MenuItem key={num} value={num}>
+                        {num}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
+
+                {/* Add to Cart Button */}
+                <Box
+                  sx={{ mt: 3, display: "flex", gap: 2, alignItems: "center" }}
+                >
                   <Button
                     variant="contained"
                     size="large"
-                    fullWidth
-                    startIcon={
-                      justAdded || isInCart() ? (
-                        <CheckCircle />
-                      ) : (
-                        <ShoppingCart />
-                      )
-                    }
                     onClick={handleAddToCart}
-                    disabled={product.status !== 'available'}
+                    disabled={justAdded}
+                    startIcon={justAdded ? <CheckCircle  /> : <ShoppingCart    />}
                     sx={{
-                      py: 2,
-                      fontSize: '1.1rem',
-                      fontWeight: 700,
-                      background: isInCart() 
-                        ? 'linear-gradient(135deg, #00ff88 0%, #00cc55 100%)'
-                        : 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-                      boxShadow: isInCart()
-                        ? '0 8px 32px rgba(0,255,136,0.4)'
-                        : '0 8px 32px rgba(0,212,255,0.4)',
-                      '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: isInCart()
-                          ? '0 12px 40px rgba(0,255,136,0.5)'
-                          : '0 12px 40px rgba(0,212,255,0.5)',
+                      bgcolor: justAdded ? "#4caf50" : "#0066cc",
+                      color: "white",
+                      px: 1,
+                      width: isSmallScreen ? "100%" : "auto",
+                      py: 0.5,
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      textTransform: "none",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                      "&:hover": {
+                        bgcolor: justAdded ? "#45a049" : "#0052cc",
+                        boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
                       },
-                      '&:disabled': {
-                        background: 'rgba(128,128,128,0.3)',
+                      "&:disabled": {
+                        bgcolor: "#4caf50",
+                        color: "white",
                       },
                     }}
                   >
                     {justAdded
-                      ? t('products.addedToCart')
-                      : isInCart()
-                      ? t('products.alreadyInCart')
-                      : product.status === 'available'
-                      ? t('products.addToCart')
-                      : t('products.outOfStock')}
+                      ? t("products.addedToCart")
+                      : t("products.addToCart")}
                   </Button>
 
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                    {user && (
-                      <Button
-                        variant="outlined"
-                        size="large"
-                        fullWidth
-                        startIcon={<LocalShipping />}
-                        onClick={() => navigate('/logistics')}
-                        sx={{
-                          py: 1.5,
-                          borderColor: 'rgba(255,0,128,0.5)',
-                          color: '#ff0080',
-                          '&:hover': {
-                            borderColor: '#ff0080',
-                            bgcolor: 'rgba(255,0,128,0.1)',
-                          },
-                        }}
-                      >
-                        {t('products.requestLogistics')}
-                      </Button>
+                  <IconButton
+                    onClick={() => setIsFavorite(!isFavorite)}
+                    sx={{
+                      border: "1px solid #ddd",
+                      "&:hover": {
+                        borderColor: "#ff4444",
+                        bgcolor: "rgba(255,68,68,0.04)",
+                      },
+                    }}
+                  >
+                    {isFavorite ? (
+                      <Favorite sx={{ color: "#ff4444", fontSize: 15 }} />
+                    ) : (
+                      <FavoriteBorder sx={{ color: "#666", fontSize: 15 }} />
                     )}
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      fullWidth
-                      startIcon={<ContactSupport />}
-                      sx={{
-                        py: 1.5,
-                        borderColor: 'rgba(0,212,255,0.5)',
-                        color: '#00d4ff',
-                        '&:hover': {
-                          borderColor: '#00d4ff',
-                          bgcolor: 'rgba(0,212,255,0.1)',
-                        },
-                      }}
-                    >
-                      {t('products.contactSupport')}
-                    </Button>
-                  </Stack>
-                </Stack>
+                  </IconButton>
 
-                {/* Trust Badges */}
-                <Box 
-                  sx={{ 
-                    mt: 4,
-                    p: 3,
-                    borderRadius: 1,
-                    bgcolor: 'rgba(0,255,136,0.05)',
-                    border: '1px solid rgba(0,255,136,0.2)',
-                  }}
-                >
-                  <Stack spacing={2}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <AutoAwesome sx={{ color: '#00ff88' }} />
-                      <Typography variant="body2">
-                        {t('products.qualityVerified')}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Shield sx={{ color: '#00ff88' }} />
-                      <Typography variant="body2">
-                        {t('products.securePayment')}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <LocalShipping sx={{ color: '#00ff88' }} />
-                      <Typography variant="body2">
-                        {t('products.fastShipping')}
-                      </Typography>
-                    </Box>
-                  </Stack>
+                  <IconButton
+                    sx={{
+                      border: "1px solid #ddd",
+                      "&:hover": {
+                        borderColor: "#0066cc",
+                        bgcolor: "rgba(0,102,204,0.04)",
+                      },
+                    }}
+                  >
+                    <Share sx={{ color: "#666", fontSize: 15 }} />
+                  </IconButton>
                 </Box>
               </Box>
             </Box>
-          </Box>
 
-          {/* Additional Information */}
-          <Box sx={{ mt: 8 }}>
-            <Typography 
-              variant="h4" 
-              gutterBottom 
-              sx={{
-                fontWeight: 700,
-                mb: 4,
-                background: 'linear-gradient(135deg, #00d4ff 0%, #ff0080 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              {t('products.additionalInfo')}
-            </Typography>
-            
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
-              <Box>
-                <Card 
-                  sx={{ 
-                    height: '100%',
-                    bgcolor: 'rgba(15,15,25,0.6)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    transition: 'all 0.3s',
-                    '&:hover': {
-                      border: '1px solid rgba(0,212,255,0.3)',
-                      transform: 'translateY(-4px)',
-                    },
-                  }}
-                >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                      <Category sx={{ color: '#00d4ff', fontSize: 30 }} />
-                      <Typography variant="h6">{t('products.productDetails')}</Typography>
-                    </Box>
-                    <Stack spacing={2}>
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          {t('products.category')}
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {product.category}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          {t('products.condition')}
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {t(`products.${product.condition}`)}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          {t('products.availability')}
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600} color={product.status === 'available' ? '#00ff88' : 'text.secondary'}>
-                          {product.status === 'available' ? t('products.inStock') : t('products.outOfStock')}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Box>
 
-              <Box>
-                <Card 
-                  sx={{ 
-                    height: '100%',
-                    bgcolor: 'rgba(15,15,25,0.6)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    transition: 'all 0.3s',
-                    '&:hover': {
-                      border: '1px solid rgba(255,0,128,0.3)',
-                      transform: 'translateY(-4px)',
-                    },
-                  }}
-                >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                      <Shield sx={{ color: '#ff0080', fontSize: 30 }} />
-                      <Typography variant="h6">{t('warrantySupport.title')}</Typography>
-                    </Box>
-                    <Typography paragraph>
-                      {product.warranty_duration
-                        ? t('warrantySupport.comprehensiveWarranty', { months: product.warranty_duration })
-                        : t('warrantySupport.standardWarranty')}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {t('warrantySupport.expertSupport')}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
 
-              <Box>
-                <Card 
-                  sx={{ 
-                    height: '100%',
-                    bgcolor: 'rgba(15,15,25,0.6)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    transition: 'all 0.3s',
-                    '&:hover': {
-                      border: '1px solid rgba(0,255,136,0.3)',
-                      transform: 'translateY(-4px)',
-                    },
-                  }}
-                >
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                      <VerifiedUser sx={{ color: '#00ff88', fontSize: 30 }} />
-                      <Typography variant="h6">{t('qualityAssurance.title')}</Typography>
-                    </Box>
-                    <Typography paragraph>
-                      {t('qualityAssurance.rigorousTesting')}
+
+
+
+
+
+
+        </Box>
+
+        {/* Additional Information Tabs */}
+        <Box sx={{ mt: 6, px: 3, pb: 3 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              mb: 4,
+              pb: 2,
+              borderBottom: "2px solid #e0e0e0",
+              color: "text.primary",
+            }}
+          >
+            {t("products.additionalInformation")}
+          </Typography>
+
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+              gap: 3,
+            }}
+          >
+            <Box>
+              <Card
+                sx={{
+                  height: "100%",
+                  border: "1px solid #e0e0e0",
+                  boxShadow: "none",
+                  "&:hover": {
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  },
+                }}
+              >
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      mb: 2,
+                    }}
+                  >
+                    <Shield sx={{ color: "#0066cc", fontSize: 28 }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t("warrantySupport.title")}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {t('qualityAssurance.authenticity')}
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.warranty_duration
+                      ? t("warrantySupport.comprehensiveWarranty", {
+                          months: product.warranty_duration,
+                        })
+                      : t("warrantySupport.standardWarranty")}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+
+            <Box>
+              <Card
+                sx={{
+                  height: "100%",
+                  border: "1px solid #e0e0e0",
+                  boxShadow: "none",
+                  "&:hover": {
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  },
+                }}
+              >
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      mb: 2,
+                    }}
+                  >
+                    <LocalShipping sx={{ color: "#4caf50", fontSize: 28 }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t("products.delivery")}
                     </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("products.freeDeliveryEurope")}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+
+            <Box>
+              <Card
+                sx={{
+                  height: "100%",
+                  border: "1px solid #e0e0e0",
+                  boxShadow: "none",
+                  "&:hover": {
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  },
+                }}
+              >
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      mb: 2,
+                    }}
+                  >
+                    <VerifiedUser sx={{ color: "#ff9800", fontSize: 28 }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t("qualityAssurance.title")}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("qualityAssurance.rigorousTesting")}
+                  </Typography>
+                </CardContent>
+              </Card>
             </Box>
           </Box>
         </Box>
-      </Fade>
-    </Container>
+        {/* <SectionHeader /> */}
+      </Paper>
+      {/* </Container> */}
+    </Box>
+      </Container>
+   
   );
 };
 

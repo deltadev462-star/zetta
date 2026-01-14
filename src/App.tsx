@@ -34,6 +34,8 @@ import SupplierPayments from "./pages/admin/SupplierPayments";
 import WarrantyManagement from "./pages/WarrantyManagement";
 import EmailMarketing from "./pages/admin/EmailMarketing";
 import UserManagement from "./pages/admin/UserManagement";
+import ContentManagement from "./pages/admin/ContentManagement";
+import CategoryDetails from "./pages/CategoryDetails";
 
 // Create Modern Futuristic Theme
 const theme = createTheme({
@@ -280,6 +282,7 @@ function App() {
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Navigate to="/products" replace />} />
                 <Route path="products" element={<Products />} />
+                <Route path="/category/:categoryId" element={<CategoryDetails />} />
                 <Route path="products/:id" element={<ProductDetail />} />
                 <Route path="cart" element={<Cart />} />
 
@@ -425,6 +428,14 @@ function App() {
                   element={
                     <ProtectedRoute adminOnly>
                       <UserManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/cms"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <ContentManagement />
                     </ProtectedRoute>
                   }
                 />

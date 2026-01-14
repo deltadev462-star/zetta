@@ -523,6 +523,23 @@ const AdminDashboard: React.FC = () => {
                     >
                       {t('dashboard.generateReports')}
                     </Button>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      onClick={() => navigate('/admin/cms')}
+                      sx={{
+                        py: 2,
+                        borderColor: 'rgba(255,0,128,0.5)',
+                        color: '#ff0080',
+                        background: 'linear-gradient(135deg, rgba(255,0,128,0.1), rgba(0,212,255,0.1))',
+                        '&:hover': {
+                          borderColor: '#ff0080',
+                          background: 'linear-gradient(135deg, rgba(255,0,128,0.2), rgba(0,212,255,0.2))',
+                        },
+                      }}
+                    >
+                      Content Management
+                    </Button>
                   </Box>
 
                   <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 3 }}>

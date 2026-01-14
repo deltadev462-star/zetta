@@ -1157,7 +1157,7 @@ const MainLayout: React.FC = () => {
                 size="small"
                 onClick={() => {
                   handleFilterChange("category", cat.key);
-                  if (location.pathname !== "/") navigate("/");
+                 navigate(`/category/${cat.key}`); 
                 }}
                 sx={{
                   color: category === cat.key ? "#00d4ff" : "rgba(0,0,0,0.8)",

@@ -37,6 +37,7 @@ export interface Product {
   warranty_duration?: number;
   created_at: string;
   updated_at: string;
+    stock?: number; // optional
 }
 
 // Order types

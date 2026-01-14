@@ -119,7 +119,50 @@
     "20000to50000": "20 000€ - 50 000€",
     "50000to100000": "50 000€ - 100 000€",
     "over100000": "Plus de 100 000€",
-    "premium": "PREMIUM"
+    "premium": "PREMIUM",
+    "ourBestPrice": "Notre Meilleur Prix",
+    "exclVAT": "hors TVA",
+    "shippingIncluded": "Livraison incluse",
+    "year": "Année",
+    "stock": "Stock",
+    "typeOfSeller": "Type de Vendeur",
+    "certifiedProfessionalSeller": "Vendeur Professionnel Certifié",
+    "originOfSeller": "Origine du Vendeur",
+    "offerDetails": "Détails de l'Offre",
+    "askQuestion": "Poser une Question",
+    "saveToWishlist": "Enregistrer dans la Liste de Souhaits",
+    "delivery": "Livraison",
+    "freeDeliveryEurope": "Livraison gratuite dans toute l'Europe",
+    "additionalInformation": "Informations Supplémentaires",
+    "conditionTooltip": "La note de condition reflète l'état physique et opérationnel de l'équipement",
+    "certifiedSellerTooltip": "Les vendeurs certifiés ont été vérifiés et répondent à nos normes de qualité",
+    "medicalSpecialties": "Spécialités Médicales",
+    "noDescription": "Aucune description disponible pour ce produit",
+    "reference": "Référence",
+    "specialties": {
+      "intensiveCriticalCare": "Médecine Intensive et de Soins Critiques",
+      "cardiology": "Cardiologie",
+      "emergencyMedicine": "Médecine d'Urgence",
+      "anesthesiaPerioperative": "Anesthésie et Médecine Périopératoire",
+      "laboratoryMedicalBiology": "Laboratoire et Biologie Médicale",
+      "gynecologyObstetrics": "Gynécologie et Obstétrique",
+      "pediatricsNeonatology": "Pédiatrie et Néonatologie",
+      "radiology": "Radiologie"
+    },
+    "productCategoriesList": {
+      "medicalDiagnosticEquipment": "Équipement de Diagnostic Médical",
+      "medicalMonitoringEquipment": "Équipement de Surveillance Médicale",
+      "vitalSignsMonitor": "Moniteur de Signes Vitaux"
+    },
+    "manufacturers": {
+      "generalElectricHealthcare": "General Electric HealthCare"
+    },
+    "productDescriptions": {
+      "carescapeB850": "Le <strong>moniteur Carescape B850</strong> est un appareil de pointe conçu pour fournir une <strong>surveillance clinique</strong> avancée. Avec sa conception intuitive et ses fonctionnalités avancées, il garantit une continuité fiable des données et une intégration transparente dans tous les domaines de soins. Doté d'un écran couleur haute définition et d'une gamme complète de paramètres surveillés, il permet des soins optimaux pour les patients à forte acuité. Sa conception ergonomique et évolutive protège les investissements à long terme de l'établissement."
+    },
+    "productReference": {
+      "geB8502014": "GE-B850-2014"
+    }
   },
   "warranty": {
     "title": "Gestion de Garantie",
@@ -1073,6 +1116,22 @@
     "en": "English",
     "ar": "العربية",
     "fr": "Français"
+  },
+  "countries": {
+    "france": "France",
+    "germany": "Allemagne",
+    "italy": "Italie",
+    "spain": "Espagne",
+    "uk": "Royaume-Uni",
+    "usa": "États-Unis"
+  },
+  "regions": {
+    "europe": "Europe",
+    "northAmerica": "Amérique du Nord",
+    "asia": "Asie",
+    "africa": "Afrique",
+    "southAmerica": "Amérique du Sud",
+    "oceania": "Océanie"
   },
   "dashboard": {
     "sellerDashboard": "Tableau de Bord Vendeur",

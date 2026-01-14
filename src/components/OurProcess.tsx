@@ -1,74 +1,98 @@
-import React, { useState } from "react";
-import { Box, Container, Typography, Paper, Fade, Zoom } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Container, Typography, Paper, Fade, Zoom, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import {
-  Search,
-  Handshake,
-  LocalShipping,
-  CheckCircle,
-  Support,
-  Shield,
-  TrendingUp,
-} from "@mui/icons-material";
-
-interface ProcessStep {
-  id: number;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  color: string;
-  highlight: string;
-}
+import * as MuiIcons from "@mui/icons-material";
+import { CheckCircle, TrendingUp } from "@mui/icons-material";
+import { cmsService, CMSProcessStep } from '../services/cms';
 
 const OurProcess: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
   const [selectedStep, setSelectedStep] = useState<number>(0);
+  const [processSteps, setProcessSteps] = useState<CMSProcessStep[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const isRTL = i18n.dir() === 'rtl';
 
-  const processSteps: ProcessStep[] = [
-    {
-      id: 0,
-      icon: <Search sx={{ fontSize: 40 }} />,
-      title: t('ourProcess.steps.discover.title'),
-      description: t('ourProcess.steps.discover.description'),
-      color: '#00d4ff',
-      highlight: t('ourProcess.steps.discover.highlight'),
-    },
-    {
-      id: 1,
-      icon: <Shield sx={{ fontSize: 40 }} />,
-      title: t('ourProcess.steps.quality.title'),
-      description: t('ourProcess.steps.quality.description'),
-      color: '#00ff88',
-      highlight: t('ourProcess.steps.quality.highlight'),
-    },
-    {
-      id: 2,
-      icon: <Handshake sx={{ fontSize: 40 }} />,
-      title: t('ourProcess.steps.connect.title'),
-      description: t('ourProcess.steps.connect.description'),
-      color: '#ff0080',
-      highlight: t('ourProcess.steps.connect.highlight'),
-    },
-    {
-      id: 3,
-      icon: <LocalShipping sx={{ fontSize: 40 }} />,
-      title: t('ourProcess.steps.logistics.title'),
-      description: t('ourProcess.steps.logistics.description'),
-      color: '#ffaa00',
-      highlight: t('ourProcess.steps.logistics.highlight'),
-    },
-    {
-      id: 4,
-      icon: <Support sx={{ fontSize: 40 }} />,
-      title: t('ourProcess.steps.support.title'),
-      description: t('ourProcess.steps.support.description'),
-      color: '#00d4ff',
-      highlight: t('ourProcess.steps.support.highlight'),
-    },
-  ];
+  useEffect(() => {
+    fetchProcessSteps();
+
+    // Subscribe to real-time updates
+    const subscription = cmsService.subscribeToChanges('cms_process_steps', () => {
+      fetchProcessSteps();
+    });
+
+    return () => {
+      cmsService.unsubscribe(subscription);
+    };
+  }, []);
+
+  const fetchProcessSteps = async () => {
+    try {
+      const { data, error } = await cmsService.getProcessSteps(true); // Only get active steps
+      if (!error && data) {
+        setProcessSteps(data);
+      }
+    } catch (error) {
+      console.error('Error fetching process steps:', error);
+      // Fallback to default steps
+      setProcessSteps([
+        {
+          step_number: 1,
+          icon_name: 'Search',
+          title: t('ourProcess.steps.discover.title'),
+          description: t('ourProcess.steps.discover.description'),
+          color: '#00d4ff',
+          highlight_text: t('ourProcess.steps.discover.highlight'),
+          is_active: true
+        },
+        {
+          step_number: 2,
+          icon_name: 'Shield',
+          title: t('ourProcess.steps.quality.title'),
+          description: t('ourProcess.steps.quality.description'),
+          color: '#00ff88',
+          highlight_text: t('ourProcess.steps.quality.highlight'),
+          is_active: true
+        },
+        {
+          step_number: 3,
+          icon_name: 'Handshake',
+          title: t('ourProcess.steps.connect.title'),
+          description: t('ourProcess.steps.connect.description'),
+          color: '#ff0080',
+          highlight_text: t('ourProcess.steps.connect.highlight'),
+          is_active: true
+        },
+        {
+          step_number: 4,
+          icon_name: 'LocalShipping',
+          title: t('ourProcess.steps.logistics.title'),
+          description: t('ourProcess.steps.logistics.description'),
+          color: '#ffaa00',
+          highlight_text: t('ourProcess.steps.logistics.highlight'),
+          is_active: true
+        },
+        {
+          step_number: 5,
+          icon_name: 'Support',
+          title: t('ourProcess.steps.support.title'),
+          description: t('ourProcess.steps.support.description'),
+          color: '#00d4ff',
+          highlight_text: t('ourProcess.steps.support.highlight'),
+          is_active: true
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get Material UI icon component by name
+  const getIconComponent = (iconName: string) => {
+    const IconComponent = (MuiIcons as any)[iconName] || MuiIcons.Help;
+    return <IconComponent sx={{ fontSize: 40 }} />;
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 8 }}>
@@ -104,8 +128,14 @@ const OurProcess: React.FC = () => {
         </Box>
       </Fade>
 
-      {/* Main Process Diagram */}
-      <Box sx={{ position: 'relative', mb: 8 }}>
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          {/* Main Process Diagram */}
+          <Box sx={{ position: 'relative', mb: 8 }}>
         {/* Single Continuous Connection Line */}
         <Box
           sx={{
@@ -144,11 +174,11 @@ const OurProcess: React.FC = () => {
           }}
         >
           {processSteps.map((step, index) => (
-            <Zoom in timeout={500 + index * 100} key={step.id}>
+            <Zoom in timeout={500 + index * 100} key={step.id || index}>
               <Box
-                onMouseEnter={() => setHoveredStep(step.id)}
+                onMouseEnter={() => setHoveredStep(index)}
                 onMouseLeave={() => setHoveredStep(null)}
-                onClick={() => setSelectedStep(step.id)}
+                onClick={() => setSelectedStep(index)}
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -181,12 +211,12 @@ const OurProcess: React.FC = () => {
                     zIndex: 2,
                   }}
                 >
-                  {isRTL ? (processSteps.length - index) : (index + 1)}
+                  {isRTL ? (processSteps.length - index) : (step.step_number || index + 1)}
                 </Box>
 
                 {/* Icon Circle */}
                 <Paper
-                  elevation={hoveredStep === step.id || selectedStep === step.id ? 8 : 3}
+                  elevation={hoveredStep === index || selectedStep === index ? 8 : 3}
                   sx={{
                     width: { xs: 100, sm: 120, md: 140 },
                     height: { xs: 100, sm: 120, md: 140 },
@@ -195,15 +225,15 @@ const OurProcess: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     background:
-                      hoveredStep === step.id || selectedStep === step.id
+                      hoveredStep === index || selectedStep === index
                         ? `linear-gradient(135deg, ${step.color}20, ${step.color}10)`
                         : 'oklch(98.7% 0.026 102.212)',
                     border: `3px solid ${
-                      selectedStep === step.id ? step.color : 'transparent'
+                      selectedStep === index ? step.color : 'transparent'
                     }`,
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     transform:
-                      hoveredStep === step.id || selectedStep === step.id
+                      hoveredStep === index || selectedStep === index
                         ? 'translateY(-10px) scale(1.1)'
                         : 'translateY(0) scale(1)',
                     position: 'relative',
@@ -213,7 +243,7 @@ const OurProcess: React.FC = () => {
                       position: 'absolute',
                       inset: 0,
                       background: `radial-gradient(circle at center, ${step.color}10, transparent)`,
-                      opacity: hoveredStep === step.id || selectedStep === step.id ? 1 : 0,
+                      opacity: hoveredStep === index || selectedStep === index ? 1 : 0,
                       transition: 'opacity 0.3s',
                     },
                   }}
@@ -222,7 +252,7 @@ const OurProcess: React.FC = () => {
                     sx={{
                       color: step.color,
                       transform:
-                        hoveredStep === step.id || selectedStep === step.id
+                        hoveredStep === index || selectedStep === index
                           ? 'scale(1.2)'
                           : 'scale(1)',
                       transition: 'transform 0.3s',
@@ -232,7 +262,7 @@ const OurProcess: React.FC = () => {
                       },
                     }}
                   >
-                    {step.icon}
+                    {getIconComponent(step.icon_name)}
                   </Box>
                 </Paper>
 
@@ -244,7 +274,7 @@ const OurProcess: React.FC = () => {
                     fontWeight: 600,
                     fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' },
                     color:
-                      hoveredStep === step.id || selectedStep === step.id
+                      hoveredStep === index || selectedStep === index
                         ? step.color
                         : 'rgba(51,51,51,0.9)',
                     transition: 'color 0.3s',
@@ -259,10 +289,11 @@ const OurProcess: React.FC = () => {
             </Zoom>
           ))}
         </Box>
-      </Box>
+          </Box>
 
-      {/* Selected Step Details */}
-      <Fade in key={selectedStep} timeout={600}>
+          {/* Selected Step Details */}
+          {processSteps.length > 0 && (
+            <Fade in key={selectedStep} timeout={600}>
         <Paper
           elevation={6}
           sx={{
@@ -294,7 +325,7 @@ const OurProcess: React.FC = () => {
               flexDirection: isRTL ? 'row-reverse' : 'row',
             }}>
               <Box sx={{ color: processSteps[selectedStep].color }}>
-                {processSteps[selectedStep].icon}
+                {getIconComponent(processSteps[selectedStep].icon_name)}
               </Box>
               <Typography
                 variant="h4"
@@ -332,7 +363,7 @@ const OurProcess: React.FC = () => {
             >
               <CheckCircle sx={{ fontSize: 20 }} />
               <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {processSteps[selectedStep].highlight}
+                {processSteps[selectedStep].highlight_text}
               </Typography>
             </Box>
           </Box>
@@ -349,8 +380,9 @@ const OurProcess: React.FC = () => {
               border: `3px solid ${processSteps[selectedStep].color}20`,
             }}
           />
-        </Paper>
-      </Fade>
+            </Paper>
+          </Fade>
+          )}
 
       {/* Bottom CTA */}
       <Box sx={{ textAlign: 'center', mt: 6 }}>
@@ -376,7 +408,9 @@ const OurProcess: React.FC = () => {
             {t('ourProcess.cta.subtitle')}
           </Typography>
         </Box>
-      </Box>
+        </Box>
+      </>
+      )}
     </Container>
   );
 };

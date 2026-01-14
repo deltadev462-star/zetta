@@ -790,4 +790,14 @@ code {
 
 [dir="rtl"] .MuiToolbar-root > * {
   direction: rtl;
+
+/* Animations */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.rotating {
+  animation: spin 2s linear infinite;
+}
 }

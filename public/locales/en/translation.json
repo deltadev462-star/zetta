@@ -119,7 +119,52 @@
     "20000to50000": "€20,000 - €50,000",
     "50000to100000": "€50,000 - €100,000",
     "over100000": "Over €100,000",
-    "premium": "PREMIUM"
+    "premium": "PREMIUM",
+    "ourBestPrice": "Our Best Price",
+    "exclVAT": "excl. VAT",
+    "shippingIncluded": "Shipping included",
+    "year": "Year",
+    "stock": "Stock",
+    "typeOfSeller": "Type of Seller",
+    "certifiedProfessionalSeller": "Certified Professional Seller",
+    "originOfSeller": "Origin of Seller",
+    "offerDetails": "Offer Details",
+    "askQuestion": "Ask a Question",
+    "saveToWishlist": "Save to Wishlist",
+    "delivery": "Delivery",
+    "freeDeliveryEurope": "Free delivery throughout Europe",
+    "additionalInformation": "Additional Information",
+    "conditionTooltip": "The condition rating reflects the equipment's physical and operational state",
+    "certifiedSellerTooltip": "Certified sellers have been verified and meet our quality standards",
+    "medicalSpecialties": "Medical Specialties",
+    "noDescription": "No description available for this product",
+    "categories": "Categories",
+    "reference": "Reference",
+    "quantity": "Quantity",
+    "specialties": {
+      "intensiveCriticalCare": "Intensive and Critical Care Medicine",
+      "cardiology": "Cardiology",
+      "emergencyMedicine": "Emergency Medicine",
+      "anesthesiaPerioperative": "Anesthesia and Perioperative Medicine",
+      "laboratoryMedicalBiology": "Laboratory and Medical Biology",
+      "gynecologyObstetrics": "Gynecology and Obstetrics",
+      "pediatricsNeonatology": "Pediatrics and Neonatology",
+      "radiology": "Radiology"
+    },
+    "productCategoriesList": {
+      "medicalDiagnosticEquipment": "Medical Diagnostic Equipment",
+      "medicalMonitoringEquipment": "Medical Monitoring Equipment",
+      "vitalSignsMonitor": "Vital Signs Monitor"
+    },
+    "manufacturers": {
+      "generalElectricHealthcare": "General Electric HealthCare"
+    },
+    "productDescriptions": {
+      "carescapeB850": "The <strong>Carescape B850 monitor</strong> is a state-of-the-art device designed to provide advanced <strong>clinical monitoring</strong>. With its intuitive design and advanced features, it ensures reliable data continuity and seamless integration across all areas of care. Featuring a high-definition color screen and a comprehensive range of monitored parameters, it enables optimal care for high-acuity patients. Its ergonomic and scalable design safeguards the long-term investments of the facility."
+    },
+    "productReference": {
+      "geB8502014": "GE-B850-2014"
+    }
   },
   "warranty": {
     "title": "Warranty Management",
@@ -936,7 +981,60 @@
     "manageUsersPermissionsActivity": "Manage user accounts, permissions, and activity monitoring",
     "enterReasonForSuspension": "Enter reason for suspension...",
     "sellerOverviewComingSoon": "Seller overview and detailed analytics coming soon",
-    "noPaymentHistoryFound": "No payment history found"
+    "noPaymentHistoryFound": "No payment history found",
+    "contentManagement": {
+      "title": "Content Management System",
+      "overview": "Overview",
+      "contentOverview": "Content Management Overview",
+      "manage": "Manage",
+      "heroSections": "Hero Sections",
+      "services": "Services",
+      "brands": "Brands",
+      "brandPartners": "Brand Partners",
+      "processSteps": "Process Steps",
+      "featuredEquipment": "Featured Equipment",
+      "testimonials": "Testimonials",
+      "siteSettings": "Site Settings",
+      "footer": "Footer",
+      "pageMeta": "Page Meta",
+      "addHeroSection": "Add Hero Section",
+      "editHeroSection": "Edit Hero Section",
+      "addService": "Add Service",
+      "editService": "Edit Service",
+      "addBrand": "Add Brand",
+      "editBrand": "Edit Brand",
+      "active": "Active",
+      "inactive": "Inactive",
+      "cta": "CTA",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "comingSoon": "{{feature}} management coming soon!",
+      "fields": {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "ctaText": "CTA Text",
+        "ctaLink": "CTA Link",
+        "backgroundImage": "Background Image",
+        "gradientStartColor": "Gradient Start Color",
+        "gradientEndColor": "Gradient End Color",
+        "displayOrder": "Display Order",
+        "iconName": "Icon Name (Material UI Icon)",
+        "iconHelperText": "e.g., LocalShipping, VerifiedUser, AccountBalance",
+        "description": "Description",
+        "shadowColor": "Shadow Color",
+        "shadowColorHelperText": "e.g., rgba(0, 212, 255, 0.4)",
+        "brandName": "Brand Name",
+        "brandLogo": "Brand Logo",
+        "websiteUrl": "Website URL"
+      },
+      "confirmDelete": {
+        "heroSection": "Are you sure you want to delete this hero section?",
+        "service": "Are you sure you want to delete this service?",
+        "brand": "Are you sure you want to delete this brand?"
+      }
+    }
   },
   "footer": {
     "aboutUs": "About Us",
@@ -1079,6 +1177,22 @@
     "en": "English",
     "ar": "العربية",
     "fr": "Français"
+  },
+  "countries": {
+    "france": "France",
+    "germany": "Germany",
+    "italy": "Italy",
+    "spain": "Spain",
+    "uk": "United Kingdom",
+    "usa": "United States"
+  },
+  "regions": {
+    "europe": "Europe",
+    "northAmerica": "North America",
+    "asia": "Asia",
+    "africa": "Africa",
+    "southAmerica": "South America",
+    "oceania": "Oceania"
   },
   "dashboard": {
     "sellerDashboard": "Seller Dashboard",

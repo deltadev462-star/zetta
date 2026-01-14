@@ -1,36 +1,72 @@
-import React from "react";
-import { Box, Container, Card, CardContent, Typography } from "@mui/material";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import React, { useEffect, useState } from "react";
+import { Box, Container, Card, CardContent, Typography, CircularProgress } from "@mui/material";
+import * as MuiIcons from "@mui/icons-material";
 import { useTranslation } from 'react-i18next';
+import { cmsService, CMSService } from '../services/cms';
 
 const Services: React.FC = () => {
   const { t } = useTranslation();
-  
-  const services = [
-    {
-      icon: <LocalShippingIcon />,
-      title: t('services.delivery.title'),
-      description: t('services.delivery.description'),
-      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      shadowColor: "rgba(102, 126, 234, 0.4)",
-    },
-    {
-      icon: <VerifiedUserIcon />,
-      title: t('services.warranty.title'),
-      description: t('services.warranty.description'),
-      gradient: "linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)",
-      shadowColor: "rgba(0, 212, 255, 0.4)",
-    },
-    {
-      icon: <AccountBalanceIcon />,
-      title: t('services.flexibleFinancing.title'),
-      description: t('services.flexibleFinancing.description'),
-      gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-      shadowColor: "rgba(245, 87, 108, 0.4)",
-    },
-  ];
+  const [services, setServices] = useState<CMSService[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchServices();
+
+    // Subscribe to real-time updates
+    const subscription = cmsService.subscribeToChanges('cms_services', () => {
+      fetchServices();
+    });
+
+    return () => {
+      cmsService.unsubscribe(subscription);
+    };
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const { data, error } = await cmsService.getServices(true); // Only get active services
+      if (!error && data) {
+        setServices(data);
+      }
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      // Fallback to default services
+      setServices([
+        {
+          icon_name: 'LocalShipping',
+          title: t('services.delivery.title'),
+          description: t('services.delivery.description'),
+          gradient_start: '#667eea',
+          gradient_end: '#764ba2',
+          shadow_color: 'rgba(102, 126, 234, 0.4)',
+        },
+        {
+          icon_name: 'VerifiedUser',
+          title: t('services.warranty.title'),
+          description: t('services.warranty.description'),
+          gradient_start: '#00d4ff',
+          gradient_end: '#0099cc',
+          shadow_color: 'rgba(0, 212, 255, 0.4)',
+        },
+        {
+          icon_name: 'AccountBalance',
+          title: t('services.flexibleFinancing.title'),
+          description: t('services.flexibleFinancing.description'),
+          gradient_start: '#f093fb',
+          gradient_end: '#f5576c',
+          shadow_color: 'rgba(245, 87, 108, 0.4)',
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get Material UI icon component by name
+  const getIconComponent = (iconName: string) => {
+    const IconComponent = (MuiIcons as any)[iconName] || MuiIcons.Help;
+    return <IconComponent />;
+  };
 
   return (
     <Box
@@ -42,17 +78,22 @@ const Services: React.FC = () => {
       }}
     >
       <Container maxWidth="xl">
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              md: "repeat(3, 1fr)",
-            },
-            gap: 4,
-          }}
-        >
-          {services.map((service, index) => (
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                md: `repeat(${Math.min(services.length, 3)}, 1fr)`,
+              },
+              gap: 4,
+            }}
+          >
+            {services.map((service, index) => (
             <Card
               key={index}
               sx={{
@@ -102,12 +143,12 @@ const Services: React.FC = () => {
                     width: 80,
                     height: 80,
                     borderRadius: 1,
-                    background: service.gradient,
+                    background: `linear-gradient(135deg, ${service.gradient_start} 0%, ${service.gradient_end} 100%)`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     mb: 3,
-                    boxShadow: `0 10px 30px ${service.shadowColor}`,
+                    boxShadow: `0 10px 30px ${service.shadow_color}`,
                     transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                     position: "relative",
                     overflow: "hidden",
@@ -134,7 +175,7 @@ const Services: React.FC = () => {
                     },
                   }}
                 >
-                  {service.icon}
+                  {getIconComponent(service.icon_name)}
                 </Box>
 
                 <Typography
@@ -165,7 +206,8 @@ const Services: React.FC = () => {
               </CardContent>
             </Card>
           ))}
-        </Box>
+          </Box>
+        )}
       </Container>
     </Box>
   );

@@ -117,7 +117,50 @@
     "20000to50000": "20,000€ - 50,000€",
     "50000to100000": "50,000€ - 100,000€",
     "over100000": "أكثر من 100,000€",
-    "premium": "مميز"
+    "premium": "مميز",
+    "ourBestPrice": "أفضل سعر لدينا",
+    "exclVAT": "غير شامل ضريبة القيمة المضافة",
+    "shippingIncluded": "الشحن مشمول",
+    "year": "السنة",
+    "stock": "المخزون",
+    "typeOfSeller": "نوع البائع",
+    "certifiedProfessionalSeller": "بائع محترف معتمد",
+    "originOfSeller": "أصل البائع",
+    "offerDetails": "تفاصيل العرض",
+    "askQuestion": "طرح سؤال",
+    "saveToWishlist": "حفظ في قائمة الأمنيات",
+    "delivery": "التوصيل",
+    "freeDeliveryEurope": "توصيل مجاني في جميع أنحاء أوروبا",
+    "additionalInformation": "معلومات إضافية",
+    "conditionTooltip": "يعكس تقييم الحالة الحالة المادية والتشغيلية للمعدات",
+    "certifiedSellerTooltip": "تم التحقق من البائعين المعتمدين وهم يستوفون معايير الجودة لدينا",
+    "medicalSpecialties": "التخصصات الطبية",
+    "noDescription": "لا يوجد وصف متاح لهذا المنتج",
+    "reference": "المرجع",
+    "specialties": {
+      "intensiveCriticalCare": "طب العناية المركزة والحرجة",
+      "cardiology": "طب القلب",
+      "emergencyMedicine": "طب الطوارئ",
+      "anesthesiaPerioperative": "التخدير والطب المحيط بالعمليات",
+      "laboratoryMedicalBiology": "المختبرات والأحياء الطبية",
+      "gynecologyObstetrics": "النساء والتوليد",
+      "pediatricsNeonatology": "طب الأطفال وحديثي الولادة",
+      "radiology": "الأشعة"
+    },
+    "productCategoriesList": {
+      "medicalDiagnosticEquipment": "معدات التشخيص الطبي",
+      "medicalMonitoringEquipment": "معدات المراقبة الطبية",
+      "vitalSignsMonitor": "جهاز مراقبة العلامات الحيوية"
+    },
+    "manufacturers": {
+      "generalElectricHealthcare": "جنرال إلكتريك للرعاية الصحية"
+    },
+    "productDescriptions": {
+      "carescapeB850": "<strong>جهاز مراقبة Carescape B850</strong> هو جهاز متطور مصمم لتوفير <strong>مراقبة سريرية</strong> متقدمة. بفضل تصميمه البديهي وميزاته المتقدمة، فإنه يضمن موثوقية البيانات المستمرة والتكامل السلس عبر جميع مجالات الرعاية. يتميز بشاشة ملونة عالية الدقة ومجموعة شاملة من المعاملات المراقبة، مما يتيح رعاية مثلى للمرضى ذوي الحالات الحرجة. يضمن تصميمه المريح والقابل للتوسع حماية استثمارات المنشأة على المدى الطويل."
+    },
+    "productReference": {
+      "geB8502014": "GE-B850-2014"
+    }
   },
   "warranty": {
     "title": "إدارة الضمان",
@@ -826,7 +869,60 @@
     "manageUsersPermissionsActivity": "إدارة حسابات المستخدمين والصلاحيات ومراقبة النشاط",
     "enterReasonForSuspension": "أدخل سبب التعليق...",
     "sellerOverviewComingSoon": "نظرة عامة على البائع والتحليلات التفصيلية قريبًا",
-    "noPaymentHistoryFound": "لم يتم العثور على سجل مدفوعات"
+    "noPaymentHistoryFound": "لم يتم العثور على سجل مدفوعات",
+    "contentManagement": {
+      "title": "نظام إدارة المحتوى",
+      "overview": "نظرة عامة",
+      "contentOverview": "نظرة عامة على إدارة المحتوى",
+      "manage": "إدارة",
+      "heroSections": "أقسام البطل",
+      "services": "الخدمات",
+      "brands": "العلامات التجارية",
+      "brandPartners": "الشركاء التجاريون",
+      "processSteps": "خطوات العملية",
+      "featuredEquipment": "المعدات المميزة",
+      "testimonials": "الشهادات",
+      "siteSettings": "إعدادات الموقع",
+      "footer": "تذييل الصفحة",
+      "pageMeta": "بيانات الصفحة الوصفية",
+      "addHeroSection": "إضافة قسم بطل",
+      "editHeroSection": "تعديل قسم البطل",
+      "addService": "إضافة خدمة",
+      "editService": "تعديل الخدمة",
+      "addBrand": "إضافة علامة تجارية",
+      "editBrand": "تعديل العلامة التجارية",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "cta": "دعوة للعمل",
+      "delete": "حذف",
+      "edit": "تعديل",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "comingSoon": "إدارة {{feature}} قريبًا!",
+      "fields": {
+        "title": "العنوان",
+        "subtitle": "العنوان الفرعي",
+        "ctaText": "نص دعوة العمل",
+        "ctaLink": "رابط دعوة العمل",
+        "backgroundImage": "صورة الخلفية",
+        "gradientStartColor": "لون بداية التدرج",
+        "gradientEndColor": "لون نهاية التدرج",
+        "displayOrder": "ترتيب العرض",
+        "iconName": "اسم الأيقونة (Material UI Icon)",
+        "iconHelperText": "مثال: LocalShipping, VerifiedUser, AccountBalance",
+        "description": "الوصف",
+        "shadowColor": "لون الظل",
+        "shadowColorHelperText": "مثال: rgba(0, 212, 255, 0.4)",
+        "brandName": "اسم العلامة التجارية",
+        "brandLogo": "شعار العلامة التجارية",
+        "websiteUrl": "رابط الموقع"
+      },
+      "confirmDelete": {
+        "heroSection": "هل أنت متأكد من حذف قسم البطل هذا؟",
+        "service": "هل أنت متأكد من حذف هذه الخدمة؟",
+        "brand": "هل أنت متأكد من حذف هذه العلامة التجارية؟"
+      }
+    }
   },
   "footer": {
     "aboutUs": "من نحن",
@@ -968,6 +1064,22 @@
     "en": "English",
     "ar": "العربية",
     "fr": "Français"
+  },
+  "countries": {
+    "france": "فرنسا",
+    "germany": "ألمانيا",
+    "italy": "إيطاليا",
+    "spain": "إسبانيا",
+    "uk": "المملكة المتحدة",
+    "usa": "الولايات المتحدة"
+  },
+  "regions": {
+    "europe": "أوروبا",
+    "northAmerica": "أمريكا الشمالية",
+    "asia": "آسيا",
+    "africa": "أفريقيا",
+    "southAmerica": "أمريكا الجنوبية",
+    "oceania": "أوقيانوسيا"
   },
   "dashboard": {
     "sellerDashboard": "لوحة تحكم البائع",
